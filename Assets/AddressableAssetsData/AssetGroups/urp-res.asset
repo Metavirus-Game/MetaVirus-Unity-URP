@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: urp-res
+  m_EditorClassIdentifier: 
+  m_GroupName: urp-res
+  m_Data:
+    m_SerializedData: []
+  m_GUID: aabb03d2bc7f5774fab6c097ceba1408
+  m_SerializeEntries:
+  - m_GUID: e6e9a19c3678ded42a3bc431ebef7dbd
+    m_Address: Packages/com.unity.render-pipelines.universal/Shaders/Utils/FallbackError.shader
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 933532a4fcc9baf4fa0491de14d08ed7
+    m_Address: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 31321ba15b8f8eb4c954353edc038b1d
+    m_Address: Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 29868e73b638e48ca99a19ea58c48d90
+    m_Address: Packages/com.unity.render-pipelines.universal/Shaders/Terrain/WavingGrassBillboard.shader
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: f6783ab646d374f94b199774402a5144
+    m_Address: Packages/com.unity.render-pipelines.universal/Shaders/Terrain/TerrainDetailLit.shader
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: e507fdfead5ca47e8b9a768b51c291a1
+    m_Address: Packages/com.unity.render-pipelines.universal/Shaders/Terrain/WavingGrass.shader
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 90a3bbecc806b0745bb0afe64773c570
+    m_Address: Assets/GameLightSetting.lighting
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 0406db5a14f94604a8c57ccfbc9f3b46
+    m_Address: Packages/com.unity.render-pipelines.universal/Shaders/Particles/ParticlesUnlit.shader
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 8d2bb70cbf9db8d4da26e15b26e74248
+    m_Address: Packages/com.unity.render-pipelines.universal/Shaders/SimpleLit.shader
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: d5d06a2a805ea174ba5053de60c9d1f6, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: c3a06ba228776964dbad50a7f15e1fca, type: 2}
+    - {fileID: 11400000, guid: 5ee5e1f95f1d3ee49869213a88c3649b, type: 2}
