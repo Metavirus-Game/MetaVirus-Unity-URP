@@ -148,6 +148,13 @@ namespace MetaVirus.Logic.Service.Arena
             return new NetworkResult<List<ArenaPlayerData>>(list);
         }
 
+        /// <summary>
+        /// 向服务请求竞技场战斗
+        /// </summary>
+        /// <param name="arenaId">竞技场id</param>
+        /// <param name="attackPartyId">进攻阵型id</param>
+        /// <param name="defenceId">防守方玩家id</param>
+        /// <returns></returns>
         public async Task<NetworkResult<ArenaBattleResult>> RunMatchBattle(int arenaId, int attackPartyId,
             int defenceId)
         {
