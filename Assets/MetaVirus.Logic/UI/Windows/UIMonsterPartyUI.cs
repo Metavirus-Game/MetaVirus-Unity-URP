@@ -4,7 +4,6 @@ using FairyGUI;
 using GameEngine;
 using GameEngine.DataNode;
 using GameEngine.Network;
-using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Data.Player;
 using MetaVirus.Logic.Protocols.Player;
 using MetaVirus.Logic.Service.Player;
@@ -13,7 +12,6 @@ using MetaVirus.Logic.UI.Component.MonsterPanel;
 using MetaVirus.Logic.UI.Component.MonsterPanel.Formation;
 using MetaVirus.Net.Messages.Common;
 using MetaVirus.Net.Messages.Player;
-using UnityEngine;
 using static MetaVirus.Logic.Data.Constants;
 
 namespace MetaVirus.Logic.UI.Windows
@@ -83,6 +81,7 @@ namespace MetaVirus.Logic.UI.Windows
 
                 _switchBattle.touchable = !_switchBattle.selected && _formationComp.SelectedPets.Length > 0;
             }
+            
         }
 
         /// <summary>
