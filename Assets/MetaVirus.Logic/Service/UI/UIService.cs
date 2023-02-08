@@ -63,7 +63,11 @@ namespace MetaVirus.Logic.Service.UI
 
         public BaseUIWindow OpenWindow(string wndName)
         {
-            var type = _wndName2class[wndName];
+            _wndName2class.TryGetValue(wndName, out var type);
+            if (type == null)
+            {
+                Debug.LogError($"UI {wndName} not found!");
+            }
             return OpenWindow(type);
         }
 
