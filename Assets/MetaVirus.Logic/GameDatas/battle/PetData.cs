@@ -55,7 +55,7 @@ public sealed partial class PetData :  Bright.Config.BeanBase
     /// </summary>
     public string Desc { get; private set; }
     /// <summary>
-    /// 怪物类型
+    /// 怪物种族
     /// </summary>
     public int Type { get; private set; }
     public common.MonsterType Type_Ref { get; private set; }

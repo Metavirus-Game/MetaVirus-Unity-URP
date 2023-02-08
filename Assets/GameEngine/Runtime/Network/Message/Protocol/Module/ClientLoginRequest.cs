@@ -3,7 +3,7 @@ using GameEngine.Network.Utils;
 
 namespace GameEngine.Network.Message.Protocol.Module
 {
-    [Protocol(Protocol.Module.Main, Protocol.Module.ClientLoginRequest)]
+    [Protocol(Runtime.Network.Message.Protocol.Protocol.Module.Main, Runtime.Network.Message.Protocol.Protocol.Module.ClientLoginRequest)]
     public class ClientLoginRequest : NetBusBasePacket
     {
         public short ModuleId { get; set; }

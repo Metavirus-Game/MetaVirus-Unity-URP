@@ -25,15 +25,15 @@ namespace MetaVirus.Net.Messages.Arena {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CjJXb3JsZE1lc3NhZ2VzL2FyZW5hL0FyZW5hUGxheWVySW5mb1JlcXVlc3RD",
-            "cy5wcm90bxIcTWV0YVZpcnVzLk5ldC5NZXNzYWdlcy5BcmVuYSI+ChpBcmVu",
-            "YVBsYXllckluZm9SZXF1ZXN0Q3NQYhIUCgdhcmVuYUlkGAEgASgFSACIAQFC",
-            "CgoIX2FyZW5hSWRCRgojY29tLm1ldGF2aXJ1cy5uZXQubWVzc2FnZXMucGIu",
-            "YXJlbmFCHUFyZW5hUGxheWVySW5mb1JlcXVlc3RDc1BiT3V0UAFiBnByb3Rv",
-            "Mw=="));
+            "cy5wcm90bxIcTWV0YVZpcnVzLk5ldC5NZXNzYWdlcy5BcmVuYSJiChpBcmVu",
+            "YVBsYXllckluZm9SZXF1ZXN0Q3NQYhIUCgdhcmVuYUlkGAEgASgFSACIAQES",
+            "FQoIcGxheWVySWQYAiABKAVIAYgBAUIKCghfYXJlbmFJZEILCglfcGxheWVy",
+            "SWRCRgojY29tLm1ldGF2aXJ1cy5uZXQubWVzc2FnZXMucGIuYXJlbmFCHUFy",
+            "ZW5hUGxheWVySW5mb1JlcXVlc3RDc1BiT3V0UAFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::MetaVirus.Net.Messages.Arena.ArenaPlayerInfoRequestCsPb), global::MetaVirus.Net.Messages.Arena.ArenaPlayerInfoRequestCsPb.Parser, new[]{ "ArenaId" }, new[]{ "ArenaId" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::MetaVirus.Net.Messages.Arena.ArenaPlayerInfoRequestCsPb), global::MetaVirus.Net.Messages.Arena.ArenaPlayerInfoRequestCsPb.Parser, new[]{ "ArenaId", "PlayerId" }, new[]{ "ArenaId", "PlayerId" }, null, null, null)
           }));
     }
     #endregion
@@ -77,6 +77,7 @@ namespace MetaVirus.Net.Messages.Arena {
     public ArenaPlayerInfoRequestCsPb(ArenaPlayerInfoRequestCsPb other) : this() {
       _hasBits0 = other._hasBits0;
       arenaId_ = other.arenaId_;
+      playerId_ = other.playerId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -111,6 +112,31 @@ namespace MetaVirus.Net.Messages.Arena {
       _hasBits0 &= ~1;
     }
 
+    /// <summary>Field number for the "playerId" field.</summary>
+    public const int PlayerIdFieldNumber = 2;
+    private int playerId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int PlayerId {
+      get { if ((_hasBits0 & 2) != 0) { return playerId_; } else { return 0; } }
+      set {
+        _hasBits0 |= 2;
+        playerId_ = value;
+      }
+    }
+    /// <summary>Gets whether the "playerId" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasPlayerId {
+      get { return (_hasBits0 & 2) != 0; }
+    }
+    /// <summary>Clears the value of the "playerId" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearPlayerId() {
+      _hasBits0 &= ~2;
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -127,6 +153,7 @@ namespace MetaVirus.Net.Messages.Arena {
         return true;
       }
       if (ArenaId != other.ArenaId) return false;
+      if (PlayerId != other.PlayerId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -135,6 +162,7 @@ namespace MetaVirus.Net.Messages.Arena {
     public override int GetHashCode() {
       int hash = 1;
       if (HasArenaId) hash ^= ArenaId.GetHashCode();
+      if (HasPlayerId) hash ^= PlayerId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -157,6 +185,10 @@ namespace MetaVirus.Net.Messages.Arena {
         output.WriteRawTag(8);
         output.WriteInt32(ArenaId);
       }
+      if (HasPlayerId) {
+        output.WriteRawTag(16);
+        output.WriteInt32(PlayerId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -171,6 +203,10 @@ namespace MetaVirus.Net.Messages.Arena {
         output.WriteRawTag(8);
         output.WriteInt32(ArenaId);
       }
+      if (HasPlayerId) {
+        output.WriteRawTag(16);
+        output.WriteInt32(PlayerId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -183,6 +219,9 @@ namespace MetaVirus.Net.Messages.Arena {
       int size = 0;
       if (HasArenaId) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(ArenaId);
+      }
+      if (HasPlayerId) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(PlayerId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -198,6 +237,9 @@ namespace MetaVirus.Net.Messages.Arena {
       }
       if (other.HasArenaId) {
         ArenaId = other.ArenaId;
+      }
+      if (other.HasPlayerId) {
+        PlayerId = other.PlayerId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -218,6 +260,10 @@ namespace MetaVirus.Net.Messages.Arena {
             ArenaId = input.ReadInt32();
             break;
           }
+          case 16: {
+            PlayerId = input.ReadInt32();
+            break;
+          }
         }
       }
     #endif
@@ -235,6 +281,10 @@ namespace MetaVirus.Net.Messages.Arena {
             break;
           case 8: {
             ArenaId = input.ReadInt32();
+            break;
+          }
+          case 16: {
+            PlayerId = input.ReadInt32();
             break;
           }
         }

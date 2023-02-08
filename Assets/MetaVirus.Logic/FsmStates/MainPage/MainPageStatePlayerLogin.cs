@@ -3,6 +3,7 @@ using cfg.common;
 using GameEngine;
 using GameEngine.Config;
 using GameEngine.DataNode;
+using GameEngine.Event;
 using GameEngine.Fsm;
 using GameEngine.Network;
 using GameEngine.Utils;
@@ -22,18 +23,20 @@ namespace MetaVirus.Logic.FsmStates.MainPage
         private NetworkService _networkService;
         private DataNodeService _dataNodeService;
         private PlayerService _playerService;
+        private EventService _eventService;
 
         public override void OnInit(FsmEntity<MainPageProcedure> fsm)
         {
             _networkService = GameFramework.GetService<NetworkService>();
             _dataNodeService = GameFramework.GetService<DataNodeService>();
             _playerService = GameFramework.GetService<PlayerService>();
+            _eventService = GameFramework.GetService<EventService>();
         }
 
         private IEnumerator PlayerLogin()
         {
             var wndEntering = UIWaitingWindow.ShowWaiting(GameDataService.LT("common.text.entering"));
-            
+
             var pId = _dataNodeService.GetData<int>(Constants.DataKeys.LoginPlayerId);
             var playerReq = new PlayerLoginPbReq()
             {
@@ -73,12 +76,15 @@ namespace MetaVirus.Logic.FsmStates.MainPage
                 _playerService.AddPetData(petInfo);
             }
 
+            _playerService.OnPlayerLoaded();
             // var pe = new PlayerEntity(p);
             // var task = _entityService.AddEntity(EntityGroupName.Player, pe);
             // yield return task.AsCoroution();
 
+
             //切换地图
             ChangeMapProcedure.ChangeMap(playerData.MapId, p.Position);
+
 
             wndEntering.Hide();
         }

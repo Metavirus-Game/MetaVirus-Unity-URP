@@ -25,15 +25,18 @@ namespace MetaVirus.Net.Messages.Arena {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CjNXb3JsZE1lc3NhZ2VzL2FyZW5hL0FyZW5hUGxheWVySW5mb1Jlc3BvbnNl",
-            "U2MucHJvdG8SHE1ldGFWaXJ1cy5OZXQuTWVzc2FnZXMuQXJlbmEiPwobQXJl",
-            "bmFQbGF5ZXJJbmZvUmVzcG9uc2VTY1BiEhQKB2FyZW5hSWQYASABKAVIAIgB",
-            "AUIKCghfYXJlbmFJZEJHCiNjb20ubWV0YXZpcnVzLm5ldC5tZXNzYWdlcy5w",
-            "Yi5hcmVuYUIeQXJlbmFQbGF5ZXJJbmZvUmVzcG9uc2VTY1BiT3V0UAFiBnBy",
-            "b3RvMw=="));
+            "U2MucHJvdG8SHE1ldGFWaXJ1cy5OZXQuTWVzc2FnZXMuQXJlbmEaMXByb3Rv",
+            "cy9Xb3JsZE1lc3NhZ2VzL2NvbW1vbi9BcmVuYVBsYXllckluZm8ucHJvdG8i",
+            "mQEKG0FyZW5hUGxheWVySW5mb1Jlc3BvbnNlU2NQYhIUCgdhcmVuYUlkGAEg",
+            "ASgFSACIAQESSQoKcGxheWVySW5mbxgCIAEoCzIwLk1ldGFWaXJ1cy5OZXQu",
+            "TWVzc2FnZXMuQ29tbW9uLlBCQXJlbmFQbGF5ZXJJbmZvSAGIAQFCCgoIX2Fy",
+            "ZW5hSWRCDQoLX3BsYXllckluZm9CRwojY29tLm1ldGF2aXJ1cy5uZXQubWVz",
+            "c2FnZXMucGIuYXJlbmFCHkFyZW5hUGxheWVySW5mb1Jlc3BvbnNlU2NQYk91",
+            "dFABYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { },
+          new pbr::FileDescriptor[] { global::MetaVirus.Net.Messages.Common.ArenaPlayerInfoReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::MetaVirus.Net.Messages.Arena.ArenaPlayerInfoResponseScPb), global::MetaVirus.Net.Messages.Arena.ArenaPlayerInfoResponseScPb.Parser, new[]{ "ArenaId" }, new[]{ "ArenaId" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::MetaVirus.Net.Messages.Arena.ArenaPlayerInfoResponseScPb), global::MetaVirus.Net.Messages.Arena.ArenaPlayerInfoResponseScPb.Parser, new[]{ "ArenaId", "PlayerInfo" }, new[]{ "ArenaId", "PlayerInfo" }, null, null, null)
           }));
     }
     #endregion
@@ -77,6 +80,7 @@ namespace MetaVirus.Net.Messages.Arena {
     public ArenaPlayerInfoResponseScPb(ArenaPlayerInfoResponseScPb other) : this() {
       _hasBits0 = other._hasBits0;
       arenaId_ = other.arenaId_;
+      playerInfo_ = other.playerInfo_ != null ? other.playerInfo_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -111,6 +115,18 @@ namespace MetaVirus.Net.Messages.Arena {
       _hasBits0 &= ~1;
     }
 
+    /// <summary>Field number for the "playerInfo" field.</summary>
+    public const int PlayerInfoFieldNumber = 2;
+    private global::MetaVirus.Net.Messages.Common.PBArenaPlayerInfo playerInfo_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::MetaVirus.Net.Messages.Common.PBArenaPlayerInfo PlayerInfo {
+      get { return playerInfo_; }
+      set {
+        playerInfo_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -127,6 +143,7 @@ namespace MetaVirus.Net.Messages.Arena {
         return true;
       }
       if (ArenaId != other.ArenaId) return false;
+      if (!object.Equals(PlayerInfo, other.PlayerInfo)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -135,6 +152,7 @@ namespace MetaVirus.Net.Messages.Arena {
     public override int GetHashCode() {
       int hash = 1;
       if (HasArenaId) hash ^= ArenaId.GetHashCode();
+      if (playerInfo_ != null) hash ^= PlayerInfo.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -157,6 +175,10 @@ namespace MetaVirus.Net.Messages.Arena {
         output.WriteRawTag(8);
         output.WriteInt32(ArenaId);
       }
+      if (playerInfo_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(PlayerInfo);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -171,6 +193,10 @@ namespace MetaVirus.Net.Messages.Arena {
         output.WriteRawTag(8);
         output.WriteInt32(ArenaId);
       }
+      if (playerInfo_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(PlayerInfo);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -183,6 +209,9 @@ namespace MetaVirus.Net.Messages.Arena {
       int size = 0;
       if (HasArenaId) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(ArenaId);
+      }
+      if (playerInfo_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(PlayerInfo);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -198,6 +227,12 @@ namespace MetaVirus.Net.Messages.Arena {
       }
       if (other.HasArenaId) {
         ArenaId = other.ArenaId;
+      }
+      if (other.playerInfo_ != null) {
+        if (playerInfo_ == null) {
+          PlayerInfo = new global::MetaVirus.Net.Messages.Common.PBArenaPlayerInfo();
+        }
+        PlayerInfo.MergeFrom(other.PlayerInfo);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -218,6 +253,13 @@ namespace MetaVirus.Net.Messages.Arena {
             ArenaId = input.ReadInt32();
             break;
           }
+          case 18: {
+            if (playerInfo_ == null) {
+              PlayerInfo = new global::MetaVirus.Net.Messages.Common.PBArenaPlayerInfo();
+            }
+            input.ReadMessage(PlayerInfo);
+            break;
+          }
         }
       }
     #endif
@@ -235,6 +277,13 @@ namespace MetaVirus.Net.Messages.Arena {
             break;
           case 8: {
             ArenaId = input.ReadInt32();
+            break;
+          }
+          case 18: {
+            if (playerInfo_ == null) {
+              PlayerInfo = new global::MetaVirus.Net.Messages.Common.PBArenaPlayerInfo();
+            }
+            input.ReadMessage(PlayerInfo);
             break;
           }
         }

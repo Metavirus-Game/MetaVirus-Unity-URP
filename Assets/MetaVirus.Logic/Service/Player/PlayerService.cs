@@ -5,6 +5,7 @@ using GameEngine;
 using GameEngine.Base;
 using GameEngine.DataNode;
 using GameEngine.Entity;
+using GameEngine.Event;
 using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Data.Entities;
 using MetaVirus.Logic.Data.Player;
@@ -18,6 +19,7 @@ namespace MetaVirus.Logic.Service.Player
         private EntityService _entityService;
         private DataNodeService _dataService;
         private PlayerInfo _currPlayerInfo;
+        private EventService _eventService;
 
         public PlayerEntity CurrentPlayer => GameFramework.GetService<EntityService>()
             .GetEntity<PlayerEntity>(Constants.EntityGroupName.Player, _currPlayerInfo?.PlayerId ?? -1);
@@ -34,6 +36,7 @@ namespace MetaVirus.Logic.Service.Player
         {
             _entityService = GameFramework.GetService<EntityService>();
             _dataService = GameFramework.GetService<DataNodeService>();
+            _eventService = GameFramework.GetService<EventService>();
         }
 
         public async Task LoadPlayer(PlayerInfo p)
@@ -63,6 +66,11 @@ namespace MetaVirus.Logic.Service.Player
             {
                 pp[i] = slots[i];
             }
+        }
+
+        public void OnPlayerLoaded()
+        {
+            _eventService.Emit(GameEvents.PlayerEvent.PlayerLoginSuccessful, _currPlayerInfo);
         }
 
         public int PartySize => _parties.Count;

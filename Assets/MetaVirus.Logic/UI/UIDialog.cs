@@ -33,13 +33,19 @@ namespace MetaVirus.Logic.UI
                 throw new Exception("Wrong Parameters");
             }
 
+            if (onBtnClicked == null)
+            {
+                onBtnClicked = (_, _, uiDialog) => uiDialog.Hide();
+            }
+
             var dialog = new UIDialog(title, message, btnIds, btnTexts, onBtnClicked);
             dialog.Show();
             return dialog;
         }
 
-        public static void ShowTimeoutMessage(UnityAction<int, string, UIDialog> onBtnClicked)
+        public static void ShowTimeoutMessage(UnityAction<int, string, UIDialog> onBtnClicked = null)
         {
+            onBtnClicked ??= (id, s, dialog) => dialog.Hide();
             ShowErrorMessage(L("Network_Error_Dialog_Title"), L("Network_Connect_Timeout"), onBtnClicked);
         }
 

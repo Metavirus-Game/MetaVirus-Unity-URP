@@ -13,6 +13,7 @@ using GameEngine.Network.Message.Attrs;
 using GameEngine.Network.Message.Protocol.Module;
 using GameEngine.Network.Socket;
 using GameEngine.Network.Utils;
+using GameEngine.Runtime.Network.Message.Protocol;
 using GameEngine.Utils;
 using UnityEngine;
 using UnityEngine.Events;
@@ -49,16 +50,16 @@ namespace GameEngine.Network
             new Queue<KeyValuePair<SocketEvent, string>>();
 
         //收到的数据包队列
-        private readonly Queue<NetBusBasePacket> _dataQueue = new Queue<NetBusBasePacket>();
+        private readonly Queue<NetBusBasePacket> _dataQueue = new();
 
         //发送的数据包的等待列表(需要响应的)，由于协议机制限制，同一时间不能等待多条相同method数据包的回应
         //serial <=> waitingPacket
-        private readonly Dictionary<int, WaitingPacket> _waitingPackets = new Dictionary<int, WaitingPacket>();
+        private readonly Dictionary<int, WaitingPacket> _waitingPackets = new();
 
         //数据包监听器 msgCode <=> listener
-        private readonly Dictionary<int, PacketListener> _packetListeners = new Dictionary<int, PacketListener>();
+        private readonly Dictionary<int, PacketListener> _packetListeners = new();
 
-        private readonly Dictionary<int, Type> _protocolTypes = new Dictionary<int, Type>();
+        private readonly Dictionary<short, Type> _protocolTypes = new();
 
         private bool _isReady = false;
 
@@ -204,7 +205,7 @@ namespace GameEngine.Network
                 var mainType = packet[0];
                 var subType = packet[1];
 
-                var msgCode = (mainType << 8) | subType;
+                var msgCode = (short)((mainType << 8) | subType);
 
                 if (_protocolTypes.ContainsKey(msgCode))
                 {
@@ -543,7 +544,14 @@ namespace GameEngine.Network
 
             public void InvokeResponse(NetBusBasePacket resp)
             {
-                onResponse?.Invoke(new RespPacket(RespPacket.RespCode.Success, resp));
+                if (resp.IsErrorMsg && resp is ClientProtocolError error)
+                {
+                    onResponse?.Invoke(new RespPacket(error.MessageCode));
+                }
+                else
+                {
+                    onResponse?.Invoke(new RespPacket(RespPacket.RespCode.Success, resp));
+                }
             }
         }
     }

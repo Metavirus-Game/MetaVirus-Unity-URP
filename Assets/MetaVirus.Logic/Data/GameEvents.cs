@@ -32,6 +32,11 @@
 
         public static class PlayerEvent
         {
+            /**
+             * 玩家登陆成功后发送
+             */
+            public const string PlayerLoginSuccessful = "PlayerEvent_PlayerLoginSuccessful";
+            
             public const string InteractiveNpcListChanged = "PlayerEvent_InteractiveNpcListChanged";
             public const string InteractingWithNpc = "PlayerEvent_InteractingWithNpc";
         }

@@ -129,6 +129,10 @@ public partial class Tables
     /// Avatar武器数据
     /// </summary>
     public avatar.AvatarWeaponDatas AvatarWeaponDatas {get; }
+    /// <summary>
+    /// 竞技场配置数据
+    /// </summary>
+    public arena.ArenaDatas ArenaDatas {get; }
 
     public Tables(System.Func<string, ByteBuf> loader)
     {
@@ -191,6 +195,8 @@ public partial class Tables
         tables.Add("avatar.AvatarSenseDatas", AvatarSenseDatas);
         AvatarWeaponDatas = new avatar.AvatarWeaponDatas(loader("avatar_avatarweapondatas")); 
         tables.Add("avatar.AvatarWeaponDatas", AvatarWeaponDatas);
+        ArenaDatas = new arena.ArenaDatas(loader("arena_arenadatas")); 
+        tables.Add("arena.ArenaDatas", ArenaDatas);
 
         PostInit();
         CommonConfigs.Resolve(tables); 
@@ -222,6 +228,7 @@ public partial class Tables
         AvatarHeadDatas.Resolve(tables); 
         AvatarSenseDatas.Resolve(tables); 
         AvatarWeaponDatas.Resolve(tables); 
+        ArenaDatas.Resolve(tables); 
         PostResolve();
     }
 
@@ -256,6 +263,7 @@ public partial class Tables
         AvatarHeadDatas.TranslateText(translator); 
         AvatarSenseDatas.TranslateText(translator); 
         AvatarWeaponDatas.TranslateText(translator); 
+        ArenaDatas.TranslateText(translator); 
     }
     
     partial void PostInit();

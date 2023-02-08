@@ -25,16 +25,431 @@ namespace MetaVirus.Net.Messages.Common {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CjFwcm90b3MvV29ybGRNZXNzYWdlcy9jb21tb24vQXJlbmFQbGF5ZXJJbmZv",
-            "LnByb3RvEh1NZXRhVmlydXMuTmV0Lk1lc3NhZ2VzLkNvbW1vbkI+CiRjb20u",
-            "bWV0YXZpcnVzLm5ldC5tZXNzYWdlcy5wYi5jb21tb25CFEFyZW5hUGxheWVy",
-            "SW5mb1BiT3V0UAFiBnByb3RvMw=="));
+            "LnByb3RvEh1NZXRhVmlydXMuTmV0Lk1lc3NhZ2VzLkNvbW1vbhorcHJvdG9z",
+            "L1dvcmxkTWVzc2FnZXMvY29tbW9uL0FyZW5hSW5mby5wcm90byL3AQoRUEJB",
+            "cmVuYVBsYXllckluZm8SFQoIcGxheWVySWQYASABKAVIAIgBARIXCgpwbGF5",
+            "ZXJOYW1lGAIgASgJSAGIAQESGAoLcGxheWVyTGV2ZWwYAyABKAVIAogBARIR",
+            "CgR0eXBlGAQgASgFSAOIAQESQgoJYXJlbmFJbmZvGAUgASgLMiouTWV0YVZp",
+            "cnVzLk5ldC5NZXNzYWdlcy5Db21tb24uUEJBcmVuYUluZm9IBIgBAUILCglf",
+            "cGxheWVySWRCDQoLX3BsYXllck5hbWVCDgoMX3BsYXllckxldmVsQgcKBV90",
+            "eXBlQgwKCl9hcmVuYUluZm9CPgokY29tLm1ldGF2aXJ1cy5uZXQubWVzc2Fn",
+            "ZXMucGIuY29tbW9uQhRBcmVuYVBsYXllckluZm9QYk91dFABYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(null, null, null));
+          new pbr::FileDescriptor[] { global::MetaVirus.Net.Messages.Common.ArenaInfoReflection.Descriptor, },
+          new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::MetaVirus.Net.Messages.Common.PBArenaPlayerInfo), global::MetaVirus.Net.Messages.Common.PBArenaPlayerInfo.Parser, new[]{ "PlayerId", "PlayerName", "PlayerLevel", "Type", "ArenaInfo" }, new[]{ "PlayerId", "PlayerName", "PlayerLevel", "Type", "ArenaInfo" }, null, null, null)
+          }));
     }
     #endregion
 
   }
+  #region Messages
+  public sealed partial class PBArenaPlayerInfo : pb::IMessage<PBArenaPlayerInfo>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<PBArenaPlayerInfo> _parser = new pb::MessageParser<PBArenaPlayerInfo>(() => new PBArenaPlayerInfo());
+    private pb::UnknownFieldSet _unknownFields;
+    private int _hasBits0;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<PBArenaPlayerInfo> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::MetaVirus.Net.Messages.Common.ArenaPlayerInfoReflection.Descriptor.MessageTypes[0]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public PBArenaPlayerInfo() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public PBArenaPlayerInfo(PBArenaPlayerInfo other) : this() {
+      _hasBits0 = other._hasBits0;
+      playerId_ = other.playerId_;
+      playerName_ = other.playerName_;
+      playerLevel_ = other.playerLevel_;
+      type_ = other.type_;
+      arenaInfo_ = other.arenaInfo_ != null ? other.arenaInfo_.Clone() : null;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public PBArenaPlayerInfo Clone() {
+      return new PBArenaPlayerInfo(this);
+    }
+
+    /// <summary>Field number for the "playerId" field.</summary>
+    public const int PlayerIdFieldNumber = 1;
+    private int playerId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int PlayerId {
+      get { if ((_hasBits0 & 1) != 0) { return playerId_; } else { return 0; } }
+      set {
+        _hasBits0 |= 1;
+        playerId_ = value;
+      }
+    }
+    /// <summary>Gets whether the "playerId" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasPlayerId {
+      get { return (_hasBits0 & 1) != 0; }
+    }
+    /// <summary>Clears the value of the "playerId" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearPlayerId() {
+      _hasBits0 &= ~1;
+    }
+
+    /// <summary>Field number for the "playerName" field.</summary>
+    public const int PlayerNameFieldNumber = 2;
+    private string playerName_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string PlayerName {
+      get { return playerName_ ?? ""; }
+      set {
+        playerName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+    /// <summary>Gets whether the "playerName" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasPlayerName {
+      get { return playerName_ != null; }
+    }
+    /// <summary>Clears the value of the "playerName" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearPlayerName() {
+      playerName_ = null;
+    }
+
+    /// <summary>Field number for the "playerLevel" field.</summary>
+    public const int PlayerLevelFieldNumber = 3;
+    private int playerLevel_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int PlayerLevel {
+      get { if ((_hasBits0 & 2) != 0) { return playerLevel_; } else { return 0; } }
+      set {
+        _hasBits0 |= 2;
+        playerLevel_ = value;
+      }
+    }
+    /// <summary>Gets whether the "playerLevel" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasPlayerLevel {
+      get { return (_hasBits0 & 2) != 0; }
+    }
+    /// <summary>Clears the value of the "playerLevel" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearPlayerLevel() {
+      _hasBits0 &= ~2;
+    }
+
+    /// <summary>Field number for the "type" field.</summary>
+    public const int TypeFieldNumber = 4;
+    private int type_;
+    /// <summary>
+    ///*
+    /// 玩家数据类型
+    /// 0=普通玩家，1=机器人
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int Type {
+      get { if ((_hasBits0 & 4) != 0) { return type_; } else { return 0; } }
+      set {
+        _hasBits0 |= 4;
+        type_ = value;
+      }
+    }
+    /// <summary>Gets whether the "type" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasType {
+      get { return (_hasBits0 & 4) != 0; }
+    }
+    /// <summary>Clears the value of the "type" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearType() {
+      _hasBits0 &= ~4;
+    }
+
+    /// <summary>Field number for the "arenaInfo" field.</summary>
+    public const int ArenaInfoFieldNumber = 5;
+    private global::MetaVirus.Net.Messages.Common.PBArenaInfo arenaInfo_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::MetaVirus.Net.Messages.Common.PBArenaInfo ArenaInfo {
+      get { return arenaInfo_; }
+      set {
+        arenaInfo_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as PBArenaPlayerInfo);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(PBArenaPlayerInfo other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (PlayerId != other.PlayerId) return false;
+      if (PlayerName != other.PlayerName) return false;
+      if (PlayerLevel != other.PlayerLevel) return false;
+      if (Type != other.Type) return false;
+      if (!object.Equals(ArenaInfo, other.ArenaInfo)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (HasPlayerId) hash ^= PlayerId.GetHashCode();
+      if (HasPlayerName) hash ^= PlayerName.GetHashCode();
+      if (HasPlayerLevel) hash ^= PlayerLevel.GetHashCode();
+      if (HasType) hash ^= Type.GetHashCode();
+      if (arenaInfo_ != null) hash ^= ArenaInfo.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (HasPlayerId) {
+        output.WriteRawTag(8);
+        output.WriteInt32(PlayerId);
+      }
+      if (HasPlayerName) {
+        output.WriteRawTag(18);
+        output.WriteString(PlayerName);
+      }
+      if (HasPlayerLevel) {
+        output.WriteRawTag(24);
+        output.WriteInt32(PlayerLevel);
+      }
+      if (HasType) {
+        output.WriteRawTag(32);
+        output.WriteInt32(Type);
+      }
+      if (arenaInfo_ != null) {
+        output.WriteRawTag(42);
+        output.WriteMessage(ArenaInfo);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (HasPlayerId) {
+        output.WriteRawTag(8);
+        output.WriteInt32(PlayerId);
+      }
+      if (HasPlayerName) {
+        output.WriteRawTag(18);
+        output.WriteString(PlayerName);
+      }
+      if (HasPlayerLevel) {
+        output.WriteRawTag(24);
+        output.WriteInt32(PlayerLevel);
+      }
+      if (HasType) {
+        output.WriteRawTag(32);
+        output.WriteInt32(Type);
+      }
+      if (arenaInfo_ != null) {
+        output.WriteRawTag(42);
+        output.WriteMessage(ArenaInfo);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (HasPlayerId) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(PlayerId);
+      }
+      if (HasPlayerName) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PlayerName);
+      }
+      if (HasPlayerLevel) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(PlayerLevel);
+      }
+      if (HasType) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Type);
+      }
+      if (arenaInfo_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(ArenaInfo);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(PBArenaPlayerInfo other) {
+      if (other == null) {
+        return;
+      }
+      if (other.HasPlayerId) {
+        PlayerId = other.PlayerId;
+      }
+      if (other.HasPlayerName) {
+        PlayerName = other.PlayerName;
+      }
+      if (other.HasPlayerLevel) {
+        PlayerLevel = other.PlayerLevel;
+      }
+      if (other.HasType) {
+        Type = other.Type;
+      }
+      if (other.arenaInfo_ != null) {
+        if (arenaInfo_ == null) {
+          ArenaInfo = new global::MetaVirus.Net.Messages.Common.PBArenaInfo();
+        }
+        ArenaInfo.MergeFrom(other.ArenaInfo);
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            PlayerId = input.ReadInt32();
+            break;
+          }
+          case 18: {
+            PlayerName = input.ReadString();
+            break;
+          }
+          case 24: {
+            PlayerLevel = input.ReadInt32();
+            break;
+          }
+          case 32: {
+            Type = input.ReadInt32();
+            break;
+          }
+          case 42: {
+            if (arenaInfo_ == null) {
+              ArenaInfo = new global::MetaVirus.Net.Messages.Common.PBArenaInfo();
+            }
+            input.ReadMessage(ArenaInfo);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            PlayerId = input.ReadInt32();
+            break;
+          }
+          case 18: {
+            PlayerName = input.ReadString();
+            break;
+          }
+          case 24: {
+            PlayerLevel = input.ReadInt32();
+            break;
+          }
+          case 32: {
+            Type = input.ReadInt32();
+            break;
+          }
+          case 42: {
+            if (arenaInfo_ == null) {
+              ArenaInfo = new global::MetaVirus.Net.Messages.Common.PBArenaInfo();
+            }
+            input.ReadMessage(ArenaInfo);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  #endregion
+
 }
 
 #endregion Designer generated code

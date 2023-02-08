@@ -14,6 +14,7 @@ using GameEngine.Utils;
 using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Procedures.fortest;
 using MetaVirus.Logic.Service;
+using MetaVirus.Logic.Service.Arena;
 using MetaVirus.Logic.Service.Battle.UI;
 using MetaVirus.Logic.Service.Npc;
 using MetaVirus.Logic.Service.Player;
@@ -49,6 +50,7 @@ namespace MetaVirus.Logic.Procedures
             GameFramework.GetService<StageUIService>();
             GameFramework.GetService<UIService>();
             GameFramework.GetService<PlayerService>();
+            GameFramework.GetService<ArenaService>();
         }
 
 
