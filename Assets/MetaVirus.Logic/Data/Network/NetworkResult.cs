@@ -1,6 +1,4 @@
-﻿using UnityEditor.VersionControl;
-
-namespace MetaVirus.Logic.Data.Network
+﻿namespace MetaVirus.Logic.Data.Network
 {
     public class NetworkResult<T>
     {
