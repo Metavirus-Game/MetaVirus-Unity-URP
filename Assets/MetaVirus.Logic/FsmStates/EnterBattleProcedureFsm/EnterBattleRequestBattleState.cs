@@ -46,17 +46,17 @@ namespace MetaVirus.Logic.FsmStates.EnterBattleProcedureFsm
                 else
                 {
                     var packet = resp.GetPacket<MapNpcBattleResponseSc>();
-                    if (packet.ProtoBufMsg.Result != 0)
-                    {
-                        //战斗数据错误处理
-                        UIDialog.ShowErrorMessage(LT("common.dialog.title.error"), LM(packet.ProtoBufMsg.Result),
-                            (btn, s, dialog) =>
-                            {
-                                dialog.Hide();
-                                ChangeMapProcedure.BackToCurrentMap();
-                            });
-                    }
-                    else
+                    // if (packet.ProtoBufMsg.Result != 0)
+                    // {
+                    //     //战斗数据错误处理
+                    //     UIDialog.ShowErrorMessage(LT("common.dialog.title.error"), LM(packet.ProtoBufMsg.Result),
+                    //         (btn, s, dialog) =>
+                    //         {
+                    //             dialog.Hide();
+                    //             ChangeMapProcedure.BackToCurrentMap();
+                    //         });
+                    // }
+                    // else
                     {
                         var br = BattleRecord.FromGZipData(packet.ProtoBufMsg.BattleResult.ToByteArray());
                         //收到战斗数据

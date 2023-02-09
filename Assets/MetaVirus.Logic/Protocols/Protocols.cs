@@ -115,6 +115,23 @@
             public const byte ArenaMatchBattleRequestCs = 0x09;
 
             public const byte ArenaMatchBattleResponseSc = 0x0A;
+
+            /// <summary>
+            /// 获取玩家战斗记录列表
+            /// </summary>
+            public const byte ArenaRecordListRequestCs = 0x0B;
+            public const byte ArenaRecordListResponseSc = 0x0C;
+
+            /// <summary>
+            /// 获取指定战斗记录
+            /// </summary>
+            public const byte ArenaPlayerRecordRequestCs = 0x0D;
+            public const byte ArenaPlayerRecordResponseSc = 0x0E;
+
+            /// <summary>
+            /// 服务器通知客户端有新的战斗记录
+            /// </summary>
+            public const byte ArenaNewRecordNotification = 0x70;
         }
     }
 }

@@ -5,6 +5,7 @@ using GameEngine;
 using GameEngine.Base;
 using GameEngine.Network;
 using MetaVirus.Logic.Data;
+using MetaVirus.Logic.Data.Events.Arena;
 using MetaVirus.Logic.Data.Network;
 using MetaVirus.Logic.Data.Player;
 using MetaVirus.Logic.Protocols.Arena;
@@ -27,6 +28,11 @@ namespace MetaVirus.Logic.Service.Arena
          * arenaId ↔ ArenaPlayerDataMap
          */
         private readonly Dictionary<int, ArenaPlayerDataMap> _playerDataMap = new();
+
+        /**
+         * arenaId ↔ List 
+         */
+        private readonly Dictionary<int, List<ArenaPlayerRecord>> _playerRecordMap = new();
 
         public override void PostConstruct()
         {
@@ -184,6 +190,76 @@ namespace MetaVirus.Logic.Service.Arena
             return new NetworkResult<ArenaBattleResult>(data);
         }
 
+        /// <summary>
+        /// 获取当前登陆玩家的竞技场战斗记录
+        /// </summary>
+        /// <param name="arenaId">竞技场Id</param>
+        /// <returns></returns>
+        public async Task<NetworkResult<List<ArenaPlayerRecord>>> GetArenaPlayerRecords(int arenaId)
+        {
+            var rList = GetArenaPlayerRecordsCache(arenaId);
+            if (rList is { Count: > 0 })
+            {
+                return new NetworkResult<List<ArenaPlayerRecord>>(rList);
+            }
+
+
+            var pb = new ArenaRecordListRequestCsPb
+            {
+                ArenaId = arenaId
+            };
+
+            var req = new ArenaRecordListRequestCs(pb);
+            var playerInfo = _playerService.CurrentPlayerInfo;
+            var resp = await _networkService.SendPacketToAsync(req, playerInfo.sceneServerId);
+
+            if (!resp.IsSuccess)
+            {
+                return new NetworkResult<List<ArenaPlayerRecord>>(resp.ErrorMessageCode, resp.IsTimeout);
+            }
+
+            var packet = resp.GetPacket<ArenaRecordListResponseSc>();
+            var proto = packet.ProtoBufMsg;
+            var list = proto.Records.Select(ArenaPlayerRecord.FromProtoBuf).ToList();
+            _playerRecordMap[arenaId] = list;
+            return new NetworkResult<List<ArenaPlayerRecord>>(list);
+        }
+
+        /// <summary>
+        /// 获取指定id的战斗记录
+        /// </summary>
+        /// <param name="arenaId">竞技场Id</param>
+        /// <param name="recordId">战斗记录Id</param>
+        /// <returns></returns>
+        public async Task<NetworkResult<ArenaPlayerRecord>> GetArenaPlayerRecord(int arenaId, int recordId)
+        {
+            var pb = new ArenaPlayerRecordRequestCsPb
+            {
+                ArenaId = arenaId
+            };
+
+            var req = new ArenaPlayerRecordRequestCs(pb);
+            var playerInfo = _playerService.CurrentPlayerInfo;
+            var resp = await _networkService.SendPacketToAsync(req, playerInfo.sceneServerId);
+
+            if (!resp.IsSuccess)
+            {
+                return new NetworkResult<ArenaPlayerRecord>(resp.ErrorMessageCode, resp.IsTimeout);
+            }
+
+            var packet = resp.GetPacket<ArenaPlayerRecordResponseSc>();
+            var proto = packet.ProtoBufMsg;
+            return new NetworkResult<ArenaPlayerRecord>(ArenaPlayerRecord.FromProtoBuf(proto.Record));
+        }
+
+        private List<ArenaPlayerRecord> GetArenaPlayerRecordsCache(int arenaId)
+        {
+            _playerRecordMap.TryGetValue(arenaId, out var rList);
+            if (rList != null) return rList;
+            rList = new List<ArenaPlayerRecord>();
+            _playerRecordMap[arenaId] = rList;
+            return rList;
+        }
 
         private async Task<NetworkResult<ArenaPlayerData>> _GetPlayerArenaData(int arenaId, int playerId,
             UnityAction<NetworkResult<ArenaPlayerData>> onData = null)
@@ -215,15 +291,42 @@ namespace MetaVirus.Logic.Service.Arena
 
         public override void ServiceReady()
         {
-            Event.On<PlayerInfo>(GameEvents.PlayerEvent.PlayerLoginSuccessful, OnPlayerLogin);
             _networkService = GameFramework.GetService<NetworkService>();
             _playerService = GameFramework.GetService<PlayerService>();
             _gameDataService = GameFramework.GetService<GameDataService>();
+            
+            Event.On<PlayerInfo>(GameEvents.PlayerEvent.PlayerLoginSuccessful, OnPlayerLogin);
+            _networkService.RegisterPacketListener(Protocols.Protocols.Arena.Main,
+                Protocols.Protocols.Arena.ArenaNewRecordNotification, OnRecvNotifition);
         }
+
+        private void OnRecvNotifition(RespPacket resp)
+        {
+            var notify = resp.GetPacket<ArenaNewRecordNotification>();
+            var arenaId = notify.ProtoBufMsg.ArenaId;
+            var records = notify.ProtoBufMsg.Records;
+
+            var list = GetArenaPlayerRecordsCache(arenaId);
+
+            var l = new List<ArenaPlayerRecord>();
+
+            for (var i = records.Count - 1; i >= 0; i--)
+            {
+                var record = records[i];
+                var r = ArenaPlayerRecord.FromProtoBuf(record);
+                list.Insert(0, r);
+                l.Insert(0, r);
+            }
+
+            Event.Emit(GameEvents.ArenaEvent.NewRecordNotifition, new NewRecordNotifitionEvent(l.ToArray()));
+        }   
+
 
         public override void PreDestroy()
         {
             Event.Remove<PlayerInfo>(GameEvents.PlayerEvent.PlayerLoginSuccessful, OnPlayerLogin);
+            _networkService.UnRegisterPacketListener(Protocols.Protocols.Arena.Main,
+                Protocols.Protocols.Arena.ArenaNewRecordNotification, OnRecvNotifition);
         }
     }
 }

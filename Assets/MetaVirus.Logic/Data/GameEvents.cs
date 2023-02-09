@@ -36,7 +36,7 @@
              * 玩家登陆成功后发送
              */
             public const string PlayerLoginSuccessful = "PlayerEvent_PlayerLoginSuccessful";
-            
+
             public const string InteractiveNpcListChanged = "PlayerEvent_InteractiveNpcListChanged";
             public const string InteractingWithNpc = "PlayerEvent_InteractingWithNpc";
         }
@@ -52,6 +52,11 @@
             public const string OnUnitAction = "BattleEvent_OnUnitAction";
 
             public const string OnUnitPropertiesChanged = "BattleEvent_OnUnitPropertiesChanged";
+        }
+
+        public static class ArenaEvent
+        {
+            public const string NewRecordNotifition = "ArenaEvent_NewRecordNotifition";
         }
     }
 }

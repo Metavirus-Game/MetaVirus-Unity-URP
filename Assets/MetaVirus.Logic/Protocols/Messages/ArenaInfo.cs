@@ -25,18 +25,19 @@ namespace MetaVirus.Net.Messages.Common {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "Citwcm90b3MvV29ybGRNZXNzYWdlcy9jb21tb24vQXJlbmFJbmZvLnByb3Rv",
-            "Eh1NZXRhVmlydXMuTmV0Lk1lc3NhZ2VzLkNvbW1vbiL9AQoLUEJBcmVuYUlu",
+            "Eh1NZXRhVmlydXMuTmV0Lk1lc3NhZ2VzLkNvbW1vbiKtAgoLUEJBcmVuYUlu",
             "Zm8SFAoHYXJlbmFJZBgBIAEoBUgAiAEBEhEKBHJhbmsYAiABKAVIAYgBARIS",
             "CgVzY29yZRgDIAEoBUgCiAEBEhUKCHdpbkNvdW50GAQgASgFSAOIAQESFgoJ",
             "bG9zZUNvdW50GAUgASgFSASIAQESFgoJZHJhd0NvdW50GAYgASgFSAWIAQES",
-            "FQoIc2Vhc29uTm8YByABKAVIBogBAUIKCghfYXJlbmFJZEIHCgVfcmFua0II",
-            "CgZfc2NvcmVCCwoJX3dpbkNvdW50QgwKCl9sb3NlQ291bnRCDAoKX2RyYXdD",
-            "b3VudEILCglfc2Vhc29uTm9COAokY29tLm1ldGF2aXJ1cy5uZXQubWVzc2Fn",
-            "ZXMucGIuY29tbW9uQg5BcmVuYUluZm9QYk91dFABYgZwcm90bzM="));
+            "FQoIc2Vhc29uTm8YByABKAVIBogBARIbCg5ob3Vyc1JlbWFpbmluZxgIIAEo",
+            "BUgHiAEBQgoKCF9hcmVuYUlkQgcKBV9yYW5rQggKBl9zY29yZUILCglfd2lu",
+            "Q291bnRCDAoKX2xvc2VDb3VudEIMCgpfZHJhd0NvdW50QgsKCV9zZWFzb25O",
+            "b0IRCg9faG91cnNSZW1haW5pbmdCOAokY29tLm1ldGF2aXJ1cy5uZXQubWVz",
+            "c2FnZXMucGIuY29tbW9uQg5BcmVuYUluZm9QYk91dFABYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::MetaVirus.Net.Messages.Common.PBArenaInfo), global::MetaVirus.Net.Messages.Common.PBArenaInfo.Parser, new[]{ "ArenaId", "Rank", "Score", "WinCount", "LoseCount", "DrawCount", "SeasonNo" }, new[]{ "ArenaId", "Rank", "Score", "WinCount", "LoseCount", "DrawCount", "SeasonNo" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::MetaVirus.Net.Messages.Common.PBArenaInfo), global::MetaVirus.Net.Messages.Common.PBArenaInfo.Parser, new[]{ "ArenaId", "Rank", "Score", "WinCount", "LoseCount", "DrawCount", "SeasonNo", "HoursRemaining" }, new[]{ "ArenaId", "Rank", "Score", "WinCount", "LoseCount", "DrawCount", "SeasonNo", "HoursRemaining" }, null, null, null)
           }));
     }
     #endregion
@@ -86,6 +87,7 @@ namespace MetaVirus.Net.Messages.Common {
       loseCount_ = other.loseCount_;
       drawCount_ = other.drawCount_;
       seasonNo_ = other.seasonNo_;
+      hoursRemaining_ = other.hoursRemaining_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -270,6 +272,31 @@ namespace MetaVirus.Net.Messages.Common {
       _hasBits0 &= ~64;
     }
 
+    /// <summary>Field number for the "hoursRemaining" field.</summary>
+    public const int HoursRemainingFieldNumber = 8;
+    private int hoursRemaining_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int HoursRemaining {
+      get { if ((_hasBits0 & 128) != 0) { return hoursRemaining_; } else { return 0; } }
+      set {
+        _hasBits0 |= 128;
+        hoursRemaining_ = value;
+      }
+    }
+    /// <summary>Gets whether the "hoursRemaining" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasHoursRemaining {
+      get { return (_hasBits0 & 128) != 0; }
+    }
+    /// <summary>Clears the value of the "hoursRemaining" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearHoursRemaining() {
+      _hasBits0 &= ~128;
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -292,6 +319,7 @@ namespace MetaVirus.Net.Messages.Common {
       if (LoseCount != other.LoseCount) return false;
       if (DrawCount != other.DrawCount) return false;
       if (SeasonNo != other.SeasonNo) return false;
+      if (HoursRemaining != other.HoursRemaining) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -306,6 +334,7 @@ namespace MetaVirus.Net.Messages.Common {
       if (HasLoseCount) hash ^= LoseCount.GetHashCode();
       if (HasDrawCount) hash ^= DrawCount.GetHashCode();
       if (HasSeasonNo) hash ^= SeasonNo.GetHashCode();
+      if (HasHoursRemaining) hash ^= HoursRemaining.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -352,6 +381,10 @@ namespace MetaVirus.Net.Messages.Common {
         output.WriteRawTag(56);
         output.WriteInt32(SeasonNo);
       }
+      if (HasHoursRemaining) {
+        output.WriteRawTag(64);
+        output.WriteInt32(HoursRemaining);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -390,6 +423,10 @@ namespace MetaVirus.Net.Messages.Common {
         output.WriteRawTag(56);
         output.WriteInt32(SeasonNo);
       }
+      if (HasHoursRemaining) {
+        output.WriteRawTag(64);
+        output.WriteInt32(HoursRemaining);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -420,6 +457,9 @@ namespace MetaVirus.Net.Messages.Common {
       }
       if (HasSeasonNo) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(SeasonNo);
+      }
+      if (HasHoursRemaining) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(HoursRemaining);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -453,6 +493,9 @@ namespace MetaVirus.Net.Messages.Common {
       }
       if (other.HasSeasonNo) {
         SeasonNo = other.SeasonNo;
+      }
+      if (other.HasHoursRemaining) {
+        HoursRemaining = other.HoursRemaining;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -497,6 +540,10 @@ namespace MetaVirus.Net.Messages.Common {
             SeasonNo = input.ReadInt32();
             break;
           }
+          case 64: {
+            HoursRemaining = input.ReadInt32();
+            break;
+          }
         }
       }
     #endif
@@ -538,6 +585,10 @@ namespace MetaVirus.Net.Messages.Common {
           }
           case 56: {
             SeasonNo = input.ReadInt32();
+            break;
+          }
+          case 64: {
+            HoursRemaining = input.ReadInt32();
             break;
           }
         }

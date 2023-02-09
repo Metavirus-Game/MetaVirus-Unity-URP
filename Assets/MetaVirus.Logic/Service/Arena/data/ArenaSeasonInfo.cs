@@ -1,4 +1,5 @@
-﻿using MetaVirus.Net.Messages.Common;
+﻿using System;
+using MetaVirus.Net.Messages.Common;
 
 namespace MetaVirus.Logic.Service.Arena.data
 {
@@ -15,6 +16,11 @@ namespace MetaVirus.Logic.Service.Arena.data
         public int DrawCount { get; set; }
         public int SeasonNo { get; set; }
 
+        /// <summary>
+        /// 本赛季剩余小时数
+        /// </summary>
+        public int hoursRemaining { get; set; }
+
         public static ArenaSeasonInfo FromPbArenaInfo(PBArenaInfo pbArenaInfo)
         {
             var ret = new ArenaSeasonInfo
@@ -25,7 +31,8 @@ namespace MetaVirus.Logic.Service.Arena.data
                 WinCount = pbArenaInfo.WinCount,
                 LoseCount = pbArenaInfo.LoseCount,
                 DrawCount = pbArenaInfo.DrawCount,
-                SeasonNo = pbArenaInfo.SeasonNo
+                SeasonNo = pbArenaInfo.SeasonNo,
+                hoursRemaining = pbArenaInfo.HoursRemaining
             };
             return ret;
         }
