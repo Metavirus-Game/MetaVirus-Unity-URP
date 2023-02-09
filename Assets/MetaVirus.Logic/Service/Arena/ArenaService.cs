@@ -319,7 +319,7 @@ namespace MetaVirus.Logic.Service.Arena
             }
 
             Event.Emit(GameEvents.ArenaEvent.NewRecordNotifition, new NewRecordNotifitionEvent(l.ToArray()));
-        }   
+        }
 
 
         public override void PreDestroy()
