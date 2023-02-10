@@ -6,6 +6,9 @@ using MetaVirus.Logic.Service.Arena;
 using MetaVirus.Logic.Service.Player;
 using MetaVirus.Logic.Service.UI;
 using System;
+using MetaVirus.Logic.Service.Arena.data;
+using MetaVirus.Logic.UI.Component.ArenaList;
+using UnityEngine;
 
 namespace MetaVirus.Logic.UI.Windows
 {   
@@ -17,6 +20,7 @@ namespace MetaVirus.Logic.UI.Windows
         private GTextField _textPlayerScore;
         private GTextField _textSeasonNo;
         private GTextField _textPlayerRanking;
+        private GList _listRanking;
         protected override GComponent MakeContent()
         {
             var comp = UIPackage.CreateObject("Common", "ArenaRankingUI").asCom;
@@ -24,19 +28,23 @@ namespace MetaVirus.Logic.UI.Windows
         }
 
         public override void LoadData(GComponent parentComp, GComponent content)
-        {
-            _arenaService = GameFramework.GetService<ArenaService>();
+        {   
+            // get player data
             _playerService = GameFramework.GetService<PlayerService>();
-            GameFramework.Inst.StartCoroutine(GetArenaTopRankList());
+            _arenaService = GameFramework.GetService<ArenaService>();
             GameFramework.Inst.StartCoroutine(GetPlayerArenaData());
             _textPlayerRanking = content.GetChildByPath("playerInfo.text_playerRanking").asTextField;
             _textPlayerScore = content.GetChildByPath("playerInfo.text_playerScore").asTextField;
             _textSeasonNo = content.GetChildByPath("playerInfo.text_seasonNum").asTextField;
+            
+            // get ranking data
+            GameFramework.Inst.StartCoroutine(GetArenaTopRankList());
+            _listRanking = content.GetChild("listRanking").asList;
         }
         
         private IEnumerator GetPlayerArenaData()
         {   
-            // get player Data
+            // get player ranking Data
             var playerInfo = _playerService.CurrentPlayerInfo;
             var task = _arenaService.GetPlayerArenaData(1, playerInfo.PlayerId);
             yield return task.AsCoroution();
@@ -52,6 +60,13 @@ namespace MetaVirus.Logic.UI.Windows
             var task = _arenaService.GetArenaTopRankList(1);
             yield return task.AsCoroution();
             var data = task.Result;
+            foreach (var listData in data.Result)
+            {
+                //Debug.Log(list.PlayerName, list.ArenaInfo.Rank, list.ArenaInfo.Score);
+                var listItem = new ArenaRankingListItem();
+                listItem.RenderRankingListItem(listData);
+                _listRanking.AddChild(listItem._rankingListItem);
+            }
         }
     }
 }

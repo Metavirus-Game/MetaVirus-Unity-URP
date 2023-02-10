@@ -22,10 +22,11 @@ namespace  MetaVirus.Logic.UI.Windows
         private PlayerService _playerService;
         private GTextField _textPlayerScore;
         private GTextField _textSeasonNo;
-        private GTextField _textEndTime;
+        private GTextField _textRemainingTime;
         private GButton _btnStart;
         private GButton _btnRanking;
         private GButton _btnRecords;
+        private UIService _uiService;
 
         protected override GComponent MakeContent()
         {
@@ -40,10 +41,19 @@ namespace  MetaVirus.Logic.UI.Windows
             GameFramework.Inst.StartCoroutine(GetPlayerArenaData());
             _textPlayerScore = content.GetChild("text_mainScore").asTextField;
             _textSeasonNo = content.GetChild(("text_seasonNum")).asTextField;
-            _textEndTime = content.GetChild("text_endTime").asTextField;
+            _textRemainingTime = content.GetChild("text_remainingTime").asTextField;
             _btnStart = content.GetChild("button_start").asButton;
             _btnRecords = content.GetChild("button_records").asButton;
             _btnRanking = content.GetChild("button_ranking").asButton;
+
+            _uiService = GameFramework.GetService<UIService>();
+
+            _btnRecords.onClick.Set(() =>
+                _uiService.OpenWindow<UIArenaRecords>());
+            
+            _btnRanking.onClick.Set(()=> _uiService.OpenWindow<UIArenaRanking>());
+            
+            _btnStart.onClick.Set(()=> _uiService.OpenWindow<UIArenaMatching>());
         }
 
         private IEnumerator GetPlayerArenaData()
@@ -54,7 +64,7 @@ namespace  MetaVirus.Logic.UI.Windows
             var data = task.Result;
             _textSeasonNo.text = Convert.ToString(data.Result.ArenaInfo.SeasonNo);
             _textPlayerScore.text = Convert.ToString(data.Result.ArenaInfo.Score);
-            //_textEndTime.text = Convert.ToString()
+            _textRemainingTime.text = Convert.ToString(data.Result.ArenaInfo.hoursRemaining);
         }
     }
 }
