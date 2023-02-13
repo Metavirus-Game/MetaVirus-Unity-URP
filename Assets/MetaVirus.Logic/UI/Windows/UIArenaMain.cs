@@ -31,6 +31,7 @@ namespace  MetaVirus.Logic.UI.Windows
         protected override GComponent MakeContent()
         {
             var comp = UIPackage.CreateObject("Common", "ArenaMainUI").asCom;
+            SetBgFadeInSetting(true);
             return comp;
         }
         

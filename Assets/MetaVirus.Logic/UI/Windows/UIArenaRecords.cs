@@ -15,13 +15,12 @@ using MetaVirus.Logic.Service.Arena.data;
 using MetaVirus.Logic.Service.Player;
 using MetaVirus.Logic.Service.UI;
 using Unity.VisualScripting;
-
 using UnityEngine;
 
 namespace MetaVirus.Logic.UI.Windows
-{   
+{
     [UIWindow("ui_arena_record")]
-    public class UIArenaRecords: BaseUIWindow
+    public class UIArenaRecords : BaseUIWindow
     {
         private ArenaService _arenaService;
         private PlayerService _playerService;
@@ -39,11 +38,15 @@ namespace MetaVirus.Logic.UI.Windows
         protected override GComponent MakeContent()
         {
             var comp = UIPackage.CreateObject("Common", "ArenaRecordsUI").asCom;
+
+
+            // comp.onClick.Add((context) => { context.StopPropagation(); });
+
             return comp;
         }
 
         public override void LoadData(GComponent parentComp, GComponent content)
-        {   
+        {
             _eventService = GameFramework.GetService<EventService>();
             _eventService.On<NewRecordNotifitionEvent>(GameEvents.ArenaEvent.NewRecordNotifition, OnNewRecords);
             _arenaService = GameFramework.GetService<ArenaService>();
@@ -99,7 +102,7 @@ namespace MetaVirus.Logic.UI.Windows
                 _listRecords.numItems = _playerRecord.Count;
             }
         }
-            
+
         private void RenderRecordsList(int index, GObject obj)
         {
             var comp = obj.asCom;
@@ -123,6 +126,7 @@ namespace MetaVirus.Logic.UI.Windows
                     textResult.color = Color.blue;
                     break;
             }
+
             textName.text = _playerRecord[index].AttackName;
         }
 
