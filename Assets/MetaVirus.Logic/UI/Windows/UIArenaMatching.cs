@@ -1,11 +1,14 @@
 ﻿using System.Collections;
+using AmazingAssets.TerrainToMesh;
 using FairyGUI;
 using GameEngine;
+using GameEngine.DataNode;
 using GameEngine.Utils;
 using MetaVirus.Logic.Service.Arena;
 using MetaVirus.Logic.Service.UI;
 using MetaVirus.Logic.UI.Component.ArenaList;
 using UnityEngine;
+using Constants = MetaVirus.Logic.Data.Constants;
 
 namespace MetaVirus.Logic.UI.Windows
 {   
@@ -14,6 +17,7 @@ namespace MetaVirus.Logic.UI.Windows
     {
         private ArenaService _arenaService;
         private GList _listMatching;
+        private DataNodeService _dataNodeService;
         protected override GComponent MakeContent()
         {
             var comp = UIPackage.CreateObject("Common", "ArenaMatchingUI").asCom;
@@ -23,6 +27,7 @@ namespace MetaVirus.Logic.UI.Windows
         public override void LoadData(GComponent parentComp, GComponent content)
         {
             _arenaService = GameFramework.GetService<ArenaService>();
+            _dataNodeService = GameFramework.GetService<DataNodeService>();
             GameFramework.Inst.StartCoroutine(GetArenaMatchList());
             _listMatching = content.GetChild("listMatching").asList;
         }
@@ -36,7 +41,8 @@ namespace MetaVirus.Logic.UI.Windows
             {
                 var listItem = new ArenaMatchingListItem();
                 listItem.RenderMatchingListItem(listData);
-                _listMatching.AddChild(listItem._matchingListItem);
+                _dataNodeService.SetData(Constants.DataKeys.UIArenaMatchingOpponentData, listData.PlayerId);
+                _listMatching.AddChild(listItem.MatchingListItem);
             }
         }
     }

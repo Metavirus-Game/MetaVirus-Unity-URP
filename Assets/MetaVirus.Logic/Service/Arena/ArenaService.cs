@@ -194,6 +194,7 @@ namespace MetaVirus.Logic.Service.Arena
         /// 获取当前登陆玩家的竞技场战斗记录
         /// </summary>
         /// <param name="arenaId">竞技场Id</param>
+        /// <param name="recordId">战斗记录Id</param>
         /// <returns></returns>
         public async Task<NetworkResult<List<ArenaPlayerRecord>>> GetArenaPlayerRecords(int arenaId)
         {
@@ -206,7 +207,7 @@ namespace MetaVirus.Logic.Service.Arena
 
             var pb = new ArenaRecordListRequestCsPb
             {
-                ArenaId = arenaId
+                ArenaId = arenaId,
             };
 
             var req = new ArenaRecordListRequestCs(pb);
@@ -235,7 +236,8 @@ namespace MetaVirus.Logic.Service.Arena
         {
             var pb = new ArenaPlayerRecordRequestCsPb
             {
-                ArenaId = arenaId
+                ArenaId = arenaId,
+                RecordId = recordId
             };
 
             var req = new ArenaPlayerRecordRequestCs(pb);
@@ -252,7 +254,7 @@ namespace MetaVirus.Logic.Service.Arena
             return new NetworkResult<ArenaPlayerRecord>(ArenaPlayerRecord.FromProtoBuf(proto.Record));
         }
 
-        private List<ArenaPlayerRecord> GetArenaPlayerRecordsCache(int arenaId)
+        public List<ArenaPlayerRecord> GetArenaPlayerRecordsCache(int arenaId)
         {
             _playerRecordMap.TryGetValue(arenaId, out var rList);
             if (rList != null) return rList;

@@ -12,17 +12,17 @@ namespace MetaVirus.Logic.UI.Component.ArenaList
     public class ArenaMatchingListItem
     {
         private GTextField _textRanking;
-        private GTextField _textEnemyName;
-        public GComponent _matchingListItem;
+        private GTextField _textOpponentName;
+        public GComponent MatchingListItem;
         private GButton _buttonChallenge;
         private UIService _uiService;
         //private ArenaService _arenaService;
         public ArenaMatchingListItem()
         {
-            _matchingListItem = UIPackage.CreateObject("Common", "MatchingListFrame").asCom;
-            _textRanking = _matchingListItem.GetChild("text_ranking").asTextField;
-            _textEnemyName = _matchingListItem.GetChild("text_enemyName").asTextField;
-            _buttonChallenge = _matchingListItem.GetChild("button_challenge").asButton;
+            MatchingListItem = UIPackage.CreateObject("Common", "MatchingListFrame").asCom;
+            _textRanking = MatchingListItem.GetChild("text_ranking").asTextField;
+            _textOpponentName = MatchingListItem.GetChild("text_opponentName").asTextField;
+            _buttonChallenge = MatchingListItem.GetChild("button_challenge").asButton;
             //_arenaService = GameFramework.GetService<ArenaService>();
             _uiService = GameFramework.GetService<UIService>();
         }
@@ -30,10 +30,10 @@ namespace MetaVirus.Logic.UI.Component.ArenaList
         public void RenderMatchingListItem(ArenaPlayerData matchingData)
         {
             _textRanking.text = Convert.ToString(matchingData.ArenaInfo.Rank);
-            _textEnemyName.text = matchingData.PlayerName;
+            _textOpponentName.text = matchingData.PlayerName;
             // var task = _arenaService
             _buttonChallenge.onClick.Set(() =>
-            {
+            {   
                 _uiService.OpenWindow<UIPreparartion>();
             });
         }

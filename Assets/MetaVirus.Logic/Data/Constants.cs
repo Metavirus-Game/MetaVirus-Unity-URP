@@ -85,6 +85,9 @@ namespace MetaVirus.Logic.Data
              */
             public const string UIMonsterDetailDataList = "UIData.Monster.Detail.Data.List";
             
+            // UIArenaMatching 相关
+            public const string UIArenaMatchingOpponentData = "UIData.Arena.Matching.Opponent.Data";
+
         }
 
         public static class UizOrders
