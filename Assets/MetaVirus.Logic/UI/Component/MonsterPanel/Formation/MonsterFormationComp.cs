@@ -93,6 +93,21 @@ namespace MetaVirus.Logic.UI.Component.MonsterPanel.Formation
             SelectedSlot = 0;
         }
 
+        /// <summary>
+        /// 设置slot对应的petData
+        /// </summary>
+        /// <param name="slot">slotId, 0 to 4</param>
+        /// <param name="petData">slot对应的petData，如果为null则移除这个位置的petData</param>
+        public void SetSlotPetData(int slot, IMonsterDataProvider petData)
+        {
+            if (slot < 0 || slot >= _slots.Count)
+            {
+                return;
+            }
+
+            _slots[slot].PetData = petData;
+        }
+
         public void RemovePetDataFromSlot(PlayerPetData petData)
         {
             foreach (var slot in _slots)
@@ -122,20 +137,6 @@ namespace MetaVirus.Logic.UI.Component.MonsterPanel.Formation
             }
         }
 
-        /// <summary>
-        /// 设置slot对应的petData
-        /// </summary>
-        /// <param name="slot">slotId, 0 to 4</param>
-        /// <param name="petData">slot对应的petData，如果为null则移除这个位置的petData</param>
-        public void SetSlotPetData(int slot, IMonsterDataProvider petData)
-        {
-            if (slot < 0 || slot >= _slots.Count)
-            {
-                return;
-            }
-
-            _slots[slot].PetData = petData;
-        }
 
         public void SetSelectedSlotPetData(PlayerPetData petData)
         {
