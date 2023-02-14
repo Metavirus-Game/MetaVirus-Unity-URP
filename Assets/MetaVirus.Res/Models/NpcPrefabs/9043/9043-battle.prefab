@@ -1,0 +1,130 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &5810129501586252556
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 860554743271302477, guid: 1834603c333e6fb418cdb1cc0c829934,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799441646710270819, guid: 1834603c333e6fb418cdb1cc0c829934,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799441646710270819, guid: 1834603c333e6fb418cdb1cc0c829934,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799441646710270819, guid: 1834603c333e6fb418cdb1cc0c829934,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799441646710270819, guid: 1834603c333e6fb418cdb1cc0c829934,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799441646710270819, guid: 1834603c333e6fb418cdb1cc0c829934,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799441646710270819, guid: 1834603c333e6fb418cdb1cc0c829934,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799441646710270819, guid: 1834603c333e6fb418cdb1cc0c829934,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799441646710270819, guid: 1834603c333e6fb418cdb1cc0c829934,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799441646710270819, guid: 1834603c333e6fb418cdb1cc0c829934,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799441646710270819, guid: 1834603c333e6fb418cdb1cc0c829934,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799441646710270819, guid: 1834603c333e6fb418cdb1cc0c829934,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3283772792485048793, guid: 1834603c333e6fb418cdb1cc0c829934,
+        type: 3}
+      propertyPath: m_Name
+      value: 9043-battle
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673390279744241417, guid: 1834603c333e6fb418cdb1cc0c829934,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8086689825016803609, guid: 1834603c333e6fb418cdb1cc0c829934,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 63c69448a2128fe4fa5257446162f3fd,
+        type: 2}
+    - target: {fileID: 8086689825016803609, guid: 1834603c333e6fb418cdb1cc0c829934,
+        type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'RigLLeg2'\n\tTransform 'RigRLeg1'\n\tTransform
+        'RigPelvis'\n\tTransform 'RigRLeg2'\n\tTransform 'RigLLegAnkle'\n\tTransform
+        'RigRLegAnkle'\n\tTransform 'RigLLeg1'\n\tTransform 'RigLLeg2'\n\tTransform
+        'RigRLeg1'\n\tTransform 'RigPelvis'\n\tand more ...\n\tFrom animation clip
+        'Jump W Root'\n\tFrom animation clip 'StartAction1'\n\tFrom animation clip
+        'StartAction2'\n\tFrom animation clip 'StartAction3'\n\tFrom animation clip
+        'MeleeAttack2'\n\tFrom animation clip 'MeleeAttack3'\n\tFrom animation clip
+        'CastSpell2'\n\tFrom animation clip 'CastSpell3'"
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 8893804605326800877, guid: 1834603c333e6fb418cdb1cc0c829934, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 1834603c333e6fb418cdb1cc0c829934, type: 3}
+--- !u!1 &9021822808551396053 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3283772792485048793, guid: 1834603c333e6fb418cdb1cc0c829934,
+    type: 3}
+  m_PrefabInstance: {fileID: 5810129501586252556}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4187278718775641888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9021822808551396053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3902d0634d124d6ea35252c1e90433e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  headNodeName: RigHead
+  hitVfxPos: {fileID: 0}
+  beatPos: {fileID: 0}
+  projectileSpawnPos: {fileID: 0}
+  headupSpawnPos: {fileID: 0}
+  topPos: {fileID: 0}
+  runSpeed: 6
+  walkSpeed: 3
+  backwardSpeed: 3
+  meleeDistance: 1.5

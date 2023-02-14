@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &4374424963675295880
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 803847941880325876, guid: becdf2f7a2a44eb4ca1af88ef7960bd0,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2813686519377350199, guid: becdf2f7a2a44eb4ca1af88ef7960bd0,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2813686519377350199, guid: becdf2f7a2a44eb4ca1af88ef7960bd0,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2813686519377350199, guid: becdf2f7a2a44eb4ca1af88ef7960bd0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2813686519377350199, guid: becdf2f7a2a44eb4ca1af88ef7960bd0,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2813686519377350199, guid: becdf2f7a2a44eb4ca1af88ef7960bd0,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2813686519377350199, guid: becdf2f7a2a44eb4ca1af88ef7960bd0,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2813686519377350199, guid: becdf2f7a2a44eb4ca1af88ef7960bd0,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2813686519377350199, guid: becdf2f7a2a44eb4ca1af88ef7960bd0,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2813686519377350199, guid: becdf2f7a2a44eb4ca1af88ef7960bd0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2813686519377350199, guid: becdf2f7a2a44eb4ca1af88ef7960bd0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2813686519377350199, guid: becdf2f7a2a44eb4ca1af88ef7960bd0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3190774324637897869, guid: becdf2f7a2a44eb4ca1af88ef7960bd0,
+        type: 3}
+      propertyPath: m_Name
+      value: 21023-battle
+      objectReference: {fileID: 0}
+    - target: {fileID: 7723733450204921148, guid: becdf2f7a2a44eb4ca1af88ef7960bd0,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8208958416605353037, guid: becdf2f7a2a44eb4ca1af88ef7960bd0,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: e3cbcdaa1353c5a40bb8af8c968cda25,
+        type: 2}
+    m_RemovedComponents:
+    - {fileID: 4678450470532866810, guid: becdf2f7a2a44eb4ca1af88ef7960bd0, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: becdf2f7a2a44eb4ca1af88ef7960bd0, type: 3}
+--- !u!1 &1221315543786390533 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3190774324637897869, guid: becdf2f7a2a44eb4ca1af88ef7960bd0,
+    type: 3}
+  m_PrefabInstance: {fileID: 4374424963675295880}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6937409824151109863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1221315543786390533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3902d0634d124d6ea35252c1e90433e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  headNodeName: RigHead
+  hitVfxPos: {fileID: 0}
+  beatPos: {fileID: 0}
+  projectileSpawnPos: {fileID: 0}
+  headupSpawnPos: {fileID: 0}
+  topPos: {fileID: 0}
+  runSpeed: 6
+  walkSpeed: 3
+  backwardSpeed: 3
+  meleeDistance: 1.5
