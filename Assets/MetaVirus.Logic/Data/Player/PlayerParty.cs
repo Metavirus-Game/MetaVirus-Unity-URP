@@ -1,7 +1,10 @@
-﻿namespace MetaVirus.Logic.Data.Player
+﻿using System.Linq;
+
+namespace MetaVirus.Logic.Data.Player
 {
     /// <summary>
-    /// 玩家小队数据
+    /// 玩家小队数据<br/>
+    /// 玩家小队只允许上5个人，slost下标为0-4，具体放在那个位置，看阵型配置
     /// </summary>
     public class PlayerParty
     {
@@ -9,11 +12,14 @@
         /// 队伍Id，0-4，一共有5个
         /// </summary>
         public int PartyId { get; }
+
         public int FormationDataId { get; set; }
         public string Name { get; set; }
         public int SlotCount => Slots.Length;
 
         public int[] Slots { set; get; }
+
+        public bool HasMonster => Slots.Any(slot => slot > 0);
 
         /// <summary>
         /// 

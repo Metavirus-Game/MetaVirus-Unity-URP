@@ -27,10 +27,6 @@ namespace MetaVirus.Logic.Data.Player
 
         public Quality Quality => PetData.Quality;
 
-        public string QualityStr => Constants.QualityToStr(Quality);
-
-        public Color QualityClr => _gameDataService.QualityToColor(Quality);
-
         public MonsterType Type => PetData.Type_Ref;
 
         public LevelUpTable LevelUpTable => PetData.LevelUpTable == 0

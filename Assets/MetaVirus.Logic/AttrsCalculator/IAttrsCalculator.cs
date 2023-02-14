@@ -6,6 +6,11 @@ namespace MetaVirus.Logic.AttrsCalculator
     {
         public int this[AttributeId attrId] => GetAttribute(attrId);
 
+        /// <summary>
+        /// 获取基本属性和计算属性
+        /// </summary>
+        /// <param name="attrId"></param>
+        /// <returns></returns>
         public int GetAttribute(AttributeId attrId)
         {
             return attrId <= AttributeId.AttrCri ? GetBaseAttribute(attrId) : GetCalcAttribute(attrId);

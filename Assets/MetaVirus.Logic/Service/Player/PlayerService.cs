@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using cfg.common;
 using GameEngine;
@@ -81,6 +82,32 @@ namespace MetaVirus.Logic.Service.Player
             return pp;
         }
 
+        /// <summary>
+        /// 返回所有可用的阵型(阵型上至少有一个怪物参战)
+        /// </summary>
+        /// <returns></returns>
+        public PlayerParty[] GetAvailableParties()
+        {
+            return _parties.Values.Where(party => party.HasMonster).ToArray();
+        }
+
+
+        /// <summary>
+        /// 返回指定阵型中，上阵怪物的怪物列表provider
+        /// </summary>
+        /// <returns></returns>
+        public PlayerPetListProvider GetPartyPetListProvider(int partyId)
+        {
+            List<PlayerPetData> pets = new();
+            var party = GetPlayerParty(partyId);
+            foreach (var id in party.Slots)
+            {
+                if (id <= 0) continue;
+                var pet = GetPetData(id);
+                pets.Add(pet);
+            }
+            return new PlayerPetListProvider(pets);
+        }
 
         /// <summary>
         ///

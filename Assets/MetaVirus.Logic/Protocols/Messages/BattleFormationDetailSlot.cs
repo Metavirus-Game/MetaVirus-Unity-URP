@@ -26,22 +26,23 @@ namespace MetaVirus.Net.Messages.Common {
           string.Concat(
             "Cjtwcm90b3MvV29ybGRNZXNzYWdlcy9jb21tb24vQmF0dGxlRm9ybWF0aW9u",
             "RGV0YWlsU2xvdC5wcm90bxIdTWV0YVZpcnVzLk5ldC5NZXNzYWdlcy5Db21t",
-            "b24ipAMKG1BCQmF0dGxlRm9ybWF0aW9uRGV0YWlsU2xvdBITCgZzbG90SWQY",
+            "b24iyAMKG1BCQmF0dGxlRm9ybWF0aW9uRGV0YWlsU2xvdBITCgZzbG90SWQY",
             "ASABKAVIAIgBARIVCghpdGVtVHlwZRgCIAEoBUgBiAEBEhMKBml0ZW1JZBgD",
             "IAEoBUgCiAEBEhYKCWl0ZW1SZXNJZBgEIAEoBUgDiAEBEhYKCWl0ZW1MZXZl",
             "bBgFIAEoBUgEiAEBEhgKC2l0ZW1RdWFsaXR5GAYgASgFSAWIAQESGAoLY2hh",
             "cmFjdGVySWQYByABKAVIBogBARIYCgtncm93VGFibGVJZBgIIAEoBUgHiAEB",
             "EhsKDmxldmVsVXBUYWJsZUlkGAkgASgFSAiIAQESEgoKYXR0cmlidXRlcxgK",
-            "IAMoBRITCgtyZXNpc3RhbmNlcxgLIAMoBUIJCgdfc2xvdElkQgsKCV9pdGVt",
-            "VHlwZUIJCgdfaXRlbUlkQgwKCl9pdGVtUmVzSWRCDAoKX2l0ZW1MZXZlbEIO",
-            "CgxfaXRlbVF1YWxpdHlCDgoMX2NoYXJhY3RlcklkQg4KDF9ncm93VGFibGVJ",
-            "ZEIRCg9fbGV2ZWxVcFRhYmxlSWRCSAokY29tLm1ldGF2aXJ1cy5uZXQubWVz",
-            "c2FnZXMucGIuY29tbW9uQh5CYXR0bGVGb3JtYXRpb25EZXRhaWxTbG90UGJP",
-            "dXRQAWIGcHJvdG8z"));
+            "IAMoBRITCgtyZXNpc3RhbmNlcxgLIAMoBRIVCghpdGVtTmFtZRgMIAEoCUgJ",
+            "iAEBQgkKB19zbG90SWRCCwoJX2l0ZW1UeXBlQgkKB19pdGVtSWRCDAoKX2l0",
+            "ZW1SZXNJZEIMCgpfaXRlbUxldmVsQg4KDF9pdGVtUXVhbGl0eUIOCgxfY2hh",
+            "cmFjdGVySWRCDgoMX2dyb3dUYWJsZUlkQhEKD19sZXZlbFVwVGFibGVJZEIL",
+            "CglfaXRlbU5hbWVCSAokY29tLm1ldGF2aXJ1cy5uZXQubWVzc2FnZXMucGIu",
+            "Y29tbW9uQh5CYXR0bGVGb3JtYXRpb25EZXRhaWxTbG90UGJPdXRQAWIGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::MetaVirus.Net.Messages.Common.PBBattleFormationDetailSlot), global::MetaVirus.Net.Messages.Common.PBBattleFormationDetailSlot.Parser, new[]{ "SlotId", "ItemType", "ItemId", "ItemResId", "ItemLevel", "ItemQuality", "CharacterId", "GrowTableId", "LevelUpTableId", "Attributes", "Resistances" }, new[]{ "SlotId", "ItemType", "ItemId", "ItemResId", "ItemLevel", "ItemQuality", "CharacterId", "GrowTableId", "LevelUpTableId" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::MetaVirus.Net.Messages.Common.PBBattleFormationDetailSlot), global::MetaVirus.Net.Messages.Common.PBBattleFormationDetailSlot.Parser, new[]{ "SlotId", "ItemType", "ItemId", "ItemResId", "ItemLevel", "ItemQuality", "CharacterId", "GrowTableId", "LevelUpTableId", "Attributes", "Resistances", "ItemName" }, new[]{ "SlotId", "ItemType", "ItemId", "ItemResId", "ItemLevel", "ItemQuality", "CharacterId", "GrowTableId", "LevelUpTableId", "ItemName" }, null, null, null)
           }));
     }
     #endregion
@@ -95,6 +96,7 @@ namespace MetaVirus.Net.Messages.Common {
       levelUpTableId_ = other.levelUpTableId_;
       attributes_ = other.attributes_.Clone();
       resistances_ = other.resistances_.Clone();
+      itemName_ = other.itemName_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -371,6 +373,30 @@ namespace MetaVirus.Net.Messages.Common {
       get { return resistances_; }
     }
 
+    /// <summary>Field number for the "itemName" field.</summary>
+    public const int ItemNameFieldNumber = 12;
+    private string itemName_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string ItemName {
+      get { return itemName_ ?? ""; }
+      set {
+        itemName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+    /// <summary>Gets whether the "itemName" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasItemName {
+      get { return itemName_ != null; }
+    }
+    /// <summary>Clears the value of the "itemName" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearItemName() {
+      itemName_ = null;
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -397,6 +423,7 @@ namespace MetaVirus.Net.Messages.Common {
       if (LevelUpTableId != other.LevelUpTableId) return false;
       if(!attributes_.Equals(other.attributes_)) return false;
       if(!resistances_.Equals(other.resistances_)) return false;
+      if (ItemName != other.ItemName) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -415,6 +442,7 @@ namespace MetaVirus.Net.Messages.Common {
       if (HasLevelUpTableId) hash ^= LevelUpTableId.GetHashCode();
       hash ^= attributes_.GetHashCode();
       hash ^= resistances_.GetHashCode();
+      if (HasItemName) hash ^= ItemName.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -471,6 +499,10 @@ namespace MetaVirus.Net.Messages.Common {
       }
       attributes_.WriteTo(output, _repeated_attributes_codec);
       resistances_.WriteTo(output, _repeated_resistances_codec);
+      if (HasItemName) {
+        output.WriteRawTag(98);
+        output.WriteString(ItemName);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -519,6 +551,10 @@ namespace MetaVirus.Net.Messages.Common {
       }
       attributes_.WriteTo(ref output, _repeated_attributes_codec);
       resistances_.WriteTo(ref output, _repeated_resistances_codec);
+      if (HasItemName) {
+        output.WriteRawTag(98);
+        output.WriteString(ItemName);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -558,6 +594,9 @@ namespace MetaVirus.Net.Messages.Common {
       }
       size += attributes_.CalculateSize(_repeated_attributes_codec);
       size += resistances_.CalculateSize(_repeated_resistances_codec);
+      if (HasItemName) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ItemName);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -599,6 +638,9 @@ namespace MetaVirus.Net.Messages.Common {
       }
       attributes_.Add(other.attributes_);
       resistances_.Add(other.resistances_);
+      if (other.HasItemName) {
+        ItemName = other.ItemName;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -660,6 +702,10 @@ namespace MetaVirus.Net.Messages.Common {
             resistances_.AddEntriesFrom(input, _repeated_resistances_codec);
             break;
           }
+          case 98: {
+            ItemName = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -719,6 +765,10 @@ namespace MetaVirus.Net.Messages.Common {
           case 90:
           case 88: {
             resistances_.AddEntriesFrom(ref input, _repeated_resistances_codec);
+            break;
+          }
+          case 98: {
+            ItemName = input.ReadString();
             break;
           }
         }

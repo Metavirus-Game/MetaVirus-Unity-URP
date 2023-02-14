@@ -2,6 +2,7 @@
 using System.Linq;
 using FairyGUI;
 using MetaVirus.Logic.Data.Player;
+using MetaVirus.Logic.Data.Provider;
 using MetaVirus.Logic.UI.Component.Common;
 using UnityEngine.Events;
 
@@ -73,12 +74,19 @@ namespace MetaVirus.Logic.UI.Component.MonsterPanel.Formation
         private readonly List<MonsterHeaderGridButton> _slots = new();
 
         /// <summary>
+        /// 反转row的排列，变成从下往上排列
+        /// </summary>
+        private bool _reverseRow = false;
+
+        /// <summary>
         /// formationInfo是临时数据，需要修改，目前是 0,1,2行每一行的slot数量
         /// </summary>
         /// <param name="rowContainer"></param>
         /// <param name="formationInfo"></param>
-        public MonsterFormationComp(GComponent rowContainer, int[] formationInfo)
+        /// <param name="reverseRow">是否反转row的排列，反转后从下向上排列</param>
+        public MonsterFormationComp(GComponent rowContainer, int[] formationInfo, bool reverseRow = false)
         {
+            _reverseRow = reverseRow;
             _container = rowContainer;
             FormationInfo = formationInfo;
             SetAllSlotsEmpty();
@@ -119,7 +127,7 @@ namespace MetaVirus.Logic.UI.Component.MonsterPanel.Formation
         /// </summary>
         /// <param name="slot">slotId, 0 to 4</param>
         /// <param name="petData">slot对应的petData，如果为null则移除这个位置的petData</param>
-        public void SetSlotPetData(int slot, PlayerPetData petData)
+        public void SetSlotPetData(int slot, IMonsterDataProvider petData)
         {
             if (slot < 0 || slot >= _slots.Count)
             {
@@ -194,7 +202,11 @@ namespace MetaVirus.Logic.UI.Component.MonsterPanel.Formation
 
             var bTop = 0;
             var slotStart = 0;
-            for (var row = 0; row < _formationInfo.Length; row++)
+
+
+            for (var row = _reverseRow ? _formationInfo.Length - 1 : 0;
+                 _reverseRow ? row >= 0 : row < _formationInfo.Length;
+                 row += _reverseRow ? -1 : 1)
             {
                 var rowCount = _formationInfo[row];
                 var left = (w - (bw * rowCount + ColumnSpace * (rowCount - 1))) / 2;
@@ -213,7 +225,53 @@ namespace MetaVirus.Logic.UI.Component.MonsterPanel.Formation
                 bTop += (int)bh + RowSpace;
                 slotStart += rowCount;
             }
+
+            // if (_reverseRow)
+            // {
+            //     for (var row = _formationInfo.Length - 1; row >= 0; row--)
+            //     {
+            //         var rowCount = _formationInfo[row];
+            //         var left = (w - (bw * rowCount + ColumnSpace * (rowCount - 1))) / 2;
+            //
+            //         for (var i = 0; i < rowCount; i++)
+            //         {
+            //             var idx = slotStart + i;
+            //             var btn = _slots[idx].HeaderButton;
+            //             btn.SetPosition(left, bTop, 0);
+            //
+            //             btn.onClick.Set(() => OnSlotClicked(idx));
+            //
+            //             left += bw + ColumnSpace;
+            //         }
+            //
+            //         bTop += (int)bh + RowSpace;
+            //         slotStart += rowCount;
+            //     }
+            // }
+            // else
+            // {
+            //     for (var row = 0; row < _formationInfo.Length; row++)
+            //     {
+            //         var rowCount = _formationInfo[row];
+            //         var left = (w - (bw * rowCount + ColumnSpace * (rowCount - 1))) / 2;
+            //
+            //         for (var i = 0; i < rowCount; i++)
+            //         {
+            //             var idx = slotStart + i;
+            //             var btn = _slots[idx].HeaderButton;
+            //             btn.SetPosition(left, bTop, 0);
+            //
+            //             btn.onClick.Set(() => OnSlotClicked(idx));
+            //
+            //             left += bw + ColumnSpace;
+            //         }
+            //
+            //         bTop += (int)bh + RowSpace;
+            //         slotStart += rowCount;
+            //     }
+            // }
         }
+
 
         private void SetAllSlotsEmpty()
         {

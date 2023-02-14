@@ -1,6 +1,7 @@
 ﻿using FairyGUI;
 using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Data.Player;
+using MetaVirus.Logic.Data.Provider;
 
 namespace MetaVirus.Logic.UI.Component.Common
 {
@@ -15,7 +16,7 @@ namespace MetaVirus.Logic.UI.Component.Common
         private Controller _emptyCtrl;
         private Controller _checkCtrl;
 
-        private PlayerPetData _petData;
+        private IMonsterDataProvider _petData;
 
         private bool _isEmpty = true;
         private bool _isChecked = false;
@@ -40,7 +41,7 @@ namespace MetaVirus.Logic.UI.Component.Common
             }
         }
 
-        public PlayerPetData PetData
+        public IMonsterDataProvider PetData
         {
             get => _petData;
             set
@@ -73,10 +74,10 @@ namespace MetaVirus.Logic.UI.Component.Common
         /// </summary>
         /// <param name="petData"></param>
         /// <param name="headerComp"></param>
-        public static void RenderHeaderComp(PlayerPetData petData, GComponent headerComp)
+        public static void RenderHeaderComp(IMonsterDataProvider petData, GComponent headerComp)
         {
             var headerImg = headerComp.GetChild("PortraitLoader").asLoader;
-            headerImg.url = Constants.FairyImageUrl.Header(petData.PetData.ResDataId);
+            headerImg.url = Constants.FairyImageUrl.Header(petData.ModelResId);
 
             var headerBg = headerComp.GetChild("card_bg").asLoader;
             headerBg.url = Constants.FairyImageUrl.HeaderBg(petData.Quality);
