@@ -114,7 +114,7 @@ namespace MetaVirus.Logic.Service.Arena.data
             else
             {
                 var monsterData = gameDataService.gameTable.MonsterDatas.Get(dataId);
-                resId = monsterData?.Id ?? 0;
+                resId = monsterData?.ResDataId ?? 0;
                 type = monsterData?.Type_Ref;
             }
 
