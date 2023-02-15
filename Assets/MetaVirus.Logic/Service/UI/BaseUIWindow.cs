@@ -71,6 +71,8 @@ namespace MetaVirus.Logic.Service.UI
         private bool _isHiding = false;
         private bool _isReleaseWhenClosed = true;
 
+        public bool IsHiding => _isHiding;
+
         public UnityAction OnClosed;
 
         protected sealed override void OnInit()
@@ -142,7 +144,15 @@ namespace MetaVirus.Logic.Service.UI
 
 
             AddComponentToParent(gcom, ContentComp);
-            LoadData(gcom, ContentComp);
+            try
+            {
+                LoadData(gcom, ContentComp);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogException(e);
+            }
+
             ContentComp.alpha = ContentInitAlpha;
         }
 
@@ -181,7 +191,6 @@ namespace MetaVirus.Logic.Service.UI
         /// </summary>
         public virtual void BeforeHiding()
         {
-            
         }
 
         /// <summary>

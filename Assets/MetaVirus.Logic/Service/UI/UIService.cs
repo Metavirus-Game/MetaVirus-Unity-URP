@@ -68,6 +68,7 @@ namespace MetaVirus.Logic.Service.UI
             {
                 Debug.LogError($"UI {wndName} not found!");
             }
+
             return OpenWindow(type);
         }
 
@@ -157,22 +158,30 @@ namespace MetaVirus.Logic.Service.UI
 
             window.OnClosed?.Invoke();
 
-            while (_openWndList.Count > 0 && _openWndList[0] != window)
+            var idx = _openWndList.IndexOf(window);
+            _openWndList.RemoveAt(idx);
+            if (idx == 0 && _openWndList.Count > 0)
             {
-                _openWndList.RemoveAt(0);
+                //顶层窗口被移除，如果队列中还有窗口，则弹出
+                _openWndList[0].Show();
             }
 
-            if (_openWndList.Count > 0)
-            {
-                //移除顶层的已关闭的window
-                _openWndList.RemoveAt(0);
-
-                if (_openWndList.Count > 0)
-                {
-                    //如果队列中有窗口，则显示顶当前的层窗口
-                    _openWndList[0].Show();
-                }
-            }
+            // while (_openWndList.Count > 0 && _openWndList[0] != window)
+            // {
+            //     _openWndList.RemoveAt(0);
+            // }
+            //
+            // if (_openWndList.Count > 0)
+            // {
+            //     //移除顶层的已关闭的window
+            //     _openWndList.RemoveAt(0);
+            //
+            //     if (_openWndList.Count > 0)
+            //     {
+            //         //如果队列中有窗口，则显示顶当前的层窗口
+            //         _openWndList[0].Show();
+            //     }
+            // }
         }
 
 
