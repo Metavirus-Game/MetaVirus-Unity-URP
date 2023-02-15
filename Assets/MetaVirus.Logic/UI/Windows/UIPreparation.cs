@@ -23,10 +23,12 @@ namespace MetaVirus.Logic.UI.Windows
         private ArenaService _arenaService;
         private PlayerService _playerService;
         private int _currOpponentId;
+        private int _currCastId;
         private GComponent _framePlayer;
         private GComponent _frameOpponent;
-        private MonsterFormationComp _monsterFormationComp;
-        private int[] _formationInfo = { 2, 3, 0 };
+        private MonsterFormationComp _monsterFormationCompOpponent;
+        private MonsterFormationComp _monsterFormationCompPlayer;
+        private readonly int[] _formationInfo = { 2, 3, 0 };
         private PlayerParty[] _playerParties;
         private ArenaFormationDetail _arenaFormationDetail;
         private GList _listCast;
@@ -42,17 +44,60 @@ namespace MetaVirus.Logic.UI.Windows
             _arenaService = GameFramework.GetService<ArenaService>();
             _playerService = GameFramework.GetService<PlayerService>();
             _currOpponentId = _dataNodeService.GetDataAndClear<int>(Constants.DataKeys.UIArenaMatchingOpponentData);
-            Debug.Log(_currOpponentId);
-            // Get opponent cast
+            _currCastId = _dataNodeService.GetData<int>(Constants.DataKeys.UIArenaPreparationCastId);
+            Debug.Log(_currCastId);
+            // Render opponent cast
             GameFramework.Inst.StartCoroutine(GetPlayerArenaFormation());
             _frameOpponent = content.GetChildByPath("comp_opponent.frame_opponent").asCom;
             
-            // Get player cast
-            // GameFramework.Inst.StartCoroutine(GetAvailableParties());
+            // Render player cast
             _playerParties = _playerService.GetAvailableParties();
-            Debug.Log(_playerParties);
             _framePlayer = content.GetChildByPath("comp_player.frame_player").asCom;
-            _listCast = content.GetChildByPath("comp_player.list.cast").asList;
+            _listCast = content.GetChildByPath("comp_player.list_cast").asList;
+            _listCast.itemRenderer = RenderCastList;
+            _listCast.numItems = _playerParties.Length;
+            _listCast.onClickItem.Add(OnCastTabClicked);
+            _listCast.selectedIndex = _currCastId;
+           
+            RenderPlayerCast(_currCastId);
+           
+        }
+
+        private void RenderPlayerCast(int index)
+        {   
+            var row = new MonsterFormationComp(_framePlayer, _formationInfo, false);
+            _monsterFormationCompPlayer = row;
+            var curCast = _playerParties[index];
+            for (var i = 0; i < curCast.SlotCount; i++)
+            {
+                var petId = curCast.Slots[i];
+                //会返回null吗？这种调用服务的方法是异步的吗？
+                var petData = _playerService.GetPetData(petId);
+                _monsterFormationCompPlayer.SetSlotPetData(i, petData);
+            }
+            row.OnSlotClickedAction = slot =>
+            {
+                _dataNodeService.SetData(Constants.DataKeys.UIMonsterDetailDataList, _playerService.GetPetListProvider());
+                _dataNodeService.SetData(Constants.DataKeys.UIMonsterDetailData,
+                    _playerService.GetPetData(_playerParties[index].Slots[slot]));
+                GameFramework.GetService<UIService>().OpenWindow<UIMonsterDetail>();
+            };
+        }
+
+        private void OnCastTabClicked(EventContext context)
+        {
+            var obj = (GObject)context.data;
+            // 如果返回的是-1需要包哪种错误？
+            var idx = _listCast.GetChildIndex(obj);
+            _dataNodeService.SetData(Constants.DataKeys.UIArenaPreparationCastId, idx);
+            RenderPlayerCast(idx);
+        }
+
+        private void RenderCastList(int index, GObject obj)
+        {
+            var comp = obj.asCom;
+            var tabCastName = comp.GetChild("text_castName").asTextField;
+            tabCastName.text = _playerParties[index].Name;
         }
 
         private IEnumerator GetPlayerArenaFormation()
@@ -69,23 +114,26 @@ namespace MetaVirus.Logic.UI.Windows
             else
             {
                 _arenaFormationDetail = task.Result.Result;
+                _dataNodeService.SetData(Constants.DataKeys.UIMonsterDetailDataList, _arenaFormationDetail);
                 var row = new MonsterFormationComp(_frameOpponent, _formationInfo, true);
-                _monsterFormationComp = row;
+                _monsterFormationCompOpponent = row;
+                row.OnSlotClickedAction = slot =>
+                {
+                    _dataNodeService.SetData(Constants.DataKeys.UIMonsterDetailDataList, _arenaFormationDetail);
+                    // 这里需要处理GetSlot返回的null吗
+                    _dataNodeService.SetData(Constants.DataKeys.UIMonsterDetailData,
+                        _arenaFormationDetail.GetSlot(slot));
+                    GameFramework.GetService<UIService>().OpenWindow<UIMonsterDetail>();
+                };
                 for (var slot = 0; slot < _arenaFormationDetail.Count; slot++)
                 {
                     var petData = _arenaFormationDetail.GetSlot(slot);
                     if (petData!=null)
                     {
-                        _monsterFormationComp.SetSlotPetData(slot, petData);
+                        _monsterFormationCompOpponent.SetSlotPetData(slot, petData);
                     }
                 }
             }
         }
-
-        // private IEnumerator GetAvailableParties()
-        // {
-        //     var task = _playerService.GetAvailableParties();
-        //     yield return task.
-        // }
     }
 }
