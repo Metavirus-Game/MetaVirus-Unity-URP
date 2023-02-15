@@ -56,13 +56,15 @@ namespace MetaVirus.Logic.UI.Windows
             _listCast = content.GetChildByPath("comp_player.list_cast").asList;
             _listCast.itemRenderer = RenderCastList;
             _listCast.numItems = _playerParties.Length;
+            _listCast.onClickItem.Add(OnCastTabClicked);
+            _listCast.selectedIndex = _currCastId;
+            var row = new MonsterFormationComp(_framePlayer, _formationInfo, false);
+            _monsterFormationCompPlayer = row;
             RenderPlayerCast(_currCastId);
         }
 
         private void RenderPlayerCast(int index)
         {
-            var row = new MonsterFormationComp(_framePlayer, _formationInfo, false);
-            _monsterFormationCompPlayer = row;
             var curCast = _playerParties[index];
             for (var i = 0; i < curCast.SlotCount; i++)
             {
@@ -72,18 +74,26 @@ namespace MetaVirus.Logic.UI.Windows
             }
         }
 
+        private void OnCastTabClicked(EventContext context)
+        {
+            var obj = (GObject)context.data;
+            var idx = _listCast.GetChildIndex(obj);
+            _dataNodeService.SetData(Constants.DataKeys.UIArenaPreparationCastId, idx);
+            RenderPlayerCast(idx);
+        }
+
         private void RenderCastList(int index, GObject obj)
         {
-            var comp = obj.asButton;
+            var comp = obj.asCom;
             var tabCastName = comp.GetChild("text_castName").asTextField;
             tabCastName.text = _playerParties[index].Name;
             // var tabButton = comp.GetChild("TabBtn_MonsterDetail").asButton;
-            comp.onClick.Set(() =>
-            {   
-                _dataNodeService.SetData(Constants.DataKeys.UIArenaPreparationCastId, index);
-                RenderPlayerCast(index);
-                Debug.Log(index);
-            });
+            // comp.onClick.Set(() =>
+            // {   
+            //     _dataNodeService.SetData(Constants.DataKeys.UIArenaPreparationCastId, index);
+            //     RenderPlayerCast(index);
+            //     Debug.Log(index);
+            // });
         }
 
         private IEnumerator GetPlayerArenaFormation()
