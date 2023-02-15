@@ -1,6 +1,8 @@
 ﻿using System;
 using FairyGUI;
 using GameEngine;
+using GameEngine.DataNode;
+using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Service.Arena;
 using MetaVirus.Logic.Service.Arena.data;
 using MetaVirus.Logic.Service.UI;
@@ -16,9 +18,13 @@ namespace MetaVirus.Logic.UI.Component.ArenaList
         public GComponent MatchingListItem;
         private GButton _buttonChallenge;
         private UIService _uiService;
+        private DataNodeService _dataNodeService;
+        private int _playerId;
         //private ArenaService _arenaService;
-        public ArenaMatchingListItem()
+        public ArenaMatchingListItem(int playerId)
         {
+            _playerId = playerId;
+            _dataNodeService = GameFramework.GetService<DataNodeService>();
             MatchingListItem = UIPackage.CreateObject("Common", "MatchingListFrame").asCom;
             _textRanking = MatchingListItem.GetChild("text_ranking").asTextField;
             _textOpponentName = MatchingListItem.GetChild("text_opponentName").asTextField;
@@ -34,6 +40,7 @@ namespace MetaVirus.Logic.UI.Component.ArenaList
             // var task = _arenaService
             _buttonChallenge.onClick.Set(() =>
             {   
+                _dataNodeService.SetData(Constants.DataKeys.UIArenaMatchingOpponentData, _playerId);
                 _uiService.OpenWindow<UIPreparartion>();
             });
         }
