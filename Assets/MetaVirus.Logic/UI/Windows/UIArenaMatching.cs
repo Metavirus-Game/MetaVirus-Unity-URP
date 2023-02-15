@@ -17,7 +17,6 @@ namespace MetaVirus.Logic.UI.Windows
     {
         private ArenaService _arenaService;
         private GList _listMatching;
-        private DataNodeService _dataNodeService;
         protected override GComponent MakeContent()
         {
             var comp = UIPackage.CreateObject("Common", "ArenaMatchingUI").asCom;
@@ -27,7 +26,6 @@ namespace MetaVirus.Logic.UI.Windows
         public override void LoadData(GComponent parentComp, GComponent content)
         {
             _arenaService = GameFramework.GetService<ArenaService>();
-            _dataNodeService = GameFramework.GetService<DataNodeService>();
             GameFramework.Inst.StartCoroutine(GetArenaMatchList());
             _listMatching = content.GetChild("listMatching").asList;
         }
@@ -39,9 +37,10 @@ namespace MetaVirus.Logic.UI.Windows
             var data = task.Result;
             foreach (var listData in data.Result)
             {
-                var listItem = new ArenaMatchingListItem();
+                var listItem = new ArenaMatchingListItem(listData.PlayerId);
                 listItem.RenderMatchingListItem(listData);
-                _dataNodeService.SetData(Constants.DataKeys.UIArenaMatchingOpponentData, listData.PlayerId);
+                // Debug.Log(listData.PlayerId);
+                // _dataNodeService.SetData(Constants.DataKeys.UIArenaMatchingOpponentData, listData.PlayerId);
                 _listMatching.AddChild(listItem.MatchingListItem);
             }
         }
