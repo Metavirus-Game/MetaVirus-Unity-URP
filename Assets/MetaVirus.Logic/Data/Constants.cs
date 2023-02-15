@@ -86,8 +86,12 @@ namespace MetaVirus.Logic.Data
             public const string UIMonsterDetailDataList = "UIData.Monster.Detail.Data.List";
             
             // UIArenaMatching 相关
+            // 选择挑战的对手Id
             public const string UIArenaMatchingOpponentData = "UIData.Arena.Matching.Opponent.Data";
-
+            
+            // UIPreparation 相关
+            // 当前选择阵容的Id
+            public const string UIArenaPreparationCastId = "UIData.Arena.Preparation.Cast.Id";
         }
 
         public static class UizOrders

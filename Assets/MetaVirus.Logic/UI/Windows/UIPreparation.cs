@@ -23,10 +23,12 @@ namespace MetaVirus.Logic.UI.Windows
         private ArenaService _arenaService;
         private PlayerService _playerService;
         private int _currOpponentId;
+        private int _currCastId;
         private GComponent _framePlayer;
         private GComponent _frameOpponent;
-        private MonsterFormationComp _monsterFormationComp;
-        private int[] _formationInfo = { 2, 3, 0 };
+        private MonsterFormationComp _monsterFormationCompOpponent;
+        private MonsterFormationComp _monsterFormationCompPlayer;
+        private readonly int[] _formationInfo = { 2, 3, 0 };
         private PlayerParty[] _playerParties;
         private ArenaFormationDetail _arenaFormationDetail;
         private GList _listCast;
@@ -42,17 +44,46 @@ namespace MetaVirus.Logic.UI.Windows
             _arenaService = GameFramework.GetService<ArenaService>();
             _playerService = GameFramework.GetService<PlayerService>();
             _currOpponentId = _dataNodeService.GetDataAndClear<int>(Constants.DataKeys.UIArenaMatchingOpponentData);
-            Debug.Log(_currOpponentId);
+            _currCastId = _dataNodeService.GetData<int>(Constants.DataKeys.UIArenaPreparationCastId);
+            Debug.Log(_currCastId);
             // Get opponent cast
             GameFramework.Inst.StartCoroutine(GetPlayerArenaFormation());
             _frameOpponent = content.GetChildByPath("comp_opponent.frame_opponent").asCom;
             
             // Get player cast
-            // GameFramework.Inst.StartCoroutine(GetAvailableParties());
             _playerParties = _playerService.GetAvailableParties();
-            Debug.Log(_playerParties);
             _framePlayer = content.GetChildByPath("comp_player.frame_player").asCom;
-            _listCast = content.GetChildByPath("comp_player.list.cast").asList;
+            _listCast = content.GetChildByPath("comp_player.list_cast").asList;
+            _listCast.itemRenderer = RenderCastList;
+            _listCast.numItems = _playerParties.Length;
+            RenderPlayerCast(_currCastId);
+        }
+
+        private void RenderPlayerCast(int index)
+        {
+            var row = new MonsterFormationComp(_framePlayer, _formationInfo, false);
+            _monsterFormationCompPlayer = row;
+            var curCast = _playerParties[index];
+            for (var i = 0; i < curCast.SlotCount; i++)
+            {
+                var petId = curCast.Slots[i];
+                var petData = _playerService.GetPetData(petId);
+                _monsterFormationCompPlayer.SetSlotPetData(i, petData);
+            }
+        }
+
+        private void RenderCastList(int index, GObject obj)
+        {
+            var comp = obj.asButton;
+            var tabCastName = comp.GetChild("text_castName").asTextField;
+            tabCastName.text = _playerParties[index].Name;
+            // var tabButton = comp.GetChild("TabBtn_MonsterDetail").asButton;
+            comp.onClick.Set(() =>
+            {   
+                _dataNodeService.SetData(Constants.DataKeys.UIArenaPreparationCastId, index);
+                RenderPlayerCast(index);
+                Debug.Log(index);
+            });
         }
 
         private IEnumerator GetPlayerArenaFormation()
@@ -70,22 +101,16 @@ namespace MetaVirus.Logic.UI.Windows
             {
                 _arenaFormationDetail = task.Result.Result;
                 var row = new MonsterFormationComp(_frameOpponent, _formationInfo, true);
-                _monsterFormationComp = row;
+                _monsterFormationCompOpponent = row;
                 for (var slot = 0; slot < _arenaFormationDetail.Count; slot++)
                 {
                     var petData = _arenaFormationDetail.GetSlot(slot);
                     if (petData!=null)
                     {
-                        _monsterFormationComp.SetSlotPetData(slot, petData);
+                        _monsterFormationCompOpponent.SetSlotPetData(slot, petData);
                     }
                 }
             }
         }
-
-        // private IEnumerator GetAvailableParties()
-        // {
-        //     var task = _playerService.GetAvailableParties();
-        //     yield return task.
-        // }
     }
 }
