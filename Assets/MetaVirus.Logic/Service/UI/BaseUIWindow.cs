@@ -29,6 +29,11 @@ namespace MetaVirus.Logic.Service.UI
         public virtual bool AutoDispose => true;
 
         /// <summary>
+        /// 返回窗口是否是全屏窗口，全屏窗口弹出后会停止游戏画面渲染
+        /// </summary>
+        public virtual bool IsFullscreenWindow => true;
+
+        /// <summary>
         /// UI用到的资源labels, 载入ui时会先载入这些assets
         /// ui-common资源不需要写入
         /// </summary>
@@ -66,7 +71,7 @@ namespace MetaVirus.Logic.Service.UI
 
         private GGraph _background;
 
-        private float _bottomMargin = 100;
+        private float _bottomMargin = 0;
 
         private bool _isHiding = false;
         private bool _isReleaseWhenClosed = true;
@@ -75,9 +80,13 @@ namespace MetaVirus.Logic.Service.UI
 
         public UnityAction OnClosed;
 
+        private UIService uiService;
+
         protected sealed override void OnInit()
         {
             base.OnInit();
+
+            uiService = GameFramework.GetService<UIService>();
 
             this.SetSize(GRoot.inst.width, GRoot.inst.height);
             this.AddRelation(GRoot.inst, RelationType.Size);
@@ -202,6 +211,7 @@ namespace MetaVirus.Logic.Service.UI
             _isHiding = true;
             _isReleaseWhenClosed = true;
             BeforeHiding();
+            uiService.OnWindowClosing(this);
             base.Hide();
         }
 
@@ -215,6 +225,7 @@ namespace MetaVirus.Logic.Service.UI
             _isHiding = true;
             _isReleaseWhenClosed = false;
             BeforeHiding();
+            uiService.OnWindowClosing(this);
             DoHideAnimation();
         }
 
@@ -222,6 +233,12 @@ namespace MetaVirus.Logic.Service.UI
         {
             _isHiding = false;
             base.Show();
+        }
+
+        protected override void OnShown()
+        {
+            base.OnShown();
+            uiService.OnWindowShown(this);
         }
 
         /// <summary>
@@ -290,7 +307,7 @@ namespace MetaVirus.Logic.Service.UI
                 HideImmediately();
                 if (!_isReleaseWhenClosed) return;
                 Release();
-                GameFramework.GetService<UIService>().OnWindowClose(this);
+                uiService.OnWindowClosed(this);
             });
         }
     }
