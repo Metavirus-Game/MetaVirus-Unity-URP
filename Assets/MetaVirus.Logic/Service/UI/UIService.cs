@@ -7,6 +7,8 @@ using GameEngine.Base;
 using GameEngine.DataNode;
 using GameEngine.FairyGUI;
 using GameEngine.Utils;
+using MetaVirus.Logic.Data;
+using MetaVirus.Logic.Data.Events.UI;
 using MetaVirus.Logic.UI;
 using UnityEngine;
 
@@ -74,12 +76,6 @@ namespace MetaVirus.Logic.Service.UI
 
         public BaseUIWindow OpenWindow(Type wndType)
         {
-            if (_openWndList.Count > 0)
-            {
-                //含有顶层窗口，将顶层窗口隐藏
-                _openWndList[0].HideWithoutRelease();
-            }
-
             _windowCache.TryGetValue(wndType, out var window);
             if (window == null)
             {
@@ -100,12 +96,26 @@ namespace MetaVirus.Logic.Service.UI
             }
             else
             {
-                window.Show();
+                OpenWindow(window);
             }
 
+            return window;
+        }
+
+        private void OpenWindow(BaseUIWindow window)
+        {
+            BaseUIWindow wndToHide = null;
+
+            if (_openWndList.Count > 0)
+            {
+                //含有顶层窗口，将顶层窗口隐藏
+                wndToHide = _openWndList[0];
+            }
+
+            wndToHide?.HideWithoutRelease();
             //将当前窗口放入队列顶端
             _openWndList.Insert(0, window);
-            return window;
+            window.Show();
         }
 
         public T OpenWindow<T>() where T : BaseUIWindow, new()
@@ -137,10 +147,33 @@ namespace MetaVirus.Logic.Service.UI
             yield return task.AsCoroution();
             uiWindow.PackageLoaded = task.Result;
             waiting.Hide();
-            uiWindow.Show();
+            OpenWindow(uiWindow);
         }
 
-        internal void OnWindowClose(BaseUIWindow window)
+        internal void OnWindowClosing(BaseUIWindow window)
+        {
+            var idx = _openWndList.IndexOf(window);
+            if (idx == 0 && window.IsFullscreenWindow)
+            {
+                //顶层窗口隐藏了
+                Event.Emit(GameEvents.UIEvent.TopLayerFullscreenUIChanged,
+                    new TopLayerFullscreenUIChangedEvent(TopLayerFullscreenUIChangedEvent.State.Closing, window));
+            }
+        }
+
+        internal void OnWindowShown(BaseUIWindow window)
+        {
+            var idx = _openWndList.IndexOf(window);
+            if (idx == 0 && window.IsFullscreenWindow)
+            {
+                //顶层窗口完全显示了
+                Event.Emit(GameEvents.UIEvent.TopLayerFullscreenUIChanged,
+                    new TopLayerFullscreenUIChangedEvent(TopLayerFullscreenUIChangedEvent.State.Shown, window));
+            }
+        }
+
+
+        internal void OnWindowClosed(BaseUIWindow window)
         {
             if (window.AutoDispose)
             {
@@ -157,6 +190,7 @@ namespace MetaVirus.Logic.Service.UI
             }
 
             window.OnClosed?.Invoke();
+            // _openWndList.Remove(window);
 
             var idx = _openWndList.IndexOf(window);
             _openWndList.RemoveAt(idx);

@@ -36,6 +36,7 @@ namespace MetaVirus.Logic.UI.Windows
         private PBNpcFunctionItem _itemSelected;
 
         protected override float ContentInitAlpha => 1;
+        public override bool IsFullscreenWindow => false;
 
         public NpcInteractiveWindow()
         {
@@ -74,7 +75,6 @@ namespace MetaVirus.Logic.UI.Windows
         {
             var obj = (GObject)context.data;
             var idx = _funcList.GetChildIndex(obj);
-            Debug.Log("按了 " + idx);
             Hide();
 
             if (idx == _items.Count)

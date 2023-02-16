@@ -55,6 +55,7 @@ namespace MetaVirus.Logic.UI.Windows
         private GComponent _resisElem;
         private GComponent _resisStatus;
 
+        public override bool IsFullscreenWindow => false;
         private IMonsterDataProvider CurrPetData
         {
             get => _currPetData;

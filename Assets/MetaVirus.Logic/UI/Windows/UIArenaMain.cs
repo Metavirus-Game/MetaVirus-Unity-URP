@@ -12,8 +12,8 @@ using GameEngine.Network;
 using GameEngine.Utils;
 using UnityEngine;
 
-namespace  MetaVirus.Logic.UI.Windows
-{   
+namespace MetaVirus.Logic.UI.Windows
+{
     // 不算全局窗体类，需要添加这个属性吗？
     [UIWindow("ui_arena_main")]
     public class UIArenaMain : BaseUIWindow
@@ -28,13 +28,15 @@ namespace  MetaVirus.Logic.UI.Windows
         private GButton _btnRecords;
         private UIService _uiService;
 
+        public override bool IsFullscreenWindow => false;
+
         protected override GComponent MakeContent()
         {
             var comp = UIPackage.CreateObject("Common", "ArenaMainUI").asCom;
             SetBgFadeInSetting(true);
             return comp;
         }
-        
+
         public override void LoadData(GComponent parentComp, GComponent content)
         {
             _arenaService = GameFramework.GetService<ArenaService>();
@@ -51,10 +53,10 @@ namespace  MetaVirus.Logic.UI.Windows
 
             _btnRecords.onClick.Set(() =>
                 _uiService.OpenWindow<UIArenaRecords>());
-            
-            _btnRanking.onClick.Set(()=> _uiService.OpenWindow<UIArenaRanking>());
-            
-            _btnStart.onClick.Set(()=> _uiService.OpenWindow<UIArenaMatching>());
+
+            _btnRanking.onClick.Set(() => _uiService.OpenWindow<UIArenaRanking>());
+
+            _btnStart.onClick.Set(() => _uiService.OpenWindow<UIArenaMatching>());
         }
 
         private IEnumerator GetPlayerArenaData()

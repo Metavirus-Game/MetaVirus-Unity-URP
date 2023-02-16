@@ -41,6 +41,11 @@
             public const string InteractingWithNpc = "PlayerEvent_InteractingWithNpc";
         }
 
+        public static class UIEvent
+        {
+            public const string TopLayerFullscreenUIChanged = "UIEvent_TopLayerFullscreenUIChanged";
+        }
+
         public static class BattleEvent
         {
             public const string Battle = "BattleEvent_Battle";
