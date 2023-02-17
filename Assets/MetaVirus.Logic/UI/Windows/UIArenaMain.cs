@@ -21,6 +21,7 @@ namespace MetaVirus.Logic.UI.Windows
         private ArenaService _arenaService;
         private PlayerService _playerService;
         private GTextField _textPlayerScore;
+        private GTextField _textPlayerRank;
         private GTextField _textSeasonNo;
         private GTextField _textRemainingTime;
         private GButton _btnStart;
@@ -45,6 +46,7 @@ namespace MetaVirus.Logic.UI.Windows
             _textPlayerScore = content.GetChild("text_mainScore").asTextField;
             _textSeasonNo = content.GetChild(("text_seasonNum")).asTextField;
             _textRemainingTime = content.GetChild("text_remainingTime").asTextField;
+            _textPlayerRank = content.GetChild("text_mainRank").asTextField;
             _btnStart = content.GetChild("button_start").asButton;
             _btnRecords = content.GetChild("button_records").asButton;
             _btnRanking = content.GetChild("button_ranking").asButton;
@@ -65,9 +67,23 @@ namespace MetaVirus.Logic.UI.Windows
             var task = _arenaService.GetPlayerArenaData(1, playerInfo.PlayerId);
             yield return task.AsCoroution();
             var data = task.Result;
+            var remainingTime = data.Result.ArenaInfo.hoursRemaining;
+            if (remainingTime < 1)
+            {
+                _textRemainingTime.text = Convert.ToString("Less than 1h");
+            }
+            else if (remainingTime < 24)
+            {
+                _textRemainingTime.text = Convert.ToString(remainingTime);
+            }
+            else
+            {
+                _textRemainingTime.text = Convert.ToString(remainingTime / 24 + " days " + remainingTime % 24 + " hs");
+            }
+
+            _textPlayerRank.text = Convert.ToString(data.Result.ArenaInfo.Rank);
             _textSeasonNo.text = Convert.ToString(data.Result.ArenaInfo.SeasonNo);
             _textPlayerScore.text = Convert.ToString(data.Result.ArenaInfo.Score);
-            _textRemainingTime.text = Convert.ToString(data.Result.ArenaInfo.hoursRemaining);
         }
     }
 }
