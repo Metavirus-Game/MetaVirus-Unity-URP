@@ -42,15 +42,26 @@ namespace MetaVirus.Logic.UI.Windows
         {
             var task = _arenaService.GetArenaMatchList(1);
             yield return task.AsCoroution();
-            _matchingData = task.Result.Result;
-            // foreach (var listData in data.Result)
-            // {
-            //     var listItem = new ArenaMatchingListItem(listData.PlayerId);
-            //     listItem.RenderMatchingListItem(listData);
-            //     _listMatching.AddChild(listItem.MatchingListItem);
-            // }
-            _listMatching.itemRenderer = RenderMatchingList;
-            _listMatching.numItems = _matchingData.Count;
+            if (task.Result.IsTimeout)
+            {
+                UIDialog.ShowTimeoutMessage();
+            }
+            else if (task.Result.IsError)
+            {
+                UIDialog.ShowErrorMessage(task.Result.MessageCode);
+            }
+            else
+            {
+                _matchingData = task.Result.Result;
+                // foreach (var listData in data.Result)
+                // {
+                //     var listItem = new ArenaMatchingListItem(listData.PlayerId);
+                //     listItem.RenderMatchingListItem(listData);
+                //     _listMatching.AddChild(listItem.MatchingListItem);
+                // }
+                _listMatching.itemRenderer = RenderMatchingList;
+                _listMatching.numItems = _matchingData.Count;
+            }
         }
 
         private void RenderMatchingList(int index, GObject obj)
@@ -61,17 +72,17 @@ namespace MetaVirus.Logic.UI.Windows
             var textOpponentScore = matchingListItem.GetChild("text_opponentScore").asTextField;
             var buttonChallenge = matchingListItem.GetChild("button_challenge").asButton;
             var playerRanking = _matchingData[index].ArenaInfo.Rank;
-      
+
             RankingMedal.RenderMedal(matchingListItem, playerRanking, index, _matchingData);
 
             textLv.text = "Lv " + Convert.ToString(_matchingData[index].PlayerLevel);
             textOpponentName.text = _matchingData[index].PlayerName;
             textOpponentScore.text = Convert.ToString(_matchingData[index].ArenaInfo.Score);
             buttonChallenge.onClick.Set(() =>
-            {   
+            {
                 Debug.Log(_matchingData[index].PlayerId);
                 _dataNodeService.SetData(Constants.DataKeys.UIArenaMatchingOpponentData, _matchingData[index].PlayerId);
-                _uiService.OpenWindow<UIPreparartion>();
+                _uiService.OpenWindow<UIPreparation>();
             });
         }
     }

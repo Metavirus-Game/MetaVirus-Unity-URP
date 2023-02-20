@@ -76,13 +76,24 @@ namespace MetaVirus.Logic.UI.Windows
             var playerInfo = _playerService.CurrentPlayerInfo;
             var task = _arenaService.GetPlayerArenaData(1, playerInfo.PlayerId);
             yield return task.AsCoroution();
-            var data = task.Result;
-            _textWinCount.text = Convert.ToString(data.Result.ArenaInfo.WinCount);
-            _textLoseCount.text = Convert.ToString(data.Result.ArenaInfo.LoseCount);
-            _textDrawCount.text = Convert.ToString(data.Result.ArenaInfo.DrawCount);
-            _textSeasonNo.text = Convert.ToString(data.Result.ArenaInfo.SeasonNo);
-            _textPlayerScore.text = Convert.ToString(data.Result.ArenaInfo.Score);
-            _textPlayerRank.text = Convert.ToString(data.Result.ArenaInfo.Rank);
+            if (task.Result.IsTimeout)
+            {
+                UIDialog.ShowTimeoutMessage();
+            }
+            else if (task.Result.IsError)
+            {
+                UIDialog.ShowErrorMessage(task.Result.MessageCode);
+            }
+            else
+            {
+                var data = task.Result;
+                _textWinCount.text = Convert.ToString(data.Result.ArenaInfo.WinCount);
+                _textLoseCount.text = Convert.ToString(data.Result.ArenaInfo.LoseCount);
+                _textDrawCount.text = Convert.ToString(data.Result.ArenaInfo.DrawCount);
+                _textSeasonNo.text = Convert.ToString(data.Result.ArenaInfo.SeasonNo);
+                _textPlayerScore.text = Convert.ToString(data.Result.ArenaInfo.Score);
+                _textPlayerRank.text = Convert.ToString(data.Result.ArenaInfo.Rank);
+            }
         }
 
         private IEnumerator GetArenaPlayerRecords()

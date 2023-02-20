@@ -66,24 +66,35 @@ namespace MetaVirus.Logic.UI.Windows
             var playerInfo = _playerService.CurrentPlayerInfo;
             var task = _arenaService.GetPlayerArenaData(1, playerInfo.PlayerId);
             yield return task.AsCoroution();
-            var data = task.Result;
-            var remainingTime = data.Result.ArenaInfo.hoursRemaining;
-            if (remainingTime < 1)
+            if (task.Result.IsTimeout)
             {
-                _textRemainingTime.text = Convert.ToString("Less than 1h");
+                UIDialog.ShowTimeoutMessage();
             }
-            else if (remainingTime < 24)
+            else if (task.Result.IsError)
             {
-                _textRemainingTime.text = Convert.ToString(remainingTime);
+                UIDialog.ShowErrorMessage(task.Result.MessageCode);
             }
             else
             {
-                _textRemainingTime.text = Convert.ToString(remainingTime / 24 + " days " + remainingTime % 24 + " hs");
+                var data = task.Result.Result;
+                var remainingTime = data.ArenaInfo.hoursRemaining;
+                if (remainingTime < 1)
+                {
+                    _textRemainingTime.text = Convert.ToString("Less than 1h");
+                }
+                else if (remainingTime < 24)
+                {
+                    _textRemainingTime.text = Convert.ToString(remainingTime);
+                }
+                else
+                {
+                    _textRemainingTime.text =
+                        Convert.ToString(remainingTime / 24 + " days " + remainingTime % 24 + " hs");
+                }
+                _textPlayerRank.text = Convert.ToString(data.ArenaInfo.Rank);
+                _textSeasonNo.text = Convert.ToString(data.ArenaInfo.SeasonNo);
+                _textPlayerScore.text = Convert.ToString(data.ArenaInfo.Score);
             }
-
-            _textPlayerRank.text = Convert.ToString(data.Result.ArenaInfo.Rank);
-            _textSeasonNo.text = Convert.ToString(data.Result.ArenaInfo.SeasonNo);
-            _textPlayerScore.text = Convert.ToString(data.Result.ArenaInfo.Score);
         }
     }
 }
