@@ -10,31 +10,30 @@ namespace MetaVirus.Logic.UI.Component.Common
         // private readonly GComponent _comp;
         // private readonly int _index;
         // private readonly List<ArenaPlayerData> _data;
-        public RankingMedal()
+        public struct Position
         {
-            // _comp = comp;
-            // _index = index;
-            // _data = data;
+            public int X;
+            public int Y;
         }
 
-        public static void RenderMedal(GComponent comp, int ranking, int index, List<ArenaPlayerData> data)
+        public static void RenderMedal(GComponent comp, int ranking, Position pos)
         {
             switch (ranking)
             {
                 case 1:
                     var goldMedal = UIPackage.CreateObject("Common", "icon_itemicon_medalgold").asImage;
                     goldMedal.SetSize(40,50);
-                    comp.AddChild(goldMedal).SetXY(40,40);
+                    comp.AddChild(goldMedal).SetXY(pos.X,pos.Y);
                     break;
                 case 2:
                     var silverMedal = UIPackage.CreateObject("Common", "icon_itemicon_medalsilver").asImage;
                     silverMedal.SetSize(40,50);
-                    comp.AddChild(silverMedal).SetXY(40,40);
+                    comp.AddChild(silverMedal).SetXY(pos.X,pos.Y);
                     break;
                 case 3:
                     var bronzeMedal = UIPackage.CreateObject("Common", "icon_itemicon_medalbronze").asImage;
                     bronzeMedal.SetSize(40,50);
-                    comp.AddChild(bronzeMedal).SetXY(40,40);
+                    comp.AddChild(bronzeMedal).SetXY(pos.X,pos.Y);
                     break;
                 default:
                     var textPlayerRanking = comp.GetChild("text_ranking").asTextField;

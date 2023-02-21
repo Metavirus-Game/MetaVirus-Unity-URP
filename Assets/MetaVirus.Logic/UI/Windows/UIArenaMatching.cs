@@ -73,7 +73,7 @@ namespace MetaVirus.Logic.UI.Windows
             var buttonChallenge = matchingListItem.GetChild("button_challenge").asButton;
             var playerRanking = _matchingData[index].ArenaInfo.Rank;
 
-            RankingMedal.RenderMedal(matchingListItem, playerRanking, index, _matchingData);
+            RankingMedal.RenderMedal(matchingListItem, playerRanking, new RankingMedal.Position { X = 40, Y = 40 });
 
             textLv.text = "Lv " + Convert.ToString(_matchingData[index].PlayerLevel);
             textOpponentName.text = _matchingData[index].PlayerName;

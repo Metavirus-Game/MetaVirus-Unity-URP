@@ -150,7 +150,7 @@ namespace MetaVirus.Logic.UI.Windows
             {
                 _arenaFormationDetail = task.Result.Result;
                 _dataNodeService.SetData(Constants.DataKeys.UIMonsterDetailDataList, _arenaFormationDetail);
-                var row = new MonsterFormationComp(_frameOpponent, _formationInfo, false);
+                var row = new MonsterFormationComp(_frameOpponent, _formationInfo, true);
                 _monsterFormationCompOpponent = row;
                 row.OnSlotClickedAction = slot =>
                 {

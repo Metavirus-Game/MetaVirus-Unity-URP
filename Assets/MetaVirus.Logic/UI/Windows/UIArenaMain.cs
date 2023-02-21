@@ -10,6 +10,7 @@ using GameEngine;
 using GameEngine.Event;
 using GameEngine.Network;
 using GameEngine.Utils;
+using MetaVirus.Logic.UI.Component.Common;
 using UnityEngine;
 
 namespace MetaVirus.Logic.UI.Windows
@@ -28,14 +29,15 @@ namespace MetaVirus.Logic.UI.Windows
         private GButton _btnRanking;
         private GButton _btnRecords;
         private UIService _uiService;
+        private GComponent _comp;
 
         public override bool IsFullscreenWindow => false;
 
         protected override GComponent MakeContent()
         {
-            var comp = UIPackage.CreateObject("Common", "ArenaMainUI").asCom;
+            _comp = UIPackage.CreateObject("Common", "ArenaMainUI").asCom;
             SetBgFadeInSetting(true);
-            return comp;
+            return _comp;
         }
 
         public override void LoadData(GComponent parentComp, GComponent content)
@@ -46,7 +48,7 @@ namespace MetaVirus.Logic.UI.Windows
             _textPlayerScore = content.GetChild("text_mainScore").asTextField;
             _textSeasonNo = content.GetChild(("text_seasonNum")).asTextField;
             _textRemainingTime = content.GetChild("text_remainingTime").asTextField;
-            _textPlayerRank = content.GetChild("text_mainRank").asTextField;
+            // _textPlayerRank = content.GetChild("text_mainRank").asTextField;
             _btnStart = content.GetChild("button_start").asButton;
             _btnRecords = content.GetChild("button_records").asButton;
             _btnRanking = content.GetChild("button_ranking").asButton;
@@ -91,7 +93,9 @@ namespace MetaVirus.Logic.UI.Windows
                     _textRemainingTime.text =
                         Convert.ToString(remainingTime / 24 + " days " + remainingTime % 24 + " hs");
                 }
-                _textPlayerRank.text = Convert.ToString(data.ArenaInfo.Rank);
+                // _textPlayerRank.text = Convert.ToString(data.ArenaInfo.Rank);
+                RankingMedal.RenderMedal(_comp, data.ArenaInfo.Rank, 
+                    new RankingMedal.Position { X = 400, Y = 910 });
                 _textSeasonNo.text = Convert.ToString(data.ArenaInfo.SeasonNo);
                 _textPlayerScore.text = Convert.ToString(data.ArenaInfo.Score);
             }

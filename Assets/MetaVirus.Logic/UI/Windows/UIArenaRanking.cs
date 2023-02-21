@@ -93,7 +93,7 @@ namespace MetaVirus.Logic.UI.Windows
         {
             var rankingListItem = obj.asCom;
             var playerRanking = _rankingData[index].ArenaInfo.Rank;
-            RankingMedal.RenderMedal(rankingListItem, playerRanking, index, _rankingData);
+            RankingMedal.RenderMedal(rankingListItem, playerRanking, new RankingMedal.Position { X = 40, Y = 40 });
             var textPlayerName = rankingListItem.GetChild("text_playerName").asTextField;
             var textPlayerLv = rankingListItem.GetChild("text_playerLv").asTextField;
             var textPlayerScore = rankingListItem.GetChild("text_score").asTextField;
