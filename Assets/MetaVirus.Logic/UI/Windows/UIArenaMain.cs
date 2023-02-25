@@ -10,6 +10,7 @@ using GameEngine;
 using GameEngine.Event;
 using GameEngine.Network;
 using GameEngine.Utils;
+using MetaVirus.Logic.UI.Component.Common;
 using UnityEngine;
 
 namespace MetaVirus.Logic.UI.Windows
@@ -21,20 +22,22 @@ namespace MetaVirus.Logic.UI.Windows
         private ArenaService _arenaService;
         private PlayerService _playerService;
         private GTextField _textPlayerScore;
+        private GTextField _textPlayerRank;
         private GTextField _textSeasonNo;
         private GTextField _textRemainingTime;
         private GButton _btnStart;
         private GButton _btnRanking;
         private GButton _btnRecords;
         private UIService _uiService;
+        private GComponent _comp;
 
         public override bool IsFullscreenWindow => false;
 
         protected override GComponent MakeContent()
         {
-            var comp = UIPackage.CreateObject("Common", "ArenaMainUI").asCom;
+            _comp = UIPackage.CreateObject("Common", "ArenaMainUI").asCom;
             SetBgFadeInSetting(true);
-            return comp;
+            return _comp;
         }
 
         public override void LoadData(GComponent parentComp, GComponent content)
@@ -45,6 +48,7 @@ namespace MetaVirus.Logic.UI.Windows
             _textPlayerScore = content.GetChild("text_mainScore").asTextField;
             _textSeasonNo = content.GetChild(("text_seasonNum")).asTextField;
             _textRemainingTime = content.GetChild("text_remainingTime").asTextField;
+            // _textPlayerRank = content.GetChild("text_mainRank").asTextField;
             _btnStart = content.GetChild("button_start").asButton;
             _btnRecords = content.GetChild("button_records").asButton;
             _btnRanking = content.GetChild("button_ranking").asButton;
@@ -64,10 +68,37 @@ namespace MetaVirus.Logic.UI.Windows
             var playerInfo = _playerService.CurrentPlayerInfo;
             var task = _arenaService.GetPlayerArenaData(1, playerInfo.PlayerId);
             yield return task.AsCoroution();
-            var data = task.Result;
-            _textSeasonNo.text = Convert.ToString(data.Result.ArenaInfo.SeasonNo);
-            _textPlayerScore.text = Convert.ToString(data.Result.ArenaInfo.Score);
-            _textRemainingTime.text = Convert.ToString(data.Result.ArenaInfo.hoursRemaining);
+            if (task.Result.IsTimeout)
+            {
+                UIDialog.ShowTimeoutMessage();
+            }
+            else if (task.Result.IsError)
+            {
+                UIDialog.ShowErrorMessage(task.Result.MessageCode);
+            }
+            else
+            {
+                var data = task.Result.Result;
+                var remainingTime = data.ArenaInfo.hoursRemaining;
+                if (remainingTime < 1)
+                {
+                    _textRemainingTime.text = Convert.ToString("Less than 1h");
+                }
+                else if (remainingTime < 24)
+                {
+                    _textRemainingTime.text = Convert.ToString(remainingTime);
+                }
+                else
+                {
+                    _textRemainingTime.text =
+                        Convert.ToString(remainingTime / 24 + " days " + remainingTime % 24 + " hs");
+                }
+                // _textPlayerRank.text = Convert.ToString(data.ArenaInfo.Rank);
+                RankingMedal.RenderMedal(_comp, data.ArenaInfo.Rank, 
+                    new RankingMedal.Position { X = 400, Y = 910 });
+                _textSeasonNo.text = Convert.ToString(data.ArenaInfo.SeasonNo);
+                _textPlayerScore.text = Convert.ToString(data.ArenaInfo.Score);
+            }
         }
     }
 }
