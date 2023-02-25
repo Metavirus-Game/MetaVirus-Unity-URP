@@ -29,6 +29,7 @@ namespace MetaVirus.Logic.UI.Windows
         private GTextField _textDrawCount;
         private GTextField _textSeasonNo;
         private GTextField _textPlayerScore;
+        private GTextField _textPlayerRank;
         private List<ArenaPlayerRecord> _playerRecord;
         private GList _listRecords;
 
@@ -56,6 +57,7 @@ namespace MetaVirus.Logic.UI.Windows
             _textLoseCount = content.GetChildByPath("playerInfo.text_loseNum").asTextField;
             _textWinCount = content.GetChildByPath("playerInfo.text_winNum").asTextField;
             _textPlayerScore = content.GetChildByPath("playerInfo.text_playerScore").asTextField;
+            _textPlayerRank = content.GetChildByPath("playerInfo.text_playerRank").asTextField;
             _textSeasonNo = content.GetChildByPath("playerInfo.text_seasonNum").asTextField;
 
             // _dataNodeService = GameFramework.GetService<DataNodeService>();
@@ -74,12 +76,24 @@ namespace MetaVirus.Logic.UI.Windows
             var playerInfo = _playerService.CurrentPlayerInfo;
             var task = _arenaService.GetPlayerArenaData(1, playerInfo.PlayerId);
             yield return task.AsCoroution();
-            var data = task.Result;
-            _textWinCount.text = Convert.ToString(data.Result.ArenaInfo.WinCount);
-            _textLoseCount.text = Convert.ToString(data.Result.ArenaInfo.LoseCount);
-            _textDrawCount.text = Convert.ToString(data.Result.ArenaInfo.DrawCount);
-            _textSeasonNo.text = Convert.ToString(data.Result.ArenaInfo.SeasonNo);
-            _textPlayerScore.text = Convert.ToString(data.Result.ArenaInfo.Score);
+            if (task.Result.IsTimeout)
+            {
+                UIDialog.ShowTimeoutMessage();
+            }
+            else if (task.Result.IsError)
+            {
+                UIDialog.ShowErrorMessage(task.Result.MessageCode);
+            }
+            else
+            {
+                var data = task.Result;
+                _textWinCount.text = Convert.ToString(data.Result.ArenaInfo.WinCount);
+                _textLoseCount.text = Convert.ToString(data.Result.ArenaInfo.LoseCount);
+                _textDrawCount.text = Convert.ToString(data.Result.ArenaInfo.DrawCount);
+                _textSeasonNo.text = Convert.ToString(data.Result.ArenaInfo.SeasonNo);
+                _textPlayerScore.text = Convert.ToString(data.Result.ArenaInfo.Score);
+                _textPlayerRank.text = Convert.ToString(data.Result.ArenaInfo.Rank);
+            }
         }
 
         private IEnumerator GetArenaPlayerRecords()
@@ -110,7 +124,6 @@ namespace MetaVirus.Logic.UI.Windows
             var textName = comp.GetChild("text_opponentName").asTextField;
             var buttonReplay = comp.GetChild("button_replay").asButton;
             var buttonFight = comp.GetChild("button_fight").asButton;
-            Debug.Log(_playerRecord[index].Result);
             switch (_playerRecord[index].Result)
             {
                 case 0:
