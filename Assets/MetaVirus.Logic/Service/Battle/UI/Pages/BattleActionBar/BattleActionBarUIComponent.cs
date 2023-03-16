@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using cfg.common;
 using FairyGUI;
 using GameEngine;
@@ -16,9 +17,15 @@ namespace MetaVirus.Logic.Service.Battle.UI.Pages.BattleActionBar
         private GComponent _hangerTop;
         private GComponent _hangerBottom;
 
+        private GProgressBar _hpBarSrc;
+        private GProgressBar _hpBarTar;
+
         private EventService _eventService;
 
         private readonly Dictionary<int, BattleActionBarHeader> _headers = new();
+
+        private int _totalHpTar = 0;
+        private int _totalHpSrc = 0;
 
         public BattleActionBarUIComponent(BattleUIManager manager, BaseBattleInstance battle) : base(manager, battle)
         {
@@ -60,6 +67,27 @@ namespace MetaVirus.Logic.Service.Battle.UI.Pages.BattleActionBar
             _hangerTop = _actionBar.GetChild("Hanger_Top").asCom;
             _hangerBottom = _actionBar.GetChild("Hanger_Bottom").asCom;
 
+            var srcs = Battle.GetUnitEntities(BattleUnitSide.Source);
+            var tars = Battle.GetUnitEntities(BattleUnitSide.Target);
+
+            _hpBarSrc = _actionBar.GetChild("n39").asProgress;
+            _hpBarTar = _actionBar.GetChild("n40").asProgress;
+
+            _totalHpSrc = srcs.Sum(entity => entity.BattleUnit.GetProperty(AttributeId.CalcHpMax));
+            _totalHpTar = tars.Sum(entity => entity.BattleUnit.GetProperty(AttributeId.CalcHpMax));
+            _hpBarSrc.value = _hpBarSrc.max = _totalHpSrc;
+            _hpBarTar.value = _hpBarTar.max = _totalHpTar;
+
+            _eventService.On<BattleUnitPropertiesChangedEvent>(GameEvents.BattleEvent.OnUnitPropertiesChanged,
+                OnUnitPropertiesChanged);
+
+            //setup src and target name
+            var txtSrcName = _actionBar.GetChild("txtAttack").asTextField;
+            var txtTarName = _actionBar.GetChild("txtDefence").asTextField;
+
+            txtSrcName.text = Battle.SrcName;
+            txtTarName.text = Battle.TarName;
+
             foreach (var entity in Battle.Entities.Values)
             {
                 var headerComp = UIPackage.CreateObject("BattlePage", "BattleActionHeader").asCom;
@@ -74,8 +102,28 @@ namespace MetaVirus.Logic.Service.Battle.UI.Pages.BattleActionBar
             }
         }
 
+        private void OnUnitPropertiesChanged(BattleUnitPropertiesChangedEvent evt)
+        {
+            if (evt.ChangedProperty == AttributeId.CalcHp)
+            {
+                var bu = evt.UnitEntity.BattleUnit;
+                if (bu.Side == BattleUnitSide.Source)
+                {
+                    _totalHpSrc -= evt.ValueFrom - evt.ValueTo;
+                    _hpBarSrc.TweenValue(_totalHpSrc, 0.2f);
+                }
+                else
+                {
+                    _totalHpTar -= evt.ValueFrom - evt.ValueTo;
+                    _hpBarTar.TweenValue(_totalHpTar, 0.2f);
+                }
+            }
+        }
+
         internal override void Release()
         {
+            _eventService.Remove<BattleUnitPropertiesChangedEvent>(GameEvents.BattleEvent.OnUnitPropertiesChanged,
+                OnUnitPropertiesChanged);
             foreach (var header in _headers.Values)
             {
                 header.Release();

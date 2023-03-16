@@ -1,8 +1,10 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using GameEngine.Network.Message.Attrs;
 using GameEngine.Network.Message.Protobuf;
 using GameEngine.Network.Utils;
 using Google.Protobuf;
+using UnityEngine;
 
 namespace GameEngine.Network.Message
 {
@@ -40,14 +42,22 @@ namespace GameEngine.Network.Message
 
         protected override void DecodeBody(byte[] body)
         {
-            var buffer = new ByteBufferBigEnding(body);
-            var data = buffer.ReadBytes();
-            var crc = buffer.ReadInt();
-            var key = GetKey(crc);
+            try
+            {
+                var buffer = new ByteBufferBigEnding(body);
+                var data = buffer.ReadBytes();
+                var crc = buffer.ReadInt();
+                var key = GetKey(crc);
 
-            var msg = new T();
-            msg.MergeFrom(CRCUtil.XOrData(data, key));
-            ProtoBufMsg = msg;
+                var msg = new T();
+                msg.MergeFrom(CRCUtil.XOrData(data, key));
+                ProtoBufMsg = msg;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Decode Message {MainType:X}-{SubType:X} Body Error");
+                Debug.LogException(e);
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using cfg.common;
 using FairyGUI;
 using GameEngine;
 using GameEngine.DataNode;
+using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Data.Player;
 using MetaVirus.Logic.Service.Player;
 using MetaVirus.Logic.Service.UI;
@@ -76,7 +77,7 @@ namespace MetaVirus.Logic.UI.Component.MonsterPanel
 
             if (string.IsNullOrEmpty(Panel.defaultItem))
             {
-                Panel.defaultItem = "ui://5jodq0f6s7qw8m";
+                Panel.defaultItem = "ui://5jodq0f6s7qw8m"; // Monster List Row
             }
 
 
@@ -169,35 +170,85 @@ namespace MetaVirus.Logic.UI.Component.MonsterPanel
             // GameFramework.GetService<UIService>().OpenWindow<UIMonsterDetail>();
         }
 
-        private void RenderMonsterListItem(PlayerPetData petData, GObject item)
+        private void RenderMonsterListItem(PlayerPetData petData, GObject item, bool showLevel = true)
         {
             var btn = item.asButton;
-            
-            var comp = btn.GetChild("n7").asCom;
-            MonsterHeaderGridButton.RenderHeaderComp(petData, comp);
 
-            var sc = comp.GetController("selected");
-            var cc = comp.GetController("checked");
+            var headerImg = btn.GetChildByPath("mask.PortraitLoader").asLoader;
+            headerImg.url = FairyImageUrl.Header(petData.ModelResId);
+
+            var name = btn.GetChild("txtName").asTextField;
+            name.text = petData.Name;
+
+            var level = petData.Level;
+            var levelMax = petData.LevelUpTable.LvMax;
+
+            var levelBarCtrl = btn.GetController("levelBar");
+            var qualityCtrl = btn.GetController("quality");
+            var labelCtrl = btn.GetController("label");
+            var checkCtrl = btn.GetController("checked");
+
+            if (showLevel)
+            {
+                levelBarCtrl.SetSelectedIndex(level == levelMax ? 1 : 0);
+                var txtLevel = btn.GetChild("txtLevel").asTextField;
+                txtLevel.text = level.ToString();
+                var sliderLevelBlue = btn.GetChild("sliderLevelBlue").asProgress;
+                var sliderLevelMax = btn.GetChild("sliderLevelMax").asProgress;
+                sliderLevelBlue.max = sliderLevelMax.max = levelMax;
+                sliderLevelBlue.min = sliderLevelMax.min = 1;
+                sliderLevelBlue.value = sliderLevelMax.value = level;
+            }
+            else
+            {
+                levelBarCtrl.SetSelectedIndex(2);
+            }
+
+            qualityCtrl.SetSelectedIndex((int)petData.Quality + 1);
             if (_selectedPets == null || _selectedPets.Length == 0)
             {
-                sc.selectedIndex = 0;
+                labelCtrl.selectedIndex = 0;
             }
             else
             {
                 var idx = Array.IndexOf(_selectedPets, petData.Id);
-                sc.selectedIndex = idx == -1 ? 0 : 1;
+                labelCtrl.selectedIndex = idx == -1 ? 0 : 2;
             }
-
 
             if (_checkedPets == null || _checkedPets.Length == 0)
             {
-                cc.selectedIndex = 0;
+                checkCtrl.selectedIndex = 0;
             }
             else
             {
                 var idx = Array.IndexOf(_checkedPets, petData.Id);
-                cc.selectedIndex = idx == -1 ? 0 : 1;
+                checkCtrl.selectedIndex = idx == -1 ? 0 : 1;
             }
+            // var comp = btn.GetChild("n7").asCom;
+            // MonsterHeaderGridButton.RenderHeaderComp(petData, comp);
+            //
+            // var sc = comp.GetController("selected");
+            // var cc = comp.GetController("checked");
+            // if (_selectedPets == null || _selectedPets.Length == 0)
+            // {
+            //     sc.selectedIndex = 0;
+            // }
+            // else
+            // {
+            //     var idx = Array.IndexOf(_selectedPets, petData.Id);
+            //     sc.selectedIndex = idx == -1 ? 0 : 1;
+            // }
+            //
+            //
+            // if (_checkedPets == null || _checkedPets.Length == 0)
+            // {
+            //     cc.selectedIndex = 0;
+            // }
+            // else
+            // {
+            //     var idx = Array.IndexOf(_checkedPets, petData.Id);
+            //     cc.selectedIndex = idx == -1 ? 0 : 1;
+            // }
         }
     }
 }

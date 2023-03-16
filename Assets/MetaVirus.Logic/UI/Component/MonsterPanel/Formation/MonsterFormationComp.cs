@@ -20,6 +20,11 @@ namespace MetaVirus.Logic.UI.Component.MonsterPanel.Formation
         private int _selectedSlot;
 
         /// <summary>
+        /// 是否显示阵型图标的选中状态
+        /// </summary>
+        private bool _enableCheck = true;
+
+        /// <summary>
         /// 返回当前阵型上的所有怪物Id集合
         /// </summary>
         public int[] SelectedPets => (from btn in _slots where btn.PetData != null select btn.PetData.Id).ToArray();
@@ -62,7 +67,7 @@ namespace MetaVirus.Logic.UI.Component.MonsterPanel.Formation
                     _selectedSlot = value;
                     for (var i = 0; i < _slots.Count; i++)
                     {
-                        _slots[i].Checked = _selectedSlot == i;
+                        _slots[i].Checked = _enableCheck && _selectedSlot == i;
                     }
                 }
             }
@@ -84,10 +89,13 @@ namespace MetaVirus.Logic.UI.Component.MonsterPanel.Formation
         /// <param name="rowContainer"></param>
         /// <param name="formationInfo"></param>
         /// <param name="reverseRow">是否反转row的排列，反转后从下向上排列</param>
-        public MonsterFormationComp(GComponent rowContainer, int[] formationInfo, bool reverseRow = false)
+        /// <param name="enableCheck">是否开启选中功能</param>
+        public MonsterFormationComp(GComponent rowContainer, int[] formationInfo, bool reverseRow = false,
+            bool enableCheck = true)
         {
             _reverseRow = reverseRow;
             _container = rowContainer;
+            _enableCheck = enableCheck;
             FormationInfo = formationInfo;
             SetAllSlotsEmpty();
             SelectedSlot = 0;

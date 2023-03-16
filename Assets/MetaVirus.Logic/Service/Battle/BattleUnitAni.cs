@@ -44,9 +44,9 @@ namespace MetaVirus.Logic.Service.Battle
         [SerializeField] [Header("投射物顶部生成位置")] private Transform headupSpawnPos;
         [SerializeField] [Header("头顶绑定位置")] private Transform topPos;
 
-        [Header("奔跑速度")] public float runSpeed = 6f;
+        [Header("奔跑速度")] public float runSpeed = 12f;
         [Header("行走速度")] public float walkSpeed = 3f;
-        [Header("后退速度")] public float backwardSpeed = 3f;
+        [Header("后退速度")] public float backwardSpeed = 12f; 
         [Header("近战攻击距离")] public float meleeDistance = 1.5f;
 
         public UnityAction<string> OnAniEvent;

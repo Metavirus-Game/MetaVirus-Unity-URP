@@ -82,17 +82,18 @@ namespace MetaVirus.Logic.Service.Battle
             }
 
             AtkSkills = skills.ToArray();
-
+ 
 
             switch (SourceType)
             {
                 case BattleSourceType.MonsterData:
                     var md = _gameDataService.GetMonsterData(SourceId);
-                    UnitDataProvider = new MonsterDataProvider(md);
+                    UnitDataProvider = new MonsterBasicDataProvider(md);
                     break;
                 case BattleSourceType.PlayerData:
-                    var pd = _playerService.GetPetData(SourceId);
-                    UnitDataProvider = new PlayerPetDataProvider(pd);
+                    //var pd = _playerService.GetPetData(SourceId);
+                    var pd = _gameDataService.gameTable.PetDatas.GetOrDefault(SourceId);
+                    UnitDataProvider = new PetDataBasicDataProvider(pd, Level);
                     break;
             }
 

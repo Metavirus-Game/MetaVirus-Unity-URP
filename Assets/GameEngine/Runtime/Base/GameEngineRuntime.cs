@@ -166,6 +166,7 @@ namespace GameEngine.Base
                     catch (System.Exception e)
                     {
                         Debug.LogError($"Service[{service.name}] exception : {e.Message}");
+                        Debug.LogException(e);
                     }
                 }
             }

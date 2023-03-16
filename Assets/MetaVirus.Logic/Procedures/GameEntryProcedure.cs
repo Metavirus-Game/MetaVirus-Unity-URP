@@ -65,6 +65,7 @@ namespace MetaVirus.Logic.Procedures
                 {
                     NextEnterProcedure.BattleTestProcedure => typeof(EnterBattleTestProcedure),
                     NextEnterProcedure.UITestProcedure => typeof(UITestProcedure),
+                    NextEnterProcedure.MonsterTestProcedure => typeof(EnterMonsterTestProcedure),
                     _ => typeof(MainPageProcedure)
                 };
             }
@@ -101,14 +102,13 @@ namespace MetaVirus.Logic.Procedures
             yield return fontTask.AsCoroution();
 
             //加载英文及数字字体
-            var tmpFont = new FloatingTextFont
+            var tmpFont = new TMPFont
             {
                 name = Constants.EnJosefinSans,
                 fontAsset = fontTask.Result
             };
 
             FontManager.RegisterFont(tmpFont);
-
 
             Debug.Log("Fonts Loaded");
 

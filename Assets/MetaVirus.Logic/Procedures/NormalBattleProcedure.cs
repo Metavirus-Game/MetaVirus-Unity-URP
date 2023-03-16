@@ -45,21 +45,6 @@ namespace MetaVirus.Logic.Procedures
             _battleService = GetService<BattleService>();
         }
 
-        // public override IEnumerator OnPrepare(FsmEntity<ProcedureService> fsm)
-        // {
-        //     var task = _fairyService.AddPackageAsync("ui-battle");
-        //     yield return task.AsCoroution();
-        //
-        //     _loadedPkgs = task.Result;
-        //
-        //     _battlePageComp = UIPackage.CreateObject("BattlePage", "BattlePage").asCom;
-        //
-        //     _fairyService.AddToGRootFullscreen(_battlePageComp);
-        //
-        //     _btnSkip = _battlePageComp.GetChild("btnSkip").asButton;
-        //     _btnSkip.text = L("BattlePage_Btn_Skip");
-        // }
-
         public override void OnEnter(FsmEntity<ProcedureService> fsm)
         {
             var player = PlayerEntity.Current?.Player;
@@ -67,13 +52,6 @@ namespace MetaVirus.Logic.Procedures
             {
                 player.SetActive(false);
             }
-
-            // _btnSkip.onClick.Add(() =>
-            // {
-            //     var mapId = _dataService.GetData<int>(Constants.DataKeys.MapCurrentId);
-            //     var entity = PlayerEntity.Current;
-            //     ChangeMapProcedure.ChangeMap(mapId, entity.Position);
-            // });
         }
 
         public override void OnLeave(FsmEntity<ProcedureService> fsm, bool isShutdown)

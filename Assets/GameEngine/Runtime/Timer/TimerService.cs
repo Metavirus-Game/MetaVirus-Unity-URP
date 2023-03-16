@@ -40,7 +40,15 @@ namespace GameEngine.Timer
                 {
                     _last = 0;
                     _ticksElapsed++;
-                    _callBack.Invoke();
+                    try
+                    {
+                        _callBack.Invoke();
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError("timer callback exception " + e.Message);
+                        Debug.LogException(e);
+                    }
 
                     if (_ticks > 0 && _ticks == _ticksElapsed)
                     {

@@ -23,6 +23,11 @@ namespace MetaVirus.Logic.Service.Battle.Fsm.BattleFsm
                 //进行行动
                 ChangeState<BattleStateAction>(fsm);
             }
+            else if (bi.BattleCompleted)
+            {
+                //战斗完毕
+                ChangeState<BattleStateCompleted>(fsm);
+            }
         }
     }
 }

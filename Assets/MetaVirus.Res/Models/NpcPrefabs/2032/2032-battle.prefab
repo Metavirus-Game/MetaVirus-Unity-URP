@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &4323144342878910278
+--- !u!1001 &8664453129461742844
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -73,32 +73,32 @@ PrefabInstance:
       propertyPath: m_Name
       value: 2032-battle
       objectReference: {fileID: 0}
-    - target: {fileID: 1847899363889431677, guid: cf175902475799540b9dce9774f9e66d,
+    - target: {fileID: 3780026901731055779, guid: cf175902475799540b9dce9774f9e66d,
         type: 3}
       propertyPath: m_RootOrder
       value: 9
       objectReference: {fileID: 0}
-    - target: {fileID: 3365840706037979341, guid: cf175902475799540b9dce9774f9e66d,
+    - target: {fileID: 7109777141666173138, guid: cf175902475799540b9dce9774f9e66d,
         type: 3}
       propertyPath: m_RootOrder
       value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 2810533175229346548, guid: cf175902475799540b9dce9774f9e66d, type: 3}
+    - {fileID: -3268463541543206535, guid: cf175902475799540b9dce9774f9e66d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: cf175902475799540b9dce9774f9e66d, type: 3}
---- !u!1 &3358802958297627857 stripped
+--- !u!1 &7880291741377738603 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1540857387673783191, guid: cf175902475799540b9dce9774f9e66d,
     type: 3}
-  m_PrefabInstance: {fileID: 4323144342878910278}
+  m_PrefabInstance: {fileID: 8664453129461742844}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1762801006519207920
+--- !u!114 &337370046580903201
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3358802958297627857}
+  m_GameObject: {fileID: 7880291741377738603}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3902d0634d124d6ea35252c1e90433e0, type: 3}
@@ -110,7 +110,7 @@ MonoBehaviour:
   projectileSpawnPos: {fileID: 0}
   headupSpawnPos: {fileID: 0}
   topPos: {fileID: 0}
-  runSpeed: 6
+  runSpeed: 12
   walkSpeed: 3
-  backwardSpeed: 3
+  backwardSpeed: 12
   meleeDistance: 1.5

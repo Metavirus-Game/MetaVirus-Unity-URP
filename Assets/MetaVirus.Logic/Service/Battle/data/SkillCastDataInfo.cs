@@ -34,7 +34,7 @@ namespace MetaVirus.Logic.Service.Battle.data
 
         public SkillCastDataInfo(SkillCastDataPb castData, float dmgPercent = 1)
         {
-            Data = castData;
+            Data = castData.Clone();
             DmgPercent = dmgPercent;
         }
     }

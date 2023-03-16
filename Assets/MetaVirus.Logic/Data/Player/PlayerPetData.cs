@@ -95,7 +95,10 @@ namespace MetaVirus.Logic.Data.Player
             var baseAttrs = GrowTable.Attributes[0];
             var growAttrs = GrowTable.Attributes[1];
 
-            return (int)(baseAttrs.Attrs[attrIdx] + growAttrs.Attrs[attrIdx] * Level);
+            var l = Level - 1;
+            l = Mathf.Max(l, 0);
+
+            return (int)(baseAttrs.Attrs[attrIdx] + growAttrs.Attrs[attrIdx] * l);
         }
 
         public float GetBaseAttributeGrow(AttributeId attr)

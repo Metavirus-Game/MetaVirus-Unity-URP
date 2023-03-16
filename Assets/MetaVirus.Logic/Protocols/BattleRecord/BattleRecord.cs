@@ -26,17 +26,19 @@ namespace MetaVirus.Battle.Record {
           string.Concat(
             "ChJCYXR0bGVSZWNvcmQucHJvdG8SF01ldGFWaXJ1cy5iYXR0bGUucmVjb3Jk",
             "GhRCYXR0bGVVbml0RGF0YS5wcm90bxoZZ29vZ2xlL3Byb3RvYnVmL2FueS5w",
-            "cm90byLzAQoOQmF0dGxlUmVjb3JkUGISEAoIYmF0dGxlSWQYASABKAUSFAoM",
-            "dGlja0ludGVydmFsGAIgASgFEhkKEXJvdW5kQWN0aW9uRW5lcmd5GAYgASgF",
-            "EjsKCHNyY1VuaXRzGAMgAygLMikuTWV0YVZpcnVzLmJhdHRsZS5yZWNvcmQu",
-            "QmF0dGxlVW5pdERhdGFQYhI7Cgh0YXJVbml0cxgEIAMoCzIpLk1ldGFWaXJ1",
-            "cy5iYXR0bGUucmVjb3JkLkJhdHRsZVVuaXREYXRhUGISJAoGZnJhbWVzGAUg",
-            "AygLMhQuZ29vZ2xlLnByb3RvYnVmLkFueUIyChtjb20ubWV0YXZpcnVzLmJh",
-            "dHRsZS5yZWNvcmRCEUJhdHRsZVJlY29yZFBCT3V0UAFiBnByb3RvMw=="));
+            "cm90byKrAgoOQmF0dGxlUmVjb3JkUGISEAoIYmF0dGxlSWQYASABKAUSFAoM",
+            "dGlja0ludGVydmFsGAIgASgFEjsKCHNyY1VuaXRzGAMgAygLMikuTWV0YVZp",
+            "cnVzLmJhdHRsZS5yZWNvcmQuQmF0dGxlVW5pdERhdGFQYhI7Cgh0YXJVbml0",
+            "cxgEIAMoCzIpLk1ldGFWaXJ1cy5iYXR0bGUucmVjb3JkLkJhdHRsZVVuaXRE",
+            "YXRhUGISJAoGZnJhbWVzGAUgAygLMhQuZ29vZ2xlLnByb3RvYnVmLkFueRIZ",
+            "ChFyb3VuZEFjdGlvbkVuZXJneRgGIAEoBRIPCgdzcmNOYW1lGAcgASgJEg8K",
+            "B3Rhck5hbWUYCCABKAkSFAoMYmF0dGxlUmVzdWx0GAkgASgFQjIKG2NvbS5t",
+            "ZXRhdmlydXMuYmF0dGxlLnJlY29yZEIRQmF0dGxlUmVjb3JkUEJPdXRQAWIG",
+            "cHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::MetaVirus.Battle.Record.BattleUnitDataReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.AnyReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::MetaVirus.Battle.Record.BattleRecordPb), global::MetaVirus.Battle.Record.BattleRecordPb.Parser, new[]{ "BattleId", "TickInterval", "RoundActionEnergy", "SrcUnits", "TarUnits", "Frames" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::MetaVirus.Battle.Record.BattleRecordPb), global::MetaVirus.Battle.Record.BattleRecordPb.Parser, new[]{ "BattleId", "TickInterval", "SrcUnits", "TarUnits", "Frames", "RoundActionEnergy", "SrcName", "TarName", "BattleResult" }, null, null, null, null)
           }));
     }
     #endregion
@@ -79,10 +81,13 @@ namespace MetaVirus.Battle.Record {
     public BattleRecordPb(BattleRecordPb other) : this() {
       battleId_ = other.battleId_;
       tickInterval_ = other.tickInterval_;
-      roundActionEnergy_ = other.roundActionEnergy_;
       srcUnits_ = other.srcUnits_.Clone();
       tarUnits_ = other.tarUnits_.Clone();
       frames_ = other.frames_.Clone();
+      roundActionEnergy_ = other.roundActionEnergy_;
+      srcName_ = other.srcName_;
+      tarName_ = other.tarName_;
+      battleResult_ = other.battleResult_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -113,18 +118,6 @@ namespace MetaVirus.Battle.Record {
       get { return tickInterval_; }
       set {
         tickInterval_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "roundActionEnergy" field.</summary>
-    public const int RoundActionEnergyFieldNumber = 6;
-    private int roundActionEnergy_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int RoundActionEnergy {
-      get { return roundActionEnergy_; }
-      set {
-        roundActionEnergy_ = value;
       }
     }
 
@@ -161,6 +154,57 @@ namespace MetaVirus.Battle.Record {
       get { return frames_; }
     }
 
+    /// <summary>Field number for the "roundActionEnergy" field.</summary>
+    public const int RoundActionEnergyFieldNumber = 6;
+    private int roundActionEnergy_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int RoundActionEnergy {
+      get { return roundActionEnergy_; }
+      set {
+        roundActionEnergy_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "srcName" field.</summary>
+    public const int SrcNameFieldNumber = 7;
+    private string srcName_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string SrcName {
+      get { return srcName_; }
+      set {
+        srcName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "tarName" field.</summary>
+    public const int TarNameFieldNumber = 8;
+    private string tarName_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string TarName {
+      get { return tarName_; }
+      set {
+        tarName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "battleResult" field.</summary>
+    public const int BattleResultFieldNumber = 9;
+    private int battleResult_;
+    /// <summary>
+    ///战斗结果 0胜 1平 2负
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int BattleResult {
+      get { return battleResult_; }
+      set {
+        battleResult_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -178,10 +222,13 @@ namespace MetaVirus.Battle.Record {
       }
       if (BattleId != other.BattleId) return false;
       if (TickInterval != other.TickInterval) return false;
-      if (RoundActionEnergy != other.RoundActionEnergy) return false;
       if(!srcUnits_.Equals(other.srcUnits_)) return false;
       if(!tarUnits_.Equals(other.tarUnits_)) return false;
       if(!frames_.Equals(other.frames_)) return false;
+      if (RoundActionEnergy != other.RoundActionEnergy) return false;
+      if (SrcName != other.SrcName) return false;
+      if (TarName != other.TarName) return false;
+      if (BattleResult != other.BattleResult) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -191,10 +238,13 @@ namespace MetaVirus.Battle.Record {
       int hash = 1;
       if (BattleId != 0) hash ^= BattleId.GetHashCode();
       if (TickInterval != 0) hash ^= TickInterval.GetHashCode();
-      if (RoundActionEnergy != 0) hash ^= RoundActionEnergy.GetHashCode();
       hash ^= srcUnits_.GetHashCode();
       hash ^= tarUnits_.GetHashCode();
       hash ^= frames_.GetHashCode();
+      if (RoundActionEnergy != 0) hash ^= RoundActionEnergy.GetHashCode();
+      if (SrcName.Length != 0) hash ^= SrcName.GetHashCode();
+      if (TarName.Length != 0) hash ^= TarName.GetHashCode();
+      if (BattleResult != 0) hash ^= BattleResult.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -228,6 +278,18 @@ namespace MetaVirus.Battle.Record {
         output.WriteRawTag(48);
         output.WriteInt32(RoundActionEnergy);
       }
+      if (SrcName.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(SrcName);
+      }
+      if (TarName.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteString(TarName);
+      }
+      if (BattleResult != 0) {
+        output.WriteRawTag(72);
+        output.WriteInt32(BattleResult);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -253,6 +315,18 @@ namespace MetaVirus.Battle.Record {
         output.WriteRawTag(48);
         output.WriteInt32(RoundActionEnergy);
       }
+      if (SrcName.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(SrcName);
+      }
+      if (TarName.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteString(TarName);
+      }
+      if (BattleResult != 0) {
+        output.WriteRawTag(72);
+        output.WriteInt32(BattleResult);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -269,12 +343,21 @@ namespace MetaVirus.Battle.Record {
       if (TickInterval != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(TickInterval);
       }
-      if (RoundActionEnergy != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(RoundActionEnergy);
-      }
       size += srcUnits_.CalculateSize(_repeated_srcUnits_codec);
       size += tarUnits_.CalculateSize(_repeated_tarUnits_codec);
       size += frames_.CalculateSize(_repeated_frames_codec);
+      if (RoundActionEnergy != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(RoundActionEnergy);
+      }
+      if (SrcName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(SrcName);
+      }
+      if (TarName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(TarName);
+      }
+      if (BattleResult != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(BattleResult);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -293,12 +376,21 @@ namespace MetaVirus.Battle.Record {
       if (other.TickInterval != 0) {
         TickInterval = other.TickInterval;
       }
-      if (other.RoundActionEnergy != 0) {
-        RoundActionEnergy = other.RoundActionEnergy;
-      }
       srcUnits_.Add(other.srcUnits_);
       tarUnits_.Add(other.tarUnits_);
       frames_.Add(other.frames_);
+      if (other.RoundActionEnergy != 0) {
+        RoundActionEnergy = other.RoundActionEnergy;
+      }
+      if (other.SrcName.Length != 0) {
+        SrcName = other.SrcName;
+      }
+      if (other.TarName.Length != 0) {
+        TarName = other.TarName;
+      }
+      if (other.BattleResult != 0) {
+        BattleResult = other.BattleResult;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -338,6 +430,18 @@ namespace MetaVirus.Battle.Record {
             RoundActionEnergy = input.ReadInt32();
             break;
           }
+          case 58: {
+            SrcName = input.ReadString();
+            break;
+          }
+          case 66: {
+            TarName = input.ReadString();
+            break;
+          }
+          case 72: {
+            BattleResult = input.ReadInt32();
+            break;
+          }
         }
       }
     #endif
@@ -375,6 +479,18 @@ namespace MetaVirus.Battle.Record {
           }
           case 48: {
             RoundActionEnergy = input.ReadInt32();
+            break;
+          }
+          case 58: {
+            SrcName = input.ReadString();
+            break;
+          }
+          case 66: {
+            TarName = input.ReadString();
+            break;
+          }
+          case 72: {
+            BattleResult = input.ReadInt32();
             break;
           }
         }

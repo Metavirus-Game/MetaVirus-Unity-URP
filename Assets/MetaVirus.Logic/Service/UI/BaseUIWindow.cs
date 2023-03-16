@@ -80,13 +80,13 @@ namespace MetaVirus.Logic.Service.UI
 
         public UnityAction OnClosed;
 
-        private UIService uiService;
+        private UIService _uiService;
 
         protected sealed override void OnInit()
         {
             base.OnInit();
 
-            uiService = GameFramework.GetService<UIService>();
+            _uiService = GameFramework.GetService<UIService>();
 
             this.SetSize(GRoot.inst.width, GRoot.inst.height);
             this.AddRelation(GRoot.inst, RelationType.Size);
@@ -115,28 +115,30 @@ namespace MetaVirus.Logic.Service.UI
             }
 
             ContentComp = MakeContent();
-            GButton btnBack = null;
+            // GButton btnBack = null;
+            //
+            // if (ContentComp.numChildren > 0)
+            // {
+            //     //先查找当前组件的子节点是否包含btnBack的按钮
+            //     btnBack = ContentComp.GetChild("btnBack")?.asButton;
+            //
+            //     if (btnBack == null)
+            //     {
+            //         //当前组件没有找到btnBack，查找是否包含CommonFrame组件，并在CommonFrame组件中查找btnBack
+            //
+            //         var comp = ContentComp.GetChildAt(0).asCom;
+            //         if (comp?.gameObjectName == "CommonFrame")
+            //         {
+            //             var obj = comp.GetChild("btnBack");
+            //             if (obj != null)
+            //             {
+            //                 btnBack = obj.asButton;
+            //             }
+            //         }
+            //     }
+            // }
 
-            if (ContentComp.numChildren > 0)
-            {
-                //先查找当前组件的子节点是否包含btnBack的按钮
-                btnBack = ContentComp.GetChild("btnBack")?.asButton;
-
-                if (btnBack == null)
-                {
-                    //当前组件没有找到btnBack，查找是否包含CommonFrame组件，并在CommonFrame组件中查找btnBack
-
-                    var comp = ContentComp.GetChildAt(0).asCom;
-                    if (comp?.gameObjectName == "CommonFrame")
-                    {
-                        var obj = comp.GetChild("btnBack");
-                        if (obj != null)
-                        {
-                            btnBack = obj.asButton;
-                        }
-                    }
-                }
-            }
+            var btnBack = FindButton("btnBack");
 
             if (btnBack != null)
             {
@@ -152,6 +154,20 @@ namespace MetaVirus.Logic.Service.UI
             }
 
 
+            var btnHome = FindButton("btnHome");
+            if (btnHome != null)
+            {
+                if (Closable)
+                {
+                    btnHome.visible = true;
+                    btnHome.onClick.Add(() => _uiService.ClearOpenWindows());
+                }
+                else
+                {
+                    btnHome.visible = false;
+                }
+            }
+
             AddComponentToParent(gcom, ContentComp);
             try
             {
@@ -163,6 +179,27 @@ namespace MetaVirus.Logic.Service.UI
             }
 
             ContentComp.alpha = ContentInitAlpha;
+        }
+
+        private GButton FindButton(string btnName)
+        {
+            if (ContentComp.numChildren <= 0) return null;
+            //先查找当前组件的子节点是否包含btnBack的按钮
+            var btn = ContentComp.GetChild(btnName)?.asButton;
+            if (btn != null) return btn;
+
+            //当前组件没有找到btnName，查找是否包含CommonFrame组件，并在CommonFrame组件中查找btnName
+            var comp = ContentComp.GetChildAt(0).asCom;
+            if (comp?.gameObjectName == "CommonFrame")
+            {
+                var obj = comp.GetChild(btnName);
+                if (obj != null)
+                {
+                    btn = obj.asButton;
+                }
+            }
+
+            return btn;
         }
 
         protected void SetBgFadeInSetting(bool fadeIn = false, float fadeInAlpha = 0.4f, float fadeInDuration = 0.3f)
@@ -211,7 +248,7 @@ namespace MetaVirus.Logic.Service.UI
             _isHiding = true;
             _isReleaseWhenClosed = true;
             BeforeHiding();
-            uiService.OnWindowClosing(this);
+            _uiService.OnWindowClosing(this);
             base.Hide();
         }
 
@@ -225,7 +262,7 @@ namespace MetaVirus.Logic.Service.UI
             _isHiding = true;
             _isReleaseWhenClosed = false;
             BeforeHiding();
-            uiService.OnWindowClosing(this);
+            _uiService.OnWindowClosing(this);
             DoHideAnimation();
         }
 
@@ -238,7 +275,7 @@ namespace MetaVirus.Logic.Service.UI
         protected override void OnShown()
         {
             base.OnShown();
-            uiService.OnWindowShown(this);
+            _uiService.OnWindowShown(this);
         }
 
         /// <summary>
@@ -307,7 +344,7 @@ namespace MetaVirus.Logic.Service.UI
                 HideImmediately();
                 if (!_isReleaseWhenClosed) return;
                 Release();
-                uiService.OnWindowClosed(this);
+                _uiService.OnWindowClosed(this);
             });
         }
     }

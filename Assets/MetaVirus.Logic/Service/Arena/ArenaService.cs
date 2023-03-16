@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GameEngine;
@@ -14,6 +15,7 @@ using MetaVirus.Logic.Service.Battle;
 using MetaVirus.Logic.Service.Player;
 using MetaVirus.Logic.UI;
 using MetaVirus.Net.Messages.Arena;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace MetaVirus.Logic.Service.Arena
@@ -43,6 +45,7 @@ namespace MetaVirus.Logic.Service.Arena
             foreach (var arenaData in _gameDataService.gameTable.ArenaDatas.DataList)
             {
                 GetPlayerArenaData(arenaData.Id, playerInfo.PlayerId);
+                GetArenaPlayerRecords(arenaData.Id);
             }
         }
 
@@ -65,6 +68,12 @@ namespace MetaVirus.Logic.Service.Arena
             }
 
             return result;
+        }
+
+        private void ClearPlayerArenaData(int arenaId, int playerId)
+        {
+            _playerDataMap.TryGetValue(arenaId, out var map);
+            map?.ClearArenaPlayerData(playerId);
         }
 
         /// <summary>
@@ -173,6 +182,10 @@ namespace MetaVirus.Logic.Service.Arena
 
             var req = new ArenaMatchBattleRequestCs(pb);
             var playerInfo = _playerService.CurrentPlayerInfo;
+
+            //备份当前积分和排名
+            var apd = await GetPlayerArenaData(arenaId, playerInfo.PlayerId);
+
             var resp = await _networkService.SendPacketToAsync(req, playerInfo.sceneServerId);
 
             if (!resp.IsSuccess)
@@ -181,7 +194,8 @@ namespace MetaVirus.Logic.Service.Arena
             }
 
             var packet = resp.GetPacket<ArenaMatchBattleResponseSc>();
-            var data = ArenaBattleResult.FromProtoBuf(packet.ProtoBufMsg);
+
+            var data = ArenaBattleResult.FromProtoBuf(packet.ProtoBufMsg, apd.Result);
 
             //更新玩家的竞技场排名数据
             _playerDataMap.TryGetValue(arenaId, out var map);
@@ -296,7 +310,7 @@ namespace MetaVirus.Logic.Service.Arena
             _networkService = GameFramework.GetService<NetworkService>();
             _playerService = GameFramework.GetService<PlayerService>();
             _gameDataService = GameFramework.GetService<GameDataService>();
-            
+
             Event.On<PlayerInfo>(GameEvents.PlayerEvent.PlayerLoginSuccessful, OnPlayerLogin);
             _networkService.RegisterPacketListener(Protocols.Protocols.Arena.Main,
                 Protocols.Protocols.Arena.ArenaNewRecordNotification, OnRecvNotifition);
@@ -317,6 +331,8 @@ namespace MetaVirus.Logic.Service.Arena
                 var record = records[i];
                 var r = ArenaPlayerRecord.FromProtoBuf(record);
                 list.Insert(0, r);
+                ClearPlayerArenaData(arenaId, r.AttackId);
+                ClearPlayerArenaData(arenaId, r.DefenceId);
                 l.Insert(0, r);
             }
 

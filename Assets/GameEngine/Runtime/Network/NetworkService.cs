@@ -193,7 +193,7 @@ namespace GameEngine.Network
                 var bodyLen = totalLen - NetBusBasePacket.HeadByteLenPos;
 
                 _memStream.Position -= NetBusBasePacket.HeadByteLenPos;
-
+                
                 if (StreamRemainingByes < bodyLen)
                 {
                     //not enough bytes for body

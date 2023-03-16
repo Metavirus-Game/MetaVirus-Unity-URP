@@ -48,6 +48,9 @@ namespace MetaVirus.Logic.FsmStates.MainPage
         {
             fsm.Owner.BtnEnter.visible = true;
 
+            var enterCtrl = fsm.Owner.MainPageCom.GetController("enter");
+            enterCtrl?.SetSelectedIndex(1);
+            
             // fsm.Owner.ChangeScene<NormalMapProcedure>(
             //     "Assets/MetaVirus.Res/Scenes/Maps/01.Forest/01.Forest.unity");
 

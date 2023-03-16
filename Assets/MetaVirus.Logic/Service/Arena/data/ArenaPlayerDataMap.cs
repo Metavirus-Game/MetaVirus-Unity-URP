@@ -21,7 +21,7 @@ namespace MetaVirus.Logic.Service.Arena.data
         public ArenaPlayerData GetArenaPlayerData(int playerId)
         {
             _dataMap.TryGetValue(playerId, out var data);
-            if (data != null && data.UpdateTime - Time.realtimeSinceStartup > UpdateInterval)
+            if (data != null && Time.realtimeSinceStartup - data.UpdateTime > UpdateInterval)
             {
                 //每两分钟更新一次数据
                 _dataMap[playerId] = null;
@@ -35,6 +35,15 @@ namespace MetaVirus.Logic.Service.Arena.data
         {
             _dataMap[data.PlayerId] = data;
             data.UpdateTime = Time.realtimeSinceStartup;
+        }
+
+        public void ClearArenaPlayerData(int playerId)
+        {
+            _dataMap.TryGetValue(playerId, out var playerData);
+            if (playerData != null)
+            {
+                playerData.UpdateTime = -UpdateInterval;
+            }
         }
 
         public void SetArenaPlayerSeasonInfo(int playerId, ArenaSeasonInfo arenaSeasonInfo)

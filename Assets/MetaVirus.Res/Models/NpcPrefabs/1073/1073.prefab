@@ -136,7 +136,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1734572081990702632}
   - component: {fileID: 1734572081997904328}
-  - component: {fileID: 2408459011958815529}
+  - component: {fileID: 187948952730795926}
   m_Layer: 0
   m_Name: 1073
   m_TagString: Untagged
@@ -173,8 +173,8 @@ Transform:
   - {fileID: 1734572081990702682}
   - {fileID: 1734572081990702674}
   - {fileID: 1734572081990703020}
-  - {fileID: 6256084016733735786}
-  - {fileID: 7643854655674829308}
+  - {fileID: 5142469777635538528}
+  - {fileID: 2969529789729244716}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -198,7 +198,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!195 &2408459011958815529
+--- !u!195 &187948952730795926
 NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2294,7 +2294,7 @@ Transform:
   m_Father: {fileID: 1734572081990702684}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6317632309467505244
+--- !u!1 &3343136551605192170
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2302,7 +2302,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6256084016733735786}
+  - component: {fileID: 5142469777635538528}
   m_Layer: 0
   m_Name: HUDPos
   m_TagString: Untagged
@@ -2310,13 +2310,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6256084016733735786
+--- !u!4 &5142469777635538528
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6317632309467505244}
+  m_GameObject: {fileID: 3343136551605192170}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.020314991, y: 2.7263846, z: -0.040482998}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -2325,7 +2325,7 @@ Transform:
   m_Father: {fileID: 1734572081990702632}
   m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &7791185462979859387
+--- !u!1 &5467600789294477168
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2333,7 +2333,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7643854655674829308}
+  - component: {fileID: 2969529789729244716}
   m_Layer: 0
   m_Name: HitVfxPos
   m_TagString: Untagged
@@ -2341,13 +2341,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7643854655674829308
+--- !u!4 &2969529789729244716
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7791185462979859387}
+  m_GameObject: {fileID: 5467600789294477168}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.020314991, y: 1.2631923, z: -0.040482998}
   m_LocalScale: {x: 1, y: 1, z: 1}

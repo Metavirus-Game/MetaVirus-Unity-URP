@@ -80,8 +80,15 @@ namespace MetaVirus.Logic.UI.Windows
                 _switchBattle.selected = CurrentParty.PartyId == _battlePartyid;
 
                 _switchBattle.touchable = !_switchBattle.selected && _formationComp.SelectedPets.Length > 0;
+                
+                var selectedPets = _formationComp.SelectedPets.Length;
+                if (selectedPets == 1 && _currentPartyId == _battlePartyid)
+                {
+                    //出战状态下的小队至少要有一个队员
+                    _btnRemove.enabled = false;
+                }
+                
             }
-            
         }
 
         /// <summary>
@@ -250,14 +257,22 @@ namespace MetaVirus.Logic.UI.Windows
             {
                 _btnDetail.enabled = _btnRemove.enabled = row.CurrSlot.PetData != null;
 
+                var selectedPets = _formationComp.SelectedPets.Length;
+                if (selectedPets == 1 && _currentPartyId == _battlePartyid)
+                {
+                    //出战状态下的小队至少要有一个队员
+                    _btnRemove.enabled = false;
+                }
+
                 _monsterListPanel.CheckedPets =
                     row.CurrSlot.PetData == null ? null : new[] { row.CurrSlot.PetData.Id };
             };
 
             _monsterListPanel.OnItemSelected = (item, petData) =>
             {
-                var headerComp = item.GetChild("n7").asCom;
-                if (headerComp.GetController("selected").selectedIndex == 1)
+                //var headerComp = item.GetChild("n7").asCom;
+                // if (headerComp.GetController("selected").selectedIndex == 1)
+                if (item.GetController("label").selectedIndex == 2)
                 {
                     if (row.CurrSlot.PetData == petData)
                     {

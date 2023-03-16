@@ -86,7 +86,7 @@ namespace MetaVirus.Logic.Service.Battle.UI.Pages.BattleHeaderUI
 
             _sourceContainer = new BattleHeaderContainer(containerSource);
             _targetContainer = new BattleHeaderContainer(containerTarget);
-
+            
             foreach (var unit in sources)
             {
                 var header = UIPackage.CreateObject("BattlePage", "BattleHeaderUI").asCom;

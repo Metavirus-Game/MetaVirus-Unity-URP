@@ -1,21 +1,26 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &4009432190241319964
+--- !u!1001 &8612564562825494050
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 876669800106665840, guid: e45f36af7d0e97f4091088a4ef4656f0,
+    - target: {fileID: 2270788419587857803, guid: e45f36af7d0e97f4091088a4ef4656f0,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3512226975218359816, guid: e45f36af7d0e97f4091088a4ef4656f0,
         type: 3}
       propertyPath: m_Name
       value: 9013-battle
+      objectReference: {fileID: 0}
+    - target: {fileID: 3783639540603527961, guid: e45f36af7d0e97f4091088a4ef4656f0,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4320710710806906034, guid: e45f36af7d0e97f4091088a4ef4656f0,
         type: 3}
@@ -78,27 +83,22 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 22100000, guid: 9c03ec5112a6fcc47a36c5a8a90e131b,
         type: 2}
-    - target: {fileID: 8639350123458763394, guid: e45f36af7d0e97f4091088a4ef4656f0,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 5630774006855339348, guid: e45f36af7d0e97f4091088a4ef4656f0, type: 3}
+    - {fileID: -3270955500377425343, guid: e45f36af7d0e97f4091088a4ef4656f0, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e45f36af7d0e97f4091088a4ef4656f0, type: 3}
---- !u!1 &511636324604113428 stripped
+--- !u!1 &5131875989881348138 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3512226975218359816, guid: e45f36af7d0e97f4091088a4ef4656f0,
     type: 3}
-  m_PrefabInstance: {fileID: 4009432190241319964}
+  m_PrefabInstance: {fileID: 8612564562825494050}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8316872620134595340
+--- !u!114 &21148308905161547
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 511636324604113428}
+  m_GameObject: {fileID: 5131875989881348138}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3902d0634d124d6ea35252c1e90433e0, type: 3}
@@ -110,7 +110,7 @@ MonoBehaviour:
   projectileSpawnPos: {fileID: 0}
   headupSpawnPos: {fileID: 0}
   topPos: {fileID: 0}
-  runSpeed: 6
+  runSpeed: 12
   walkSpeed: 3
-  backwardSpeed: 3
+  backwardSpeed: 12
   meleeDistance: 1.5

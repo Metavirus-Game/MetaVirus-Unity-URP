@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &5817383169023448314
+--- !u!1001 &6400076510715496628
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -67,12 +67,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4963268841912498342, guid: 067c87e2cd3038d45bc2b44488995d8e,
+    - target: {fileID: 5204856224213117109, guid: 067c87e2cd3038d45bc2b44488995d8e,
         type: 3}
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
-    - target: {fileID: 6875763008629865529, guid: 067c87e2cd3038d45bc2b44488995d8e,
+    - target: {fileID: 7375389899432629502, guid: 067c87e2cd3038d45bc2b44488995d8e,
         type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -84,21 +84,21 @@ PrefabInstance:
       objectReference: {fileID: 22100000, guid: abe98fdec792908488b9eecade774f91,
         type: 2}
     m_RemovedComponents:
-    - {fileID: 989501529666706277, guid: 067c87e2cd3038d45bc2b44488995d8e, type: 3}
+    - {fileID: 7857834051002545370, guid: 067c87e2cd3038d45bc2b44488995d8e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 067c87e2cd3038d45bc2b44488995d8e, type: 3}
---- !u!1 &7437416806531941126 stripped
+--- !u!1 &8024816027393400648 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4002710532697217020, guid: 067c87e2cd3038d45bc2b44488995d8e,
     type: 3}
-  m_PrefabInstance: {fileID: 5817383169023448314}
+  m_PrefabInstance: {fileID: 6400076510715496628}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5874615642659706226
+--- !u!114 &7146789779449514939
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7437416806531941126}
+  m_GameObject: {fileID: 8024816027393400648}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3902d0634d124d6ea35252c1e90433e0, type: 3}
@@ -110,7 +110,7 @@ MonoBehaviour:
   projectileSpawnPos: {fileID: 0}
   headupSpawnPos: {fileID: 0}
   topPos: {fileID: 0}
-  runSpeed: 6
+  runSpeed: 12
   walkSpeed: 3
-  backwardSpeed: 3
+  backwardSpeed: 12
   meleeDistance: 1.5

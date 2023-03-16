@@ -43,19 +43,22 @@ namespace MetaVirus.Logic.Service.Battle.UI.Pages.BattleHeaderUI
         {
             _header = _headerComp.GetChild("Header").asCom;
             //header icon
-            _headerImg = _header.GetChild("PortraitLoader").asLoader;
+            _headerImg = _header.GetChildByPath("mask.PortraitLoader").asLoader;
             _headerImg.url = FairyImageUrl.Header(Unit.BattleUnit.ResourceId);
 
             //header bg 
-            _headerBg = _header.GetChild("card_bg").asLoader;
-            _headerBg.url = FairyImageUrl.HeaderBg(_unit.Quality);
+            // _headerBg = _header.GetChild("card_bg").asLoader;
+            // _headerBg.url = FairyImageUrl.HeaderBg(_unit.Quality);
 
             //level
-            _levelBg = _header.GetChild("card_level_bg").asLoader;
+            //_levelBg = _header.GetChild("card_level_bg").asLoader;
             _txtLevel = _header.GetChild("card_level_txt").asTextField;
 
-            _levelBg.url = FairyImageUrl.LevelFlag(_unit.Quality);
+            //_levelBg.url = FairyImageUrl.LevelFlag(_unit.Quality);
             _txtLevel.text = _unit.BattleUnit.Level.ToString();
+
+            var ctrl = _header.GetController("quality");
+            ctrl.SetSelectedIndex((int)_unit.Quality + 1);
 
             //hp mp bar
             _hpBar = _headerComp.GetChild("HpBar").asProgress;

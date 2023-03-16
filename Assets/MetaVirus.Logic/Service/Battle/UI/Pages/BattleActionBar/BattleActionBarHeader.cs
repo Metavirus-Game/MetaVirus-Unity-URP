@@ -49,8 +49,11 @@ namespace MetaVirus.Logic.Service.Battle.UI.Pages.BattleActionBar
             _glowFrame.visible = true;
             _glowFrame.alpha = 0;
 
-            var headBg = _headerComp.GetChild("n13").asImage;
-            headBg.color = _dataService.QualityToColor(entity.Quality);
+            //var headBg = _headerComp.GetChild("n13").asImage;
+            //headBg.color = _dataService.QualityToColor(entity.Quality);
+
+            var qualityCtrl = _headerComp.GetController("quality");
+            qualityCtrl.SetSelectedIndex((int)entity.Quality);
 
             _headerLoader = _headerComp.GetChildByPath("Portrait.Loader").asLoader;
             _headerLoader.url = Constants.FairyImageUrl.Header(Entity.BattleUnit.ResourceId);

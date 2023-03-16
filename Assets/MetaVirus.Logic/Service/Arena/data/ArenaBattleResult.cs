@@ -1,21 +1,15 @@
-﻿using MetaVirus.Logic.Service.Battle;
+﻿using MetaVirus.Logic.Data;
+using MetaVirus.Logic.Service.Battle;
 using MetaVirus.Net.Messages.Arena;
 
 namespace MetaVirus.Logic.Service.Arena.data
 {
-    public enum BattleResult
-    {
-        Win = 0,
-        Draw,
-        Lose
-    }
-
     public class ArenaBattleResult
     {
         /// <summary>
         /// 战斗结果，胜平负
         /// </summary>
-        public BattleResult Result { get; private set; }
+        public Constants.BattleResult Result { get; private set; }
 
         /// <summary>
         /// 战斗录像
@@ -27,19 +21,23 @@ namespace MetaVirus.Logic.Service.Arena.data
         /// </summary>
         public ArenaSeasonInfo ArenaInfo { get; private set; }
 
+        public int RankChanged { get; private set; }
+        public int ScoreChanged { get; private set; }
+
         private ArenaBattleResult()
         {
         }
 
-        public static ArenaBattleResult FromProtoBuf(ArenaMatchBattleResponseScPb pb)
+        public static ArenaBattleResult FromProtoBuf(ArenaMatchBattleResponseScPb pb, ArenaPlayerData currentData)
         {
             var ret = new ArenaBattleResult
             {
-                Result = (BattleResult)pb.Result,
+                Result = (Constants.BattleResult)pb.Result,
                 BattleRecord = BattleRecord.FromGZipData(pb.BattleRecord.ToByteArray()),
-                ArenaInfo = ArenaSeasonInfo.FromPbArenaInfo(pb.ArenaInfo)
+                ArenaInfo = ArenaSeasonInfo.FromPbArenaInfo(pb.ArenaInfo),
+                ScoreChanged = pb.ArenaInfo.Score - currentData?.ArenaInfo.Score ?? pb.ArenaInfo.Score,
+                RankChanged = pb.ArenaInfo.Rank - currentData?.ArenaInfo.Rank ?? pb.ArenaInfo.Rank
             };
-
 
             return ret;
         }

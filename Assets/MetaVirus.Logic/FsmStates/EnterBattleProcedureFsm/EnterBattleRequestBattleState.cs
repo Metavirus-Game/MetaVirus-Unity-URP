@@ -61,6 +61,7 @@ namespace MetaVirus.Logic.FsmStates.EnterBattleProcedureFsm
                         var br = BattleRecord.FromGZipData(packet.ProtoBufMsg.BattleResult.ToByteArray());
                         //收到战斗数据
                         owner.BattleRecord = br;
+                        owner.LoadingPage.SetBattleRecord(br);
                         //进入战斗
                         fsm.ChangeState<EnterBattleState>();
                     }

@@ -1,18 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &7501379195340432607
+--- !u!1001 &2850246517005866246
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 148543973096504420, guid: 6e2f7ceb729f55848971b6c302bf1e43,
+    - target: {fileID: 2451914960248017943, guid: 6e2f7ceb729f55848971b6c302bf1e43,
         type: 3}
       propertyPath: m_RootOrder
       value: 18
       objectReference: {fileID: 0}
-    - target: {fileID: 7472385660382744295, guid: 6e2f7ceb729f55848971b6c302bf1e43,
+    - target: {fileID: 4654205064005522135, guid: 6e2f7ceb729f55848971b6c302bf1e43,
         type: 3}
       propertyPath: m_RootOrder
       value: 17
@@ -84,21 +84,21 @@ PrefabInstance:
       objectReference: {fileID: 22100000, guid: 4e80590b0bdf8a249825f408e74f5e71,
         type: 2}
     m_RemovedComponents:
-    - {fileID: -183915377944744800, guid: 6e2f7ceb729f55848971b6c302bf1e43, type: 3}
+    - {fileID: -1359377817633057895, guid: 6e2f7ceb729f55848971b6c302bf1e43, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 6e2f7ceb729f55848971b6c302bf1e43, type: 3}
---- !u!1 &1498984864879113938 stripped
+--- !u!1 &6582339006429005579 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8995718604172022285, guid: 6e2f7ceb729f55848971b6c302bf1e43,
     type: 3}
-  m_PrefabInstance: {fileID: 7501379195340432607}
+  m_PrefabInstance: {fileID: 2850246517005866246}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &101903135845358721
+--- !u!114 &8244485076453115206
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1498984864879113938}
+  m_GameObject: {fileID: 6582339006429005579}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3902d0634d124d6ea35252c1e90433e0, type: 3}
@@ -110,7 +110,7 @@ MonoBehaviour:
   projectileSpawnPos: {fileID: 0}
   headupSpawnPos: {fileID: 0}
   topPos: {fileID: 0}
-  runSpeed: 6
+  runSpeed: 12
   walkSpeed: 3
-  backwardSpeed: 3
+  backwardSpeed: 12
   meleeDistance: 1.5

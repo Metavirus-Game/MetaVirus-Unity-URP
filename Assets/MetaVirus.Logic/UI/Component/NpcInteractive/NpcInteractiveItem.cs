@@ -32,6 +32,8 @@ namespace MetaVirus.Logic.UI.Component.NpcInteractive
         public GComponent UiComp { get; private set; }
 
         private GButton _btnHeader;
+        private GTextField _txtName;
+        private GLoader _headLoader;
 
         public NpcInteractiveItem()
         {
@@ -55,16 +57,17 @@ namespace MetaVirus.Logic.UI.Component.NpcInteractive
 
         private void MakeComponent()
         {
-            _btnHeader = UIPackage.CreateObject("Common", "BtnCircleHead_Red").asButton;
-
-            UiComp = new GComponent
-            {
-                size = _btnHeader.size
-            };
-
-            UiComp.AddChild(_btnHeader);
-
-            _btnHeader.SetPosition(0, 0, 0);
+            //_btnHeader = UIPackage.CreateObject("Common", "BtnCircleHead_Red").asButton;
+            // UiComp = new GComponent
+            // {
+            //     size = _btnHeader.size
+            // };
+            // UiComp.AddChild(_btnHeader);
+            //_btnHeader.SetPosition(0, 0, 0);
+            UiComp = UIPackage.CreateObject("Common", "BtnHeaderFrame").asCom;
+            _btnHeader = UiComp.GetChild("btnHeader").asButton;
+            _txtName = UiComp.GetChild("txtName").asTextField;
+            _headLoader = UiComp.GetChildByPath("btnHeader.loader.n1").asLoader;
             _btnHeader.onClick.Set(OnBtnClicked);
         }
 
@@ -88,6 +91,10 @@ namespace MetaVirus.Logic.UI.Component.NpcInteractive
         private void RefreshContent()
         {
             UiComp.visible = true;
+            if (NpcEntity != null)
+            {
+                _txtName.text = NpcEntity.MapNpc.Name;
+            }
         }
 
         public void OnSpawn()

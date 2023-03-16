@@ -32,6 +32,7 @@ namespace MetaVirus.Logic.Service
     {
 #if UNITY_EDITOR
         private static GameDataService _inst;
+
         public static GameDataService EditorInst
         {
             get
@@ -113,6 +114,14 @@ namespace MetaVirus.Logic.Service
                 Debug.LogError($"GameData File [{file}] Not Found!");
                 return null;
             });
+
+
+            // var str =
+            //     "H4sIAAAAAAAAAL2WQUgUYRTH9/u+cfv8SHdcTEUxJgla5jAOnkSIdI2wg7IglEEdZnfHdWl1l90V7OaMs0NKUgkFHTp18BBFR/HQKQgiCjpZp04eokMduon1ZmbXxonVlWZ2YC7v7f7e4/9/7/uGIn6p9wbVljl+lfZgYUgc3CEfOBOltmnqEfqMP2IWavlx/p5kvZ7ws66t7tAQCx08I1incUQmQ6HlSwk8s0oBrQN6nfcBvQJoXEOv84A2AL3pR9drgEY19KbVdQXQuxEf0Pfd6N0IoE1AG34IornRBj+gQNeUxz1EYOLga7SHLzzF29wefouTDxBj7Hv7Tr/1esI/Oy1y52P0bf+386CDGog4modGE2hmY0pMsqvlOwVVyuTzmZyqFLIlKZWfH5xUy8q1bHGxJCWVcjmnSkU1lS+mpUQxX1CL5axaGp9TFjLqWKqczS9cKSrzaiIZPUM5fqkHlB5ooX38GzTA0X4eiTf9rBGxa5h2jXb+riTOsvhJ6NO3s7ncuFIqH8YKFDlYQaMxNNTBIrb2CFxti73nZByEUmYTlNKCUQqwgk5jpElKaV6lAqhhNMENPRg3ACus0Bhukhu6V6lbftbgocZXAscItaXa6Ren2cWT4OOLs7OHkVFKLCQSNqZiwJXJMBMfcr4Y8I6AA067AgEHroMD1g3pOPAFyzhaCxAIPEcQ6Kh6FIbAEySjYdQr0DD/ySTwJ0jF4PcQxaNkoi2RniMFvIRscMULrjQAPuUCV+qArSuM2OA9B2w2AKYusFkHrHk71hoAt7rAWh2w4QUbDYCZC2z8C/Z/V6pzzMGyjAW1K69aq0eXfazM/O+udMOuAJIJIJUtEgcitU2kxV/Il4V5iWBhnJ6FNeuuPctO/x0TGUXbq1ZazqVlJ28ck9ePyVeOyZv182LKT8O63Ib18S+wPRU4kKmoXTaGf1MRtqdCd01FxpehOOfMxFH3WBA26M2wwfTfBmrbYAZlw1GfwUHYYHpskLe6R8KX09YTJ5Ik/QGEnPEb1A4AAA==";
+            // var bytes = Convert.FromBase64String(str);
+            //
+            // var br = BattleRecord.FromGZipData(bytes);
+            // Debug.Log(br);
 
             return gameTable;
         }

@@ -140,6 +140,24 @@ namespace MetaVirus.Logic.Service.UI
             return (T)OpenWindow(typeof(T));
         }
 
+        /// <summary>
+        /// 关闭所有开启的ui
+        /// </summary>
+        public void ClearOpenWindows()
+        {
+
+            while (_openWndList.Count > 1)
+            {
+                _openWndList[1].HideImmediately();
+                OnWindowClosed(_openWndList[1]);
+            }
+            
+            if (_openWndList.Count > 0)
+            {
+                _openWndList[0].Hide();
+            }
+        }
+
         private IEnumerator LoadUIAssets(BaseUIWindow uiWindow)
         {
             var waiting = UIWaitingWindow.ShowWaiting("Loading...");

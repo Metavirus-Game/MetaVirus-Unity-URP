@@ -13,7 +13,7 @@ namespace MetaVirus.Logic.UI.Component.Common
 
         public GButton HeaderButton => _headerButton;
 
-        private Controller _emptyCtrl;
+        private Controller _qualityCtrl;
         private Controller _checkCtrl;
 
         private IMonsterDataProvider _petData;
@@ -27,7 +27,7 @@ namespace MetaVirus.Logic.UI.Component.Common
             set
             {
                 _isEmpty = value;
-                _emptyCtrl.selectedIndex = _isEmpty ? 1 : 0;
+                _qualityCtrl.selectedIndex = _isEmpty ? 0 : (int)_petData.Quality + 1;
             }
         }
 
@@ -54,7 +54,7 @@ namespace MetaVirus.Logic.UI.Component.Common
                 else
                 {
                     Empty = false;
-                    RenderHeaderComp(_petData, _headerComp);
+                    RenderHeaderCompNew(_petData, _headerComp);
                 }
             }
         }
@@ -63,8 +63,9 @@ namespace MetaVirus.Logic.UI.Component.Common
         public MonsterHeaderGridButton(GButton headerButton = null)
         {
             _headerButton = headerButton ?? UIPackage.CreateObject("Common", "GridButton_MonsterHeader").asButton;
-            _headerComp = _headerButton.GetChild("n7").asCom;
-            _emptyCtrl = _headerComp.GetController("empty");
+            // _headerComp = _headerButton.GetChild("n7").asCom;
+            _headerComp = _headerButton.GetChild("headerComp").asCom;
+            _qualityCtrl = _headerComp.GetController("quality");
             _checkCtrl = _headerComp.GetController("checked");
             Empty = true;
         }
@@ -74,9 +75,28 @@ namespace MetaVirus.Logic.UI.Component.Common
         /// </summary>
         /// <param name="petData"></param>
         /// <param name="headerComp"></param>
+        public static void RenderHeaderCompNew(IMonsterDataProvider petData, GComponent headerComp)
+        {
+            var headerImg = headerComp.GetChildByPath("mask.PortraitLoader").asLoader;
+            headerImg.url = Constants.FairyImageUrl.Header(petData.ModelResId);
+
+            // var headerBg = headerComp.GetChild("card_bg").asLoader;
+            // headerBg.url = Constants.FairyImageUrl.HeaderBg(petData.Quality);
+
+            var text = headerComp.GetChild("card_level_txt").asTextField;
+            text.text = petData.Level.ToString();
+
+            // var rank = headerComp.GetChild("txt_rank").asTextField;
+            // rank.text = petData.QualityStr;
+            // rank.color = petData.QualityClr;
+
+            var ctrl = headerComp.GetController("quality");
+            ctrl.SetSelectedIndex((int)petData.Quality + 1);
+        }
+
         public static void RenderHeaderComp(IMonsterDataProvider petData, GComponent headerComp)
         {
-            var headerImg = headerComp.GetChild("PortraitLoader").asLoader;
+            var headerImg = headerComp.GetChildByPath("PortraitLoader").asLoader;
             headerImg.url = Constants.FairyImageUrl.Header(petData.ModelResId);
 
             var headerBg = headerComp.GetChild("card_bg").asLoader;
@@ -86,8 +106,8 @@ namespace MetaVirus.Logic.UI.Component.Common
             text.text = petData.Level.ToString();
 
             var rank = headerComp.GetChild("txt_rank").asTextField;
-            rank.text = petData.QualityStr;
-            rank.color = petData.QualityClr;
+            // rank.text = petData.QualityStr;
+            // rank.color = petData.QualityClr;
         }
     }
 }

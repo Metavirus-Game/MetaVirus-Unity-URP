@@ -76,6 +76,7 @@ namespace GameEngine.Event
                 catch (Exception e)
                 {
                     Debug.LogError($"message:{message} call exception: {e.StackTrace}");
+                    Debug.LogException(e);
                 }
             }
         }

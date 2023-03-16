@@ -46,6 +46,8 @@ namespace MetaVirus.Logic.UI.Windows
 
         public UnityAction<int> OnActorCreated;
 
+        public override bool IsFullscreenWindow => false;
+
         protected override GComponent MakeContent()
         {
             GameFramework.Inst.StartCoroutine(LoadModel());

@@ -1,6 +1,7 @@
 ﻿using System;
 using cfg.common;
 using cfg.skill;
+using FairyGUI;
 using MetaVirus.Logic.Data.Entities;
 using MetaVirus.Logic.Data.Player;
 using UnityEngine;
@@ -9,6 +10,31 @@ namespace MetaVirus.Logic.Data
 {
     public static class Constants
     {
+        public enum BattleTypes
+        {
+            /// <summary>
+            /// 地图npc触碰战斗
+            /// </summary>
+            MapNpc,
+
+            /// <summary>
+            /// 战斗录像播放
+            /// </summary>
+            Record,
+
+            /// <summary>
+            /// 竞技场战斗
+            /// </summary>
+            Arena,
+        }
+
+        public enum BattleResult
+        {
+            Win = 0,
+            Draw,
+            Lose
+        }
+
         public enum MonsterSort
         {
             BySpecies,
@@ -66,32 +92,34 @@ namespace MetaVirus.Logic.Data
             public const string MapCurrentLayer = "CommonData.Map.CurrentLayer";
 
             /**
-             * 战斗结束后返回的Procedure
+             * 战斗结束后返回的Procedure，没用了
              */
             public const string BattleBackProcedure = "CommonData.Battle.BackProcedure";
 
             //ui 相关数据
-            
+
             public const string UIDataInteractiveNpc = "UIData.Npc.Interactive";
-            
+
             //UIMonsterDetail 相关
             //需要同时提供以下两项provider
             /**
              * UIMonsterDetail 需要显示的数据，必须是IMonsterDataProvider类型
              */
             public const string UIMonsterDetailData = "UIData.Monster.Detail.Data";
+
             /**
              * UIMonsterDetail 需要显示的数据列表，必须是IMonsterListProvider类型
              */
             public const string UIMonsterDetailDataList = "UIData.Monster.Detail.Data.List";
-            
+
             // UIArenaMatching 相关
             // 选择挑战的对手Id
             public const string UIArenaMatchingOpponentData = "UIData.Arena.Matching.Opponent.Data";
-            
+
             // UIPreparation 相关
             // 当前选择阵容的Id
-            public const string UIArenaPreparationCastId = "UIData.Arena.Preparation.Cast.Id";
+            // 这个没用
+            // public const string UIArenaPreparationCastId = "UIData.Arena.Preparation.Cast.Id";
         }
 
         public static class UizOrders
@@ -119,7 +147,14 @@ namespace MetaVirus.Logic.Data
 
             public static string Header(int npcResId)
             {
-                return $"ui://UnitPortraits/head-{npcResId}";
+                var headUrl = $"ui://UnitPortraits/head-{npcResId}";
+                var url = UIPackage.GetItemByURL(headUrl);
+                if (url == null)
+                {
+                    headUrl = "ui://asz9r10dvi4jle"; //头像没找到使用默认的头像代替
+                }
+
+                return headUrl;
             }
 
             // public static string Frame(string frameName)
@@ -248,7 +283,7 @@ namespace MetaVirus.Logic.Data
                 case AtkAttribute.Poison:
                     return new Color[] { new Color32(145, 0, 255, 255), new Color32(129, 19, 212, 255) };
                 default:
-                    return null;
+                    return new Color[] { new Color32(255, 255, 255, 255), new Color32(233, 86, 0, 255) };
             }
         }
 
@@ -561,7 +596,7 @@ namespace MetaVirus.Logic.Data
             var c = NpcNameColors[r];
             return RGBToColor(c);
         }
-        
+
         public static Color32 NetPlayerRelationToColor(NpcRelation relation)
         {
             var r = (int)relation;
@@ -607,19 +642,21 @@ namespace MetaVirus.Logic.Data
             return NpcRelation.OpposedPositive;
         }
 
-        public const string EnJosefinSans = "JosefinSans";
+        public const string EnJosefinSans = "JosefinSans-Bold";
+
+        public const string EnLilitaOne = "LilitaOne-Regular";
 
 
         public static string QualityToStr(Quality quality)
         {
             return quality switch
             {
-                Quality.WHITE => "C",
-                Quality.GREEN => "B",
-                Quality.BLUE => "A",
-                Quality.PURPLE => "S",
-                Quality.Orange => "SS",
-                Quality.Red => "SSS",
+                Quality.WHITE => "D",
+                Quality.GREEN => "C",
+                Quality.BLUE => "B",
+                Quality.PURPLE => "A",
+                Quality.Orange => "S",
+                Quality.Red => "SS",
                 _ => ""
             };
         }

@@ -23,6 +23,14 @@ namespace MetaVirus.Logic.FsmStates.MainPage
 
         public override void OnEnter(FsmEntity<MainPageProcedure> fsm)
         {
+            var enterCtrl = fsm.Owner.MainPageCom.GetController("enter");
+            enterCtrl?.SetSelectedIndex(0);
+
+            if (fsm.Owner.BtnEnter != null)
+            {
+                fsm.Owner.BtnEnter.visible = true;
+            }
+
             _btnTapToStar.alpha = _txtTapToStart.alpha = 0;
 
             _btnTapToStar.TweenFade(1, 0.5f).OnComplete(() =>
@@ -33,7 +41,6 @@ namespace MetaVirus.Logic.FsmStates.MainPage
             });
 
             _txtTapToStart.TweenFade(1, 0.5f);
-
         }
 
         private void ToCheckUpdate()

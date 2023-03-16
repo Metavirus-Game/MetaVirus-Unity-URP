@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using FairyGUI;
 using GameEngine.Utils;
 using MetaVirus.Logic.Data.Player;
+using MetaVirus.Logic.Service;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -68,6 +70,31 @@ namespace MetaVirus.Logic.Utils
             //     p.transform.localPosition = position;
             //     p.transform.rotation = rot;
             // }
+        }
+
+        public static string HourToString(int hours)
+        {
+            string textKey;
+
+            Dictionary<string, string> replace = new();
+
+            switch (hours)
+            {
+                case < 1:
+                    textKey = "common.text.hour.less1";
+                    break;
+                case < 24:
+                    textKey = "common.text.hour.left";
+                    replace["%h"] = hours.ToString();
+                    break;
+                default:
+                    textKey = "common.text.hour.days";
+                    replace["%h"] = (hours % 24).ToString();
+                    replace["%d"] = (hours / 24).ToString();
+                    break;
+            }
+
+            return GameDataService.LT(textKey, replace);
         }
     }
 }

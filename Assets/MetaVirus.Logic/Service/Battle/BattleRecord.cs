@@ -4,6 +4,8 @@ using System.IO;
 using System.IO.Compression;
 using Google.Protobuf;
 using MetaVirus.Battle.Record;
+using MetaVirus.Logic.Data;
+using MetaVirus.Logic.Service.Arena.data;
 using MetaVirus.Logic.Service.Battle.Frame;
 
 namespace MetaVirus.Logic.Service.Battle
@@ -11,8 +13,13 @@ namespace MetaVirus.Logic.Service.Battle
     public class BattleRecord
     {
         public int BattleId { get; }
+
+        public Constants.BattleResult BattleResult { get; }
         public int TickInterval { get; }
         public int RoundActionEnergy { get; }
+
+        public string SrcName { get; }
+        public string TarName { get; }
 
         public List<BattleUnit> SrcUnits { get; } = new List<BattleUnit>();
         public List<BattleUnit> TarUnits { get; } = new List<BattleUnit>();
@@ -23,9 +30,15 @@ namespace MetaVirus.Logic.Service.Battle
         {
             BattleId = pBuf.BattleId;
 
+            SrcName = pBuf.SrcName;
+
+            TarName = pBuf.TarName;
+
             TickInterval = pBuf.TickInterval;
 
             RoundActionEnergy = pBuf.RoundActionEnergy;
+
+            BattleResult = (Constants.BattleResult)pBuf.BattleResult;
 
             foreach (var data in pBuf.SrcUnits)
             {
