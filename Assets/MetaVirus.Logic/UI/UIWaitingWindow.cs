@@ -1,5 +1,6 @@
 ﻿using FairyGUI;
 using MetaVirus.Logic.Data;
+using MetaVirus.Logic.Service;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,8 +10,13 @@ namespace MetaVirus.Logic.UI
     {
         //private static UIWaitingWindow _waitingWindow;
 
-        public static UIWaitingWindow ShowWaiting(string content)
+        public static UIWaitingWindow ShowWaiting(string content = null)
         {
+            if (string.IsNullOrEmpty(content))
+            {
+                content = GameDataService.LT("common.text.loading");
+            }
+            
             var waitingWindow = new UIWaitingWindow
             {
                 Content = content

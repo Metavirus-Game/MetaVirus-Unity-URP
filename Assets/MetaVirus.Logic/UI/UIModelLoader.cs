@@ -22,6 +22,26 @@ namespace MetaVirus.Logic.UI
         private Image _image;
         private RenderTexture _modelTexture;
 
+        private Vector2 _textureSize = new(400, 400);
+
+        public Vector2 TextureSize
+        {
+            get => _textureSize;
+            set
+            {
+                _textureSize = value;
+                if (_modelTexture != null)
+                {
+                    modelCamera.targetTexture = null;
+                    RenderTexture.ReleaseTemporary(_modelTexture);
+                    _modelTexture =
+                        RenderTexture.GetTemporary((int)TextureSize.x, (int)TextureSize.y, 24,
+                            RenderTextureFormat.ARGB32);
+                    modelCamera.targetTexture = _modelTexture;
+                }
+            }
+        }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -35,7 +55,8 @@ namespace MetaVirus.Logic.UI
                 modelCamera = GetComponentInChildren<Camera>();
             }
 
-            _modelTexture = RenderTexture.GetTemporary(400, 400, 24, RenderTextureFormat.ARGB32);
+            _modelTexture =
+                RenderTexture.GetTemporary((int)TextureSize.x, (int)TextureSize.y, 24, RenderTextureFormat.ARGB32);
             modelCamera.targetTexture = _modelTexture;
         }
 

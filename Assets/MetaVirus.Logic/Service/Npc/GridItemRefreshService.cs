@@ -6,6 +6,7 @@ using GameEngine.DataNode;
 using GameEngine.Entity;
 using GameEngine.Event;
 using GameEngine.Network;
+using GameEngine.ObjectPool;
 using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Data.Entities;
 using MetaVirus.Logic.Data.Events;
@@ -13,6 +14,7 @@ using MetaVirus.Logic.Data.Npc;
 using MetaVirus.Logic.Protocols.Scene;
 using MetaVirus.Logic.Utils;
 using MetaVirus.Net.Messages.Scene;
+using UnityEngine;
 
 namespace MetaVirus.Logic.Service.Npc
 {
@@ -63,6 +65,7 @@ namespace MetaVirus.Logic.Service.Npc
                 Protocols.Protocols.Scene.ScNotifyGridItemsMove, OnGridItemMove);
 
             _eventService.On<MapChangedEvent>(GameEvents.MapEvent.MapChanged, OnMapChanged);
+
         }
 
         private void AddEntityToGroup(GridItemEntity entity)

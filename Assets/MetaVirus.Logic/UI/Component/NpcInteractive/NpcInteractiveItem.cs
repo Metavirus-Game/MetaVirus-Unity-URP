@@ -7,10 +7,14 @@ using GameEngine.Network;
 using GameEngine.ObjectPool;
 using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Data.Entities;
+using MetaVirus.Logic.Player;
 using MetaVirus.Logic.Protocols.Scene;
+using MetaVirus.Logic.Service;
+using MetaVirus.Logic.Service.NpcHeader;
 using MetaVirus.Logic.Service.UI;
 using MetaVirus.Logic.UI.Windows;
 using MetaVirus.Net.Messages.Scene;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace MetaVirus.Logic.UI.Component.NpcInteractive
@@ -22,6 +26,7 @@ namespace MetaVirus.Logic.UI.Component.NpcInteractive
         private DataNodeService _dataNodeService;
         private NetworkService _networkService;
         private FairyGUIService _guiService;
+        private NpcHeaderService _npcHeaderService;
 
         //交互间隔
         private const float InteractiveDuration = 1;
@@ -32,6 +37,8 @@ namespace MetaVirus.Logic.UI.Component.NpcInteractive
         public GComponent UiComp { get; private set; }
 
         private GButton _btnHeader;
+        private GTextField _txtName;
+        private GLoader _headLoader;
 
         public NpcInteractiveItem()
         {
@@ -39,6 +46,7 @@ namespace MetaVirus.Logic.UI.Component.NpcInteractive
             _entityService = GameFramework.GetService<EntityService>();
             _guiService = GameFramework.GetService<FairyGUIService>();
             _dataNodeService = GameFramework.GetService<DataNodeService>();
+            _npcHeaderService = GameFramework.GetService<NpcHeaderService>();
         }
 
         public void SetNpcId(int npcId)
@@ -55,16 +63,17 @@ namespace MetaVirus.Logic.UI.Component.NpcInteractive
 
         private void MakeComponent()
         {
-            _btnHeader = UIPackage.CreateObject("Common", "BtnCircleHead_Red").asButton;
-
-            UiComp = new GComponent
-            {
-                size = _btnHeader.size
-            };
-
-            UiComp.AddChild(_btnHeader);
-
-            _btnHeader.SetPosition(0, 0, 0);
+            //_btnHeader = UIPackage.CreateObject("Common", "BtnCircleHead_Red").asButton;
+            // UiComp = new GComponent
+            // {
+            //     size = _btnHeader.size
+            // };
+            // UiComp.AddChild(_btnHeader);
+            //_btnHeader.SetPosition(0, 0, 0);
+            UiComp = UIPackage.CreateObject("Common", "BtnHeaderFrame").asCom;
+            _btnHeader = UiComp.GetChild("btnHeader").asButton;
+            _txtName = UiComp.GetChild("txtName").asTextField;
+            _headLoader = UiComp.GetChildByPath("btnHeader.loader.n1").asLoader;
             _btnHeader.onClick.Set(OnBtnClicked);
         }
 
@@ -88,6 +97,15 @@ namespace MetaVirus.Logic.UI.Component.NpcInteractive
         private void RefreshContent()
         {
             UiComp.visible = true;
+            if (NpcEntity != null)
+            {
+                _txtName.text = NpcEntity.MapNpc.Name;
+                if (NpcEntity.AvatarValue != 0)
+                {
+                    _npcHeaderService.GetNpcHeader(NpcEntity.AvatarValue,
+                        tex => { _headLoader.texture = new NTexture(tex); });
+                }
+            }
         }
 
         public void OnSpawn()
@@ -103,6 +121,14 @@ namespace MetaVirus.Logic.UI.Component.NpcInteractive
             if (UiComp != null)
             {
                 UiComp.RemoveFromParent();
+                if (_headLoader.texture != null)
+                {
+                    _headLoader.texture = null;
+                    if (NpcEntity.AvatarValue != 0)
+                    {
+                        _npcHeaderService.ReleaseNpcHeader(NpcEntity.AvatarValue);
+                    }
+                }
             }
         }
 

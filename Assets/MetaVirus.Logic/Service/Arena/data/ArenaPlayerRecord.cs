@@ -17,7 +17,7 @@ namespace MetaVirus.Logic.Service.Arena.data
 
         public long BattleTime { get; private set; }
         public int BattleRecordVersion { get; private set; }
-        public byte[] BattleRecord { get; private set; }
+        public byte[] BattleRecord { get; set; }
 
         private ArenaPlayerRecord()
         {

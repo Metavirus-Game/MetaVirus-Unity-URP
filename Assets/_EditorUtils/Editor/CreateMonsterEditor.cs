@@ -9,6 +9,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using Object = UnityEngine.Object;
 
 public class CreateMonsterEditor : EditorWindow
 {
@@ -36,7 +37,12 @@ public class CreateMonsterEditor : EditorWindow
 
     private class ClipConfig
     {
+        public string ClipName;
+
+        public string BackupClip;
         public string[] Keywords { get; }
+
+        public bool Strict { get; }
 
         public AnimationEvent Event => (string.IsNullOrEmpty(_eventString) || _eventTime == 0)
             ? null
@@ -51,8 +57,12 @@ public class CreateMonsterEditor : EditorWindow
         private readonly float _eventTime;
         public bool IsLoop { get; }
 
-        public ClipConfig(string[] keywords, string eventString = null, float eventTime = 0, bool loop = false)
+        public ClipConfig(string clipName, string[] keywords, string eventString = null, float eventTime = 0,
+            bool loop = false, bool strict = false, string backupClip = null)
         {
+            Strict = strict;
+            ClipName = clipName;
+            BackupClip = backupClip;
             Keywords = keywords;
             _eventString = eventString;
             _eventTime = eventTime;
@@ -68,7 +78,7 @@ public class CreateMonsterEditor : EditorWindow
     private static string[] AttackKeywords =
     {
         "Bite Attack", "Slash Attack", "Punch Attack", "Head Attack", "Melee Attack", "Stab Attack",
-        "Projectile Attack Forward", "Left Attack", "Attack"
+        "Left Attack", "Right Attack", "PAttack"
     };
 
     private static string[] DieKeywords = { "Die" };
@@ -94,8 +104,7 @@ public class CreateMonsterEditor : EditorWindow
 
     private static string[] ProjectileKeywords =
     {
-        "Projectile Attack", "Shoot Attack", "Sting Attack", "Head Attack", "Machine Gun Attack", "Attack",
-        "Right Attack"
+        "Projectile Attack", "Shoot Attack", "Sting Attack", "Machine Gun Attack"
     };
 
     private string _pathBattleController = "Assets/MetaVirus.Res/Models/NpcPrefabs/MonsterBattleController.controller";
@@ -116,25 +125,32 @@ public class CreateMonsterEditor : EditorWindow
     {
         GameDataService.EditorInst.LoadGameDataFromDisk();
 
-        mapClipName2Keywords["Die"] = new ClipConfig(DieKeywords);
-        mapClipName2Keywords["MeleeAttack1"] = new ClipConfig(AttackKeywords, "MeleeAttack", 0.4f);
-        mapClipName2Keywords["Spawn"] = new ClipConfig(SpawnKeywords);
-        mapClipName2Keywords["Take Damage"] = new ClipConfig(TakeDamageKeywords);
-        mapClipName2Keywords["Underground"] = new ClipConfig(UndergroundKeywords);
-        mapClipName2Keywords["Walk Forward In Place"] = new ClipConfig(WalkKeywords, loop: true);
-        mapClipName2Keywords["Run Forward In Place"] = new ClipConfig(RunKeywords, loop: true);
-        mapClipName2Keywords["Idle"] = new ClipConfig(IdleKeywords, loop: true);
+        mapClipName2Keywords["Die"] = new ClipConfig("Die", DieKeywords);
+        mapClipName2Keywords["MeleeAttack1"] = new ClipConfig("Melee Attack", AttackKeywords, "MeleeAttack", 0.4f,
+            backupClip: "Projectile Attack");
+        mapClipName2Keywords["Spawn"] = new ClipConfig("Spawn", SpawnKeywords);
+        mapClipName2Keywords["Take Damage"] = new ClipConfig("TakeDamage", TakeDamageKeywords);
+        mapClipName2Keywords["Underground"] = new ClipConfig("Underground", UndergroundKeywords, strict: true);
+        mapClipName2Keywords["Walk Forward In Place"] = new ClipConfig("Walk", WalkKeywords, loop: true);
+        mapClipName2Keywords["Run Forward In Place"] = new ClipConfig("Run", RunKeywords, loop: true);
+        mapClipName2Keywords["Idle"] = new ClipConfig("Idle", IdleKeywords, loop: true, strict: true);
+        mapClipName2Keywords["Projectile Attack"] =
+            new ClipConfig("Projectile Attack", ProjectileKeywords, "SpawnProjectile", 0.5f,
+                backupClip: "MeleeAttack1");
 
-        battleClipName2Keywords["Die"] = new ClipConfig(DieKeywords);
-        battleClipName2Keywords["MeleeAttack1"] = new ClipConfig(AttackKeywords, "MeleeAttack", 0.4f);
-        battleClipName2Keywords["Spawn"] = new ClipConfig(SpawnKeywords);
-        battleClipName2Keywords["Take Damage"] = new ClipConfig(TakeDamageKeywords);
-        battleClipName2Keywords["Underground"] = new ClipConfig(UndergroundKeywords);
-        battleClipName2Keywords["CastSpell1"] = new ClipConfig(CastSpellKeywords, "CastSpell", 0.4f);
-        battleClipName2Keywords["Projectile Attack"] = new ClipConfig(ProjectileKeywords, "SpawnProjectile", 0.5f);
-        battleClipName2Keywords["Walk Forward In Place"] = new ClipConfig(WalkKeywords, loop: true);
-        battleClipName2Keywords["Run Forward In Place"] = new ClipConfig(RunKeywords, loop: true);
-        battleClipName2Keywords["Idle"] = new ClipConfig(IdleKeywords, loop: true);
+        battleClipName2Keywords["Die"] = new ClipConfig("Die", DieKeywords);
+        battleClipName2Keywords["MeleeAttack1"] = new ClipConfig("Melee Attack", AttackKeywords, "MeleeAttack", 0.4f,
+            backupClip: "Projectile Attack");
+        battleClipName2Keywords["Spawn"] = new ClipConfig("Spawn", SpawnKeywords);
+        battleClipName2Keywords["Take Damage"] = new ClipConfig("TakeDamage", TakeDamageKeywords);
+        battleClipName2Keywords["Underground"] = new ClipConfig("Underground", UndergroundKeywords, strict: true);
+        battleClipName2Keywords["CastSpell1"] = new ClipConfig("CastSpell", CastSpellKeywords, "CastSpell", 0.4f);
+        battleClipName2Keywords["Projectile Attack"] =
+            new ClipConfig("Projectile Attack", ProjectileKeywords, "SpawnProjectile", 0.5f,
+                backupClip: "MeleeAttack1");
+        battleClipName2Keywords["Walk Forward In Place"] = new ClipConfig("Walk", WalkKeywords, loop: true);
+        battleClipName2Keywords["Run Forward In Place"] = new ClipConfig("Run", RunKeywords, loop: true);
+        battleClipName2Keywords["Idle"] = new ClipConfig("Idle", IdleKeywords, loop: true, strict: true);
 
         monsterAlias["Eyeball Bat"] = "Eyeball Bat Red";
         monsterAlias["Eyeball Creep"] = "Eyeball Creep Red";
@@ -390,6 +406,7 @@ public class CreateMonsterEditor : EditorWindow
                             var newClip = new AnimationClip();
                             EditorUtility.CopySerialized(clip, newClip);
                             clips.Add(newClip);
+                            break;
                         }
                     }
 
@@ -398,6 +415,12 @@ public class CreateMonsterEditor : EditorWindow
                     AssetDatabase.Refresh();
                     foreach (var clip in clips)
                     {
+                        if (clip.name.Equals("Attack"))
+                        {
+                            clip.name = clip.name.Replace("Attack", "PAttack");
+                            animName = animName.Replace("@Attack", "@PAttack");
+                        }
+
                         AssetDatabase.CreateAsset(clip, FullPathToAssetPath(animName));
                     }
                 }
@@ -422,6 +445,7 @@ public class CreateMonsterEditor : EditorWindow
         }
 
         FileUtil.CopyFileOrDirectory(fromDir, toToDir);
+        AssetDatabase.Refresh();
     }
 
     private void MovePrefab(string prefabsDir, string modelToResDir, NpcResourceData npcResourceData)
@@ -529,10 +553,20 @@ public class CreateMonsterEditor : EditorWindow
                 var controller = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(_pathMapController);
                 var overCon = new AnimatorOverrideController(controller);
 
-                BindAniToController(overCon, mapClipName2Keywords, Path.Combine(modelToResDir, "FBX"));
+                BindAniToController(overCon, mapClipName2Keywords, Path.Combine(modelToResDir, "FBX"),
+                    npcResourceData.Name);
 
                 var prefabAni = prefab.GetComponent<Animator>();
                 prefabAni.runtimeAnimatorController = overCon;
+
+                var ctrlFile = Path.Combine(aniDir.FullName,
+                    $"{npcResourceData.Name.Replace(" ", "")}AniController.overrideController");
+
+                if (File.Exists(ctrlFile))
+                {
+                    File.Delete(ctrlFile);
+                    AssetDatabase.Refresh();
+                }
 
                 AssetDatabase.CreateAsset(overCon,
                     Path.Combine(FullPathToAssetPath(aniDir.FullName),
@@ -541,10 +575,20 @@ public class CreateMonsterEditor : EditorWindow
                 controller = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(_pathBattleController);
                 overCon = new AnimatorOverrideController(controller);
 
-                BindAniToController(overCon, battleClipName2Keywords, Path.Combine(modelToResDir, "FBX"));
+                BindAniToController(overCon, battleClipName2Keywords, Path.Combine(modelToResDir, "FBX"),
+                    npcResourceData.Name);
 
                 var instAni = inst.GetComponent<Animator>();
                 instAni.runtimeAnimatorController = overCon;
+
+                ctrlFile = Path.Combine(aniDir.FullName,
+                    $"{npcResourceData.Name.Replace(" ", "")}AniBattleController.overrideController");
+
+                if (File.Exists(ctrlFile))
+                {
+                    File.Delete(ctrlFile);
+                    AssetDatabase.Refresh();
+                }
 
                 AssetDatabase.CreateAsset(overCon,
                     Path.Combine(FullPathToAssetPath(aniDir.FullName),
@@ -558,7 +602,7 @@ public class CreateMonsterEditor : EditorWindow
     }
 
     private void BindAniToController(AnimatorOverrideController controller,
-        Dictionary<string, ClipConfig> clipConfigMap, string modelDir)
+        Dictionary<string, ClipConfig> clipConfigMap, string modelDir, string modelName)
     {
         var dir = new DirectoryInfo(modelDir);
         var fbxFiles = dir.GetFiles("*.anim");
@@ -574,12 +618,32 @@ public class CreateMonsterEditor : EditorWindow
             //     continue;
             // }
 
-            var clipAni = GetClipInfoFromAnimFiles(fbxFiles, clipConfig.Keywords); // clipInfo.ClipAnimation;
+            var clipAni =
+                GetClipInfoFromAnimFiles(fbxFiles, clipConfig.Keywords, clipConfig.Strict); // clipInfo.ClipAnimation;
 
             if (clipAni == null)
             {
-                Debug.LogError($"Bind Ani Error: model[{modelDir}] ani clip to {key} not found");
-                continue;
+                if (clipConfig.BackupClip != null)
+                {
+                    var backClipConfig = clipConfigMap[clipConfig.BackupClip];
+                    clipAni = GetClipInfoFromAnimFiles(fbxFiles, backClipConfig.Keywords, backClipConfig.Strict);
+                }
+
+                if (clipAni == null)
+                {
+                    Debug.LogError($"Bind Ani Error: model[{modelDir}] ani clip to {key} not found");
+                    continue;
+                }
+                else
+                {
+                    //copy clipAni to new file
+                    var clipName = $"{modelName}@{clipConfig.ClipName}";
+                    var p = Path.Combine(FullPathToAssetPath(modelDir), clipName + ".anim");
+                    clipAni = Instantiate(clipAni);
+                    clipAni.name = clipName;
+                    AssetDatabase.CreateAsset(clipAni, p);
+                    clipAni = AssetDatabase.LoadAssetAtPath<AnimationClip>(p);
+                }
             }
 
             var clipSetting = AnimationUtility.GetAnimationClipSettings(clipAni);
@@ -613,24 +677,34 @@ public class CreateMonsterEditor : EditorWindow
         }
     }
 
-    private AnimationClip GetClipInfoFromAnimFiles(FileInfo[] animFiles, string[] keywords)
+    private AnimationClip GetClipInfoFromAnimFiles(FileInfo[] animFiles, string[] keywords, bool strict)
     {
-        foreach (var fileInfo in animFiles)
+        foreach (var keyword in keywords)
         {
-            var assetPath = FullPathToAssetPath(fileInfo.FullName);
-
-            var clipInfo = AssetDatabase.LoadAssetAtPath<AnimationClip>(assetPath);
-            //var importer = (ModelImporter)AssetImporter.GetAtPath(assetPath);
-
-            foreach (var keyword in keywords)
+            foreach (var fileInfo in animFiles)
             {
+                var assetPath = FullPathToAssetPath(fileInfo.FullName);
+
+                var clipInfo = AssetDatabase.LoadAssetAtPath<AnimationClip>(assetPath);
+                //var importer = (ModelImporter)AssetImporter.GetAtPath(assetPath);
+
                 // foreach (var clipInfo in importer.defaultClipAnimations)
                 // {
                 var idx = clipInfo.name.IndexOf("@", StringComparison.Ordinal);
-                var clipInfoName = idx > 0 ? clipInfo.name[idx..] : clipInfo.name;
-                if (clipInfoName.Contains(keyword))
+                var clipInfoName = idx > 0 ? clipInfo.name[(idx + 1)..] : clipInfo.name;
+                if (strict)
                 {
-                    return clipInfo;
+                    if (clipInfoName.Equals(keyword))
+                    {
+                        return clipInfo;
+                    }
+                }
+                else
+                {
+                    if (clipInfoName.Contains(keyword))
+                    {
+                        return clipInfo;
+                    }
                 }
                 // }
             }

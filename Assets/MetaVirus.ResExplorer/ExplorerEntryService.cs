@@ -20,10 +20,10 @@ public class ExplorerEntryService : BaseService
 
     private void OnGameStarted()
     {
-        if (_entryProcedure != null)
-        {
-            GetService<ProcedureService>().StartProcedure(_entryProcedure);
-        }
+        // if (_entryProcedure != null)
+        // {
+        //     GetService<ProcedureService>().StartProcedure(_entryProcedure);
+        // }
     }
 
     public override void ServiceReady()

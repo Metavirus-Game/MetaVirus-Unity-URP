@@ -170,6 +170,7 @@ namespace MetaVirus.Logic.Data.Entities
             var player = await Addressables.InstantiateAsync(playerAddress).Task;
 
             var p = player.GetComponent<PlayerController>();
+            playerObj.SetActive(true);
             p.PlayerObject = playerObj;
 
             PlayerController = p;

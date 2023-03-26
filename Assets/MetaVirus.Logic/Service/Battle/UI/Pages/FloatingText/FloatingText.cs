@@ -308,11 +308,11 @@ namespace MetaVirus.Logic.Service.Battle.UI.Pages.FloatingText
             var format = text.textFormat;
             format.size = 40;
             format.font = EnJosefinSans;
-            format.outline = 0.4f;
+            format.outline = 0.2f;
             format.faceDilate = 0.1f;
             format.glowPower = 0.75f;
-            format.glowInner = 0.3f;
-            format.glowOuter = 0.6f;
+            format.glowInner = 0.2f;
+            format.glowOuter = 0.4f;
             //format.shadowOffset = new Vector2(0.3f, 0.3f);
             //format.shadowColor = Color.black;
             //format.underlaySoftness = 0.4f;

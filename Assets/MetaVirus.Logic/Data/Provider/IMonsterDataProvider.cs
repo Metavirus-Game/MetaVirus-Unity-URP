@@ -3,6 +3,7 @@ using cfg.battle;
 using cfg.common;
 using GameEngine;
 using MetaVirus.Logic.AttrsCalculator;
+using MetaVirus.Logic.Data.Battle;
 using MetaVirus.Logic.Service;
 using UnityEngine;
 
@@ -20,11 +21,19 @@ namespace MetaVirus.Logic.Data.Provider
         public LevelUpTable LevelUpTable { get; }
         public int CurrExp { get; }
         public int ExpToNextLevel { get; }
+        public CharacterData Character { get; }
+
+        public MonsterSkillInfo[] Skills { get; }
 
         /**
          * 返回基本属性的成长率
          */
-        public float GetBaseAttributeGrow(AttributeId attr);
+        public float GetBaseAttributeGrow(AttributeId attr)
+        {
+            var attrIdx = (int)attr - 1;
+            var growAttrs = GrowTable.Attributes[1];
+            return growAttrs.Attrs[attrIdx];
+        }
 
         /// <summary>
         /// 返回基本属性和计算属性，AttributeId.AttrCri之前(包含)为基本属性，之后为计算属性
@@ -33,7 +42,6 @@ namespace MetaVirus.Logic.Data.Provider
         /// <returns></returns>
         public int GetAttribute(AttributeId attr);
 
-        public CharacterData Character { get; }
         public string QualityStr => Constants.QualityToStr(Quality);
 
         public Color QualityClr => GameFramework.GetService<GameDataService>().QualityToColor(Quality);

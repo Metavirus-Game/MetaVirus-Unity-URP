@@ -1,7 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Threading.Tasks;
 using GameEngine;
 using GameEngine.Fsm;
 using GameEngine.Utils;
+using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Procedures;
 using MetaVirus.Logic.Service;
 using MetaVirus.Logic.Service.Battle;
@@ -28,8 +31,16 @@ namespace MetaVirus.Logic.FsmStates.EnterBattleProcedureFsm
             var progress = loadingPage.ProgressBar;
 
             var handler = new TaskProgressHandler();
+
             //载入所有的战斗单位
-            var battleTask = _battleService.AsyncRunBattle(owner.BattleRecord, handler);
+
+            var battleTask = owner.BattleType switch
+            {
+                Constants.BattleTypes.MapNpc => _battleService.AsyncRunBattle(owner.BattleRecord, handler),
+                Constants.BattleTypes.Record => _battleService.AsyncRunBattle(owner.BattleRecord, handler),
+                Constants.BattleTypes.Arena => _battleService.AsyncRunArenaMatch(owner.ArenaBattleResult, handler),
+                _ => null
+            };
 
             while (!battleTask.IsCompleted)
             {

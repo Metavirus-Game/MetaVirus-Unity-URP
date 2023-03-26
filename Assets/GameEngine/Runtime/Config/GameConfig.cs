@@ -11,6 +11,7 @@ namespace GameEngine.Config
     {
         MainPageProcedure = 1,
         BattleTestProcedure,
+        MonsterTestProcedure,
         UITestProcedure
     }
 
@@ -46,6 +47,7 @@ namespace GameEngine.Config
         private string server;
 
         [SerializeField] private int port;
+        [SerializeField] private string battleServerIp;
         [SerializeField] private int battleServerPort;
         [SerializeField] private string moduleId;
         [SerializeField] private string instId;
@@ -55,6 +57,7 @@ namespace GameEngine.Config
         [SerializeField] private NextEnterProcedure nextProcedure = NextEnterProcedure.MainPageProcedure;
         [SerializeField] private bool offlineTest = true;
         [SerializeField] private bool savePlayerId = false;
+        [SerializeField] private int[] timeScaleOptions = new[] { 1, 2, 3 };
 
         public bool SavePlayerId => savePlayerId;
         public NextEnterProcedure NextEnterProcedure => nextProcedure;
@@ -66,7 +69,11 @@ namespace GameEngine.Config
         /// </summary>
         public int BattleServerPort => battleServerPort;
 
+        public string BattleServerIp => battleServerIp;
+
         public int TargetFps => targetFps;
+
+        public int[] TimeScaleOptions => timeScaleOptions;
 
         public short ModuleId => moduleId.StartsWith("0x")
             ? Convert.ToInt16(moduleId.Substring(2), 16)

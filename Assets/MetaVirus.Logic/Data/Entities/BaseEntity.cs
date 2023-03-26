@@ -30,6 +30,7 @@ namespace MetaVirus.Logic.Data.Entities
         public abstract void OnUpdate(float timeElapse, float realTimeElapse);
 
         public abstract void OnRelease();
+        public bool Removed { get; set; } = false;
         public abstract void OnTimeScaleChanged();
     }
 }

@@ -72,7 +72,7 @@ namespace MetaVirus.Logic.UI.Windows
 
             var createMonsterComp = ContentComp;
 
-            _modelAnchor = createMonsterComp.GetChild("modelAnchor").asGraph;
+            _modelAnchor = createMonsterComp.GetChildByPath("modelPreview.n3.modelAnchor").asGraph;
 
             _monsterTitle = createMonsterComp.GetChild("txtMonsterName").asRichTextField;
 
@@ -123,10 +123,11 @@ namespace MetaVirus.Logic.UI.Windows
                         else
                         {
                             var packet = resp.GetPacket<TestCreateMonsterResponse>();
-                            if (packet != null)
+                            if (resp.IsSuccess && packet != null)
                             {
                                 _playerService.AddPetData(PlayerPetInfo.FromPbPetData(packet.ProtoBufMsg.PetData));
                                 _lstMonsters.numItems = _currentMonsters.Count;
+                                _btnCreate.enabled = false;
                             }
                         }
                     });
@@ -197,6 +198,7 @@ namespace MetaVirus.Logic.UI.Windows
                 var task = Addressables.InstantiateAsync(Constants.ResAddress.UIModelLoader).Task;
                 yield return task.AsCoroution();
                 _uiModelLoader = task.Result.GetComponent<UIModelLoader>();
+                _uiModelLoader.TextureSize = _modelAnchor.size;
             }
 
             _uiModelLoader.LoadModel(_currentMonster.ResDataId, texture =>
@@ -207,7 +209,7 @@ namespace MetaVirus.Logic.UI.Windows
                 _modelImage = new Image
                 {
                     texture = tex,
-                    blendMode = BlendMode.Add
+                    blendMode = BlendMode.Normal
                 };
 
                 _modelAnchor.SetNativeObject(_modelImage);
@@ -257,8 +259,14 @@ namespace MetaVirus.Logic.UI.Windows
             var comp = obj.asCom;
             var petData = _currentMonsters[index];
 
-            var headerLoader = comp.GetChild("n16").asCom.GetChild("PortraitLoader").asLoader;
+            var headerComp = comp.GetChild("headerComp").asCom;
+            var headerLoader = headerComp.GetChildByPath("mask.PortraitLoader").asLoader;
             headerLoader.url = Constants.FairyImageUrl.Header(petData.ResDataId_Ref.Id);
+
+            headerComp.GetChild("card_level_txt").asTextField.text = "1";
+
+            headerComp.GetController("quality").selectedIndex = (int)petData.Quality + 1;
+
 
             var owned = _playerService.GetPetDataBySourceDataId(petData.Id) != null;
 

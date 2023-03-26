@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace MetaVirus.Logic.Player
 {
+    /// <summary>
+    /// 镜头和玩家的锚点
+    /// 镜头通过 和玩家的距离 ， X轴角度，距地面(0,0,0)的高度 来定位
+    /// </summary>
     public class PlayerCameraAnchor : MonoBehaviour
     {
         private Vector3 _playerPos = Vector3.zero;

@@ -48,14 +48,25 @@ namespace MetaVirus.Logic.Player
         {
             ControlObject = controlObject;
             _gridItem = gridItemData;
-            if (_fsm == null)
+            if (_fsm != null)
             {
-                _fsm = GameFramework.GetService<FsmService>()
-                    .CreateFsm("NetPlayerController-" + _gridItem.Type + "-" + _gridItem.ID, this,
-                        new NetPlayerStateIdle(),
-                        new NetPlayerStateWaiting(),
-                        new NetPlayerStateMoving());
-                _fsm.Start<NetPlayerStateIdle>();
+                GameFramework.GetService<FsmService>().DestroyFsm<NetPlayerController>(_fsm.Name);
+            }
+
+            _fsm = GameFramework.GetService<FsmService>()
+                .CreateFsm("NetPlayerController-" + _gridItem.Type + "-" + _gridItem.ID, this,
+                    new NetPlayerStateIdle(),
+                    new NetPlayerStateWaiting(),
+                    new NetPlayerStateMoving());
+            _fsm.Start<NetPlayerStateIdle>();
+        }
+
+        public void ClearControlData()
+        {
+            if (_fsm != null)
+            {
+                GameFramework.GetService<FsmService>().DestroyFsm<NetPlayerController>(_fsm.Name);
+                _fsm = null;
             }
         }
 

@@ -98,7 +98,7 @@ namespace MetaVirus.Logic.Service.Battle.Projectile.States
 
                     if (!info.IsHitFinished) return;
                     Projectile.OnHitFinished(false);
-                    Object.Destroy(_parabolaRoot.gameObject);
+                    //Object.Destroy(_parabolaRoot.gameObject);
                 }
 
                 var delay = hitVfxObj.GetComponent<BattleVfxHitDelay>();

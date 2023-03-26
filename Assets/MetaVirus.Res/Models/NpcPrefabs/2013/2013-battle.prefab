@@ -1,13 +1,13 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &8163025051861038869
+--- !u!1001 &3982446952546884120
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2611734851656110523, guid: 9baa6aecf6e0723449e5ccb64391e9af,
+    - target: {fileID: 3268852093564503927, guid: 9baa6aecf6e0723449e5ccb64391e9af,
         type: 3}
       propertyPath: m_RootOrder
       value: 39
@@ -78,27 +78,27 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 22100000, guid: 4920d6b10a246ec45869f40ad7bc74af,
         type: 2}
-    - target: {fileID: 6884005689286932662, guid: 9baa6aecf6e0723449e5ccb64391e9af,
+    - target: {fileID: 6774690227328831949, guid: 9baa6aecf6e0723449e5ccb64391e9af,
         type: 3}
       propertyPath: m_RootOrder
       value: 38
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: -7706858498114456429, guid: 9baa6aecf6e0723449e5ccb64391e9af, type: 3}
+    - {fileID: -9209531021365496138, guid: 9baa6aecf6e0723449e5ccb64391e9af, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9baa6aecf6e0723449e5ccb64391e9af, type: 3}
---- !u!1 &5447897979413473154 stripped
+--- !u!1 &979049368452352655 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4238509924709601431, guid: 9baa6aecf6e0723449e5ccb64391e9af,
     type: 3}
-  m_PrefabInstance: {fileID: 8163025051861038869}
+  m_PrefabInstance: {fileID: 3982446952546884120}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &963730888677818467
+--- !u!114 &5903149431656931423
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5447897979413473154}
+  m_GameObject: {fileID: 979049368452352655}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3902d0634d124d6ea35252c1e90433e0, type: 3}
@@ -110,7 +110,7 @@ MonoBehaviour:
   projectileSpawnPos: {fileID: 0}
   headupSpawnPos: {fileID: 0}
   topPos: {fileID: 0}
-  runSpeed: 6
+  runSpeed: 12
   walkSpeed: 3
-  backwardSpeed: 3
+  backwardSpeed: 12
   meleeDistance: 1.5

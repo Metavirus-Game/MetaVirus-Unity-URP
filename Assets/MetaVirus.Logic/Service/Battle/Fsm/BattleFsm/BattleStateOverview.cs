@@ -15,10 +15,12 @@ namespace MetaVirus.Logic.Service.Battle.Fsm.BattleFsm
     public class BattleStateOverview : FsmState<BaseBattleInstance>
     {
         private EventService _eventService;
+        private BattleService _battleService;
 
         public override void OnInit(FsmEntity<BaseBattleInstance> fsm)
         {
             _eventService = GameFramework.GetService<EventService>();
+            _battleService = GameFramework.GetService<BattleService>();
         }
 
         public override void OnEnter(FsmEntity<BaseBattleInstance> fsm)
@@ -38,6 +40,9 @@ namespace MetaVirus.Logic.Service.Battle.Fsm.BattleFsm
             _eventService.Emit(GameEvents.BattleEvent.Battle,
                 new BattleEvent(Fsm.Owner.BattleId, BattleEvent.BattleEventType.OverviewBattleField));
             yield return new WaitForSeconds(2);
+            
+            //将战斗速度调整为当前速度
+            _battleService.ApplyTimeSpeed();
             ChangeState<BattleStateIncActionEnergy>(Fsm);
         }
     }

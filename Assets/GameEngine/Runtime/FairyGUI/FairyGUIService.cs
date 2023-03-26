@@ -66,7 +66,7 @@ namespace GameEngine.FairyGUI
                 {
                     var resName = location.PrimaryKey;
                     var fIdx = resName.LastIndexOf('/') + 1;
-                    var eIdx = resName.LastIndexOf('_');
+                    var eIdx = resName.IndexOf('_', fIdx);
 
                     var packageName = resName.Substring(fIdx, eIdx - fIdx);
 

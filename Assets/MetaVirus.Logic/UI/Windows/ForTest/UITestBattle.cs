@@ -3,6 +3,7 @@ using GameEngine;
 using GameEngine.Network;
 using MetaVirus.Logic.Procedures;
 using MetaVirus.Logic.Protocols.Test;
+using MetaVirus.Logic.Service;
 using MetaVirus.Logic.Service.Battle;
 using MetaVirus.Logic.Service.Player;
 using MetaVirus.Logic.Service.UI;
@@ -47,7 +48,7 @@ namespace MetaVirus.Logic.UI.Windows.ForTest
                     var bytes = r.ProtoBufMsg.BattleResult.ToByteArray();
 
                     var result = BattleRecord.FromGZipData(bytes);
-                    EnterBattleProcedure.EnterBattle( result);
+                    BattleService.EnterBattle(result);
                     Hide();
                 });
             });

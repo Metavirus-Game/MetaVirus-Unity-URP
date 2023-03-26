@@ -65,6 +65,12 @@ namespace GameEngine.Base
         {
             var pool = GetService<ObjectPoolService>();
             pool.RemoveAllUnusedItems();
+            
+            foreach (var baseService in _serviceList)
+            {
+                baseService.OnLowerMemory();
+            }
+            
         }
 
         private T CreateService<T>() where T : BaseService
@@ -166,6 +172,7 @@ namespace GameEngine.Base
                     catch (System.Exception e)
                     {
                         Debug.LogError($"Service[{service.name}] exception : {e.Message}");
+                        Debug.LogException(e);
                     }
                 }
             }

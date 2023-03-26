@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &1226337389813951920
+--- !u!1001 &8191920833529488058
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -13,7 +13,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 22100000, guid: f1dd899aecd2b2c4c8ea9ea3b0172c44,
         type: 2}
-    - target: {fileID: 2870747814135650505, guid: fdf8dd31feb47974caac6b560e49341a,
+    - target: {fileID: 1945402973525205637, guid: fdf8dd31feb47974caac6b560e49341a,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3785947509109415533, guid: fdf8dd31feb47974caac6b560e49341a,
         type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -78,27 +83,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: 22041-battle
       objectReference: {fileID: 0}
-    - target: {fileID: 6584571914119817615, guid: fdf8dd31feb47974caac6b560e49341a,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 3234296270718625139, guid: fdf8dd31feb47974caac6b560e49341a, type: 3}
+    - {fileID: -4085720700241915711, guid: fdf8dd31feb47974caac6b560e49341a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: fdf8dd31feb47974caac6b560e49341a, type: 3}
---- !u!1 &6838112282681579974 stripped
+--- !u!1 &4489672283358418636 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5755892518623081590, guid: fdf8dd31feb47974caac6b560e49341a,
     type: 3}
-  m_PrefabInstance: {fileID: 1226337389813951920}
+  m_PrefabInstance: {fileID: 8191920833529488058}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3381447971792664966
+--- !u!114 &650325418000802040
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6838112282681579974}
+  m_GameObject: {fileID: 4489672283358418636}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3902d0634d124d6ea35252c1e90433e0, type: 3}
@@ -110,7 +110,7 @@ MonoBehaviour:
   projectileSpawnPos: {fileID: 0}
   headupSpawnPos: {fileID: 0}
   topPos: {fileID: 0}
-  runSpeed: 6
+  runSpeed: 12
   walkSpeed: 3
-  backwardSpeed: 3
+  backwardSpeed: 12
   meleeDistance: 1.5

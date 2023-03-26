@@ -20,6 +20,7 @@ using MetaVirus.Logic.Service.Battle.UI.Pages.FloatingText;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Events;
 
 namespace MetaVirus.Logic.Service.Battle.UI
 {
@@ -28,6 +29,7 @@ namespace MetaVirus.Logic.Service.Battle.UI
         private BaseBattleInstance _battle;
         private DataNodeService _dataService;
         private readonly FairyGUIService _fairyService;
+        private BattleService _battleService;
 
         private readonly List<BattleUIComponent> _battleUIComponents;
 
@@ -35,9 +37,20 @@ namespace MetaVirus.Logic.Service.Battle.UI
 
         public GComponent UIBattlePage { get; private set; }
 
+        /// <summary>
+        /// 退出战斗时的回调
+        /// </summary>
+        public EventCallback0 ExitCallback { get; set; }
+
+        /// <summary>
+        /// 重播的回调
+        /// </summary>
+        public EventCallback0 ReplayCallback { get; set; }
+
         public BattleUIManager(BaseBattleInstance battle)
         {
             _battle = battle;
+            _battleService = GameFramework.GetService<BattleService>();
             _dataService = GameFramework.GetService<DataNodeService>();
             _fairyService = GameFramework.GetService<FairyGUIService>();
 
@@ -76,8 +89,16 @@ namespace MetaVirus.Logic.Service.Battle.UI
             {
                 UIBattlePage = UIPackage.CreateObject("BattlePage", "BattlePage").asCom;
                 var btnSkip = UIBattlePage.GetChild("btnSkip").asButton;
+                var btnSpeed = UIBattlePage.GetChild("btnSpeed").asButton;
                 btnSkip.text = "Skip";
-                btnSkip.onClick.Add(ChangeMapProcedure.BackToCurrentMap);
+                //btnSkip.onClick.Add(ExitCallback ?? ChangeMapProcedure.BackToCurrentMap);
+                btnSkip.onClick.Set(() => { _battle.Skip(); });
+
+                btnSpeed.text = $"[size=60]×[/size]{_battleService.TimeSpeedRate}";
+                btnSpeed.onClick.Set(() =>
+                {
+                    btnSpeed.text = $"[size=60]×[/size]{_battleService.NextTimeSpeedOption()}";
+                });
 
                 _fairyService.AddToGRootFullscreen(UIBattlePage);
 

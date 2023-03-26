@@ -11,6 +11,7 @@ using MetaVirus.Logic.Data.Provider;
 using MetaVirus.Logic.Service;
 using MetaVirus.Logic.Service.Player;
 using MetaVirus.Logic.Service.UI;
+using MetaVirus.Logic.UI.Component.MonsterPanel;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -55,7 +56,10 @@ namespace MetaVirus.Logic.UI.Windows
         private GComponent _resisElem;
         private GComponent _resisStatus;
 
-        public override bool IsFullscreenWindow => false;
+        private MonsterListPanel _monsterListPanel;
+        private MonsterSkillListPanel _monsterSkillListPanel;
+
+
         private IMonsterDataProvider CurrPetData
         {
             get => _currPetData;
@@ -86,6 +90,7 @@ namespace MetaVirus.Logic.UI.Windows
 
             RefreshBasicInfo();
             RefreshResisInfo();
+            RefreshAbilityInfo();
         }
 
         private void RefreshBasicInfo()
@@ -109,6 +114,11 @@ namespace MetaVirus.Logic.UI.Windows
         {
             FillResisToPanel(_resisElem, ResistanceId.ResiFire, ResistanceId.ResiDark);
             FillResisToPanel(_resisStatus, ResistanceId.ResiPoi, ResistanceId.ResiSleep);
+        }
+
+        private void RefreshAbilityInfo()
+        {
+            _monsterSkillListPanel.DataProvider = _currPetData;
         }
 
         private void FillResisToPanel(GComponent resisPanel, ResistanceId idStart, ResistanceId idEnd)
@@ -149,6 +159,7 @@ namespace MetaVirus.Logic.UI.Windows
                 var task = Addressables.InstantiateAsync(Constants.ResAddress.UIModelLoader).Task;
                 yield return task.AsCoroution();
                 _uiModelLoader = task.Result.GetComponent<UIModelLoader>();
+                _uiModelLoader.TextureSize = _modelAnchor.size;
             }
 
             _uiModelLoader.LoadModel(_currPetData.ModelResId, texture =>
@@ -159,7 +170,7 @@ namespace MetaVirus.Logic.UI.Windows
                 _modelImage = new Image
                 {
                     texture = tex,
-                    blendMode = BlendMode.Add
+                    blendMode = BlendMode.Normal
                 };
 
                 _modelAnchor.SetNativeObject(_modelImage);
@@ -254,6 +265,8 @@ namespace MetaVirus.Logic.UI.Windows
             _txtBasicExp = basicPanel.GetChildByPath("calcAttrs.exp").asTextField;
             _txtBasicExpToNext = basicPanel.GetChildByPath("calcAttrs.expToNextLevel").asTextField;
 
+            var abilityPanel = listAbility.GetChildAt(0).asCom;
+            _monsterSkillListPanel = new MonsterSkillListPanel(abilityPanel);
 
             var resisPanel = listResistance.GetChildAt(0).asCom;
             _resisElem = resisPanel.GetChild("resi_elem").asCom;
@@ -265,6 +278,8 @@ namespace MetaVirus.Logic.UI.Windows
             CurrPetData =
                 _dataNodeService.GetDataAndClear<IMonsterDataProvider>(Constants.DataKeys.UIMonsterDetailData) ??
                 _monsterListProvider?.GetMonsterDataAt(0);
+
+            _monsterSkillListPanel.DataProvider = _currPetData;
         }
 
         public override void Release()

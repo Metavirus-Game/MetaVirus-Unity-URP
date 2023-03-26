@@ -1,17 +1,12 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &2928304992638608343
+--- !u!1001 &1302328283541894812
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 198880392461930964, guid: 8f0b284ce8c31d7408aa82264c52cdff,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1721927560079117264, guid: 8f0b284ce8c31d7408aa82264c52cdff,
         type: 3}
       propertyPath: m_Name
@@ -72,33 +67,38 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4236910030603125074, guid: 8f0b284ce8c31d7408aa82264c52cdff,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5354357221510941456, guid: 8f0b284ce8c31d7408aa82264c52cdff,
         type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 22100000, guid: 475ba9270f5e32243bc3d33eadd9583c,
         type: 2}
-    - target: {fileID: 6867016279269442976, guid: 8f0b284ce8c31d7408aa82264c52cdff,
+    - target: {fileID: 8414230434418465569, guid: 8f0b284ce8c31d7408aa82264c52cdff,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: -6187009943030620028, guid: 8f0b284ce8c31d7408aa82264c52cdff, type: 3}
+    - {fileID: 8179109808826640335, guid: 8f0b284ce8c31d7408aa82264c52cdff, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8f0b284ce8c31d7408aa82264c52cdff, type: 3}
---- !u!1 &4559593487040948231 stripped
+--- !u!1 &429899505761910092 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1721927560079117264, guid: 8f0b284ce8c31d7408aa82264c52cdff,
     type: 3}
-  m_PrefabInstance: {fileID: 2928304992638608343}
+  m_PrefabInstance: {fileID: 1302328283541894812}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &562667832082548921
+--- !u!114 &6014189047678853039
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4559593487040948231}
+  m_GameObject: {fileID: 429899505761910092}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3902d0634d124d6ea35252c1e90433e0, type: 3}
@@ -110,7 +110,7 @@ MonoBehaviour:
   projectileSpawnPos: {fileID: 0}
   headupSpawnPos: {fileID: 0}
   topPos: {fileID: 0}
-  runSpeed: 6
+  runSpeed: 12
   walkSpeed: 3
-  backwardSpeed: 3
+  backwardSpeed: 12
   meleeDistance: 1.5

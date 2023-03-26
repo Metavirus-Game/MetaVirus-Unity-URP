@@ -11,6 +11,7 @@ using GameEngine.Utils;
 using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Service;
 using MetaVirus.Logic.Service.Battle.UI;
+using MetaVirus.Logic.UI;
 using MetaVirus.ResExplorer.UI;
 using TMPro;
 using UnityEngine;
@@ -37,17 +38,20 @@ namespace MetaVirus.ResExplorer.Procedures
 
         public override IEnumerator OnPrepare(FsmEntity<ProcedureService> fsm)
         {
+            //通用设置
+            UIConfig.bringWindowToFrontOnClick = false;
+            GRoot.inst.SetContentScaleFactor(1920, 1080, UIContentScaler.ScreenMatchMode.MatchWidthOrHeight);
+          
+            //加载common ui资源
+            var ret = _fairyService.AddPackageAsync("ui-common");
+            yield return ret.AsCoroution();
+            Debug.Log("Common UI Loaded");
+
             //加载游戏数据
             var t = _gameDataService.LoadGameDataAsync();
             yield return t.AsCoroution();
 
             Debug.Log("GameData Loaded");
-
-            //加载common ui资源
-            var ret = _fairyService.AddPackageAsync("ui-common");
-            yield return ret.AsCoroution();
-
-            Debug.Log("Common UI Loaded");
 
             //加载gameitem icons资源
             ret = _fairyService.AddPackageAsync("ui-gameitem-icons");
@@ -60,11 +64,11 @@ namespace MetaVirus.ResExplorer.Procedures
             yield return ret.AsCoroution();
 
             Debug.Log("Portrait UI Loaded");
-            
+
             //加载编辑器用资源
             ret = _fairyService.AddPackageAsync("ui-res-explorer");
             yield return ret.AsCoroution();
-            
+
             Debug.Log("res explorer UI loaded");
 
             var fontTask = Addressables.LoadAssetAsync<TMP_FontAsset>("UI/Fonts/JosefinSans-Bold.asset").Task;
@@ -83,10 +87,6 @@ namespace MetaVirus.ResExplorer.Procedures
             Debug.Log("Fonts Loaded");
 
             _loadedPkgs = ret.Result;
-
-            //通用设置
-            UIConfig.bringWindowToFrontOnClick = false;
-            GRoot.inst.SetContentScaleFactor(1920, 1080, UIContentScaler.ScreenMatchMode.MatchWidthOrHeight);
 
             GameFramework.GetService<EventService>().Emit(GameEvents.ResourceEvent.AllResLoaded);
         }

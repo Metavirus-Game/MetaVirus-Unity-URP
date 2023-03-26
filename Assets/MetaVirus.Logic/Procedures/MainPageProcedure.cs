@@ -82,8 +82,8 @@ namespace MetaVirus.Logic.Procedures
             BtnEnter = btnEnterGame;
             
             //加载创建角色的资源
-            var scene =await Addressables.LoadSceneAsync("map-createactor/CreateActor.unity", LoadSceneMode.Additive).Task;
-            SceneManager.SetActiveScene(scene.Scene);
+            // var scene =await Addressables.LoadSceneAsync("map-createactor/CreateActor.unity", LoadSceneMode.Additive).Task;
+            // SceneManager.SetActiveScene(scene.Scene);
         }
 
         public override void OnUpdate(FsmEntity<ProcedureService> fsm, float elapseTime, float realElapseTime)

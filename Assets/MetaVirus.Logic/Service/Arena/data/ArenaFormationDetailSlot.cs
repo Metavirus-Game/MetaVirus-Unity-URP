@@ -1,8 +1,10 @@
+using System;
 using System.Linq;
 using cfg.attr;
 using cfg.battle;
 using cfg.common;
 using GameEngine;
+using MetaVirus.Logic.Data.Battle;
 using MetaVirus.Logic.Data.Provider;
 using MetaVirus.Net.Messages.Common;
 using Unity.VisualScripting;
@@ -52,6 +54,8 @@ namespace MetaVirus.Logic.Service.Arena.data
 
         public CharacterData Character { get; private set; }
         public AttrGrowTable GrowTable { get; private set; }
+
+        public MonsterSkillInfo[] Skills { get; private set; }
 
         public float GetBaseAttributeGrow(AttributeId attr)
         {
@@ -105,18 +109,29 @@ namespace MetaVirus.Logic.Service.Arena.data
             var dataId = slot.ItemResId;
             var resId = 0;
             MonsterType type = null;
+
+            BattleSkillData[] skills = null;
+            int[] skillLvs = null;
+
+
             if (slot.ItemType == 0)
             {
                 var petData = gameDataService.gameTable.PetDatas.Get(dataId);
                 resId = petData?.ResDataId ?? 0;
                 type = petData?.Type_Ref;
+                skills = petData?.AtkSkill_Ref ?? Array.Empty<BattleSkillData>();
+                skillLvs = petData?.AtkSkillLevel ?? Array.Empty<int>();
             }
             else
             {
                 var monsterData = gameDataService.gameTable.MonsterDatas.Get(dataId);
                 resId = monsterData?.ResDataId ?? 0;
                 type = monsterData?.Type_Ref;
+                skills = monsterData?.AtkSkill_Ref ?? Array.Empty<BattleSkillData>();
+                skillLvs = monsterData?.AtkSkillLevel ?? Array.Empty<int>();
             }
+
+            var l = Math.Min(skills.Length, skillLvs.Length);
 
 
             var ret = new ArenaFormationDetailSlot
@@ -136,8 +151,17 @@ namespace MetaVirus.Logic.Service.Arena.data
                 Resistances = slot.Resistances.ToArray(),
                 LevelUpTable = levelUpTable,
                 GrowTable = growTable,
-                Character = character
+                Character = character,
             };
+
+            var infos = new MonsterSkillInfo[l];
+            for (var i = 0; i < l; i++)
+            {
+                infos[i] = new MonsterSkillInfo(skills[i], skillLvs[i], ret);
+            }
+
+            ret.Skills = infos;
+
             return ret;
         }
     }

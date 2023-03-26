@@ -239,6 +239,7 @@ namespace MetaVirus.Logic.Procedures
             _loadingPage.LoadingPageCom.TweenFade(0, LoadingFadeDuration).OnComplete(() =>
             {
                 GRoot.inst.RemoveChild(_loadingPage.LoadingPageCom, true);
+                _loadingPage.LoadingPageCom.Dispose();
                 _fairyService.ReleasePackages(_loadedPkgs);
             });
         }

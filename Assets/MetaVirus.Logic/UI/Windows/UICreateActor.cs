@@ -46,6 +46,8 @@ namespace MetaVirus.Logic.UI.Windows
 
         public UnityAction<int> OnActorCreated;
 
+        public override bool IsFullscreenWindow => false;
+
         protected override GComponent MakeContent()
         {
             GameFramework.Inst.StartCoroutine(LoadModel());
@@ -57,9 +59,12 @@ namespace MetaVirus.Logic.UI.Windows
         {
             _modelAnchor = GameObject.Find("ModelAnchor");
 
-            var task = Addressables.InstantiateAsync(PrefabAddress).Task;
-            yield return task.AsCoroution();
+            var task = Addressables.InstantiateAsync(PrefabAddress);
+            yield return task;
+
+            task.Result.SetActive(true);
             _characterTemplate = task.Result.GetComponent<CharacterTemplate>();
+            _characterTemplate.gameObject.SetLayerAll(LayerMask.NameToLayer("UI"));
 
             _characterTemplate.transform.SetParent(_modelAnchor.transform, false);
             _characterTemplate.transform.localPosition = Vector3.zero;

@@ -1,11 +1,8 @@
-﻿using System;
-using FairyGUI;
+﻿using FairyGUI;
 using GameEngine;
 using GameEngine.Event;
 using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Data.Events.UI;
-using MetaVirus.Logic.Service.UI;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 

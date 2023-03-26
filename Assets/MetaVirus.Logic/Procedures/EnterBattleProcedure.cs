@@ -14,8 +14,10 @@ using MetaVirus.Logic.Data.Entities;
 using MetaVirus.Logic.FsmStates.EnterBattleProcedureFsm;
 using MetaVirus.Logic.Protocols.Player;
 using MetaVirus.Logic.Service;
+using MetaVirus.Logic.Service.Arena.data;
 using MetaVirus.Logic.Service.Battle;
 using MetaVirus.Logic.Service.Battle.Scene;
+using MetaVirus.Logic.Service.UI;
 using MetaVirus.Logic.UI;
 using MetaVirus.Logic.Utils;
 using MetaVirus.Net.Messages.Player;
@@ -33,11 +35,16 @@ namespace MetaVirus.Logic.Procedures
 
         public BattleRecord BattleRecord { get; set; }
 
+        public ArenaBattleResult ArenaBattleResult { get; set; }
+
+        public Constants.BattleTypes BattleType { get; private set; }
+
         private FairyGUIService _fairyService;
         private FsmService _fsmService;
         private FsmEntity<EnterBattleProcedure> _fsmEntity;
+        private UIService _uiService;
 
-        public LoadingPage LoadingPage;
+        public BattleLoadingPage LoadingPage;
         private string[] _loadedPkgs;
 
 
@@ -46,23 +53,36 @@ namespace MetaVirus.Logic.Procedures
         /// </summary>
         /// <param name="npcId"></param>
         /// <param name="npcInfo"></param>
-        private void SetBattleInfo(int npcId, NpcRefreshInfo npcInfo)
+        public void SetBattleInfo(int npcId, NpcRefreshInfo npcInfo)
         {
             NpcId = npcId;
             NpcInfo = npcInfo;
             BattleRecord = null;
+            ArenaBattleResult = null;
+            BattleType = Constants.BattleTypes.MapNpc;
         }
 
-        private void SetBattleRecord(BattleRecord record)
+        public void SetBattleRecord(BattleRecord record)
         {
             NpcId = -1;
             BattleRecord = record;
+            ArenaBattleResult = null;
+            BattleType = Constants.BattleTypes.Record;
+        }
+
+        public void SetArenaResult(ArenaBattleResult result)
+        {
+            NpcId = -1;
+            BattleRecord = null;
+            ArenaBattleResult = result;
+            BattleType = Constants.BattleTypes.Arena;
         }
 
         public override void OnInit(FsmEntity<ProcedureService> fsm)
         {
             _fairyService = GameFramework.GetService<FairyGUIService>();
             _fsmService = GameFramework.GetService<FsmService>();
+            _uiService = GameFramework.GetService<UIService>();
         }
 
         public override IEnumerator OnPrepare(FsmEntity<ProcedureService> fsm)
@@ -81,9 +101,15 @@ namespace MetaVirus.Logic.Procedures
             yield return ret.AsCoroution();
             _loadedPkgs = ret.Result;
 
-            LoadingPage = LoadingPage.Create();
+
+            var battleRecord = BattleRecord ?? ArenaBattleResult?.BattleRecord;
+
+            LoadingPage = BattleLoadingPage.Create(battleRecord);
             _fairyService.AddToGRootFullscreen(LoadingPage.LoadingPageCom);
             yield return null;
+
+            //关闭所有通过UIService开启的ui
+            _uiService.ClearOpenWindows();
 
             var proceed = false;
             LoadingPage.LoadingPageCom.TweenFade(1, 0.3f).OnComplete(() => { proceed = true; });
@@ -95,16 +121,29 @@ namespace MetaVirus.Logic.Procedures
             //创建状态机
             _fsmEntity = _fsmService.CreateFsm(FsmName, this, new EnterBattleRequestBattleState(),
                 new EnterBattleState());
-            if (BattleRecord == null)
+
+            switch (BattleType)
             {
-                //未传入战斗结果，使用NpcId请求战斗
-                _fsmEntity.Start<EnterBattleRequestBattleState>();
+                case Constants.BattleTypes.MapNpc:
+                    _fsmEntity.Start<EnterBattleRequestBattleState>();
+                    break;
+                // case Constants.BattleTypes.Record:
+                // case Constants.BattleTypes.Arena:
+                default:
+                    _fsmEntity.Start<EnterBattleState>();
+                    break;
             }
-            else
-            {
-                //已经传入了战斗结果，直接进入战斗
-                _fsmEntity.Start<EnterBattleState>();
-            }
+
+            // if (BattleRecord == null)
+            // {
+            //     //未传入战斗结果，使用NpcId请求战斗
+            //     _fsmEntity.Start<EnterBattleRequestBattleState>();
+            // }
+            // else
+            // {
+            //     //已经传入了战斗结果，直接进入战斗
+            //     _fsmEntity.Start<EnterBattleState>();
+            // }
         }
 
         public override void OnLeave(FsmEntity<ProcedureService> fsm, bool isShutdown)
@@ -123,6 +162,7 @@ namespace MetaVirus.Logic.Procedures
                 }
 
                 GRoot.inst.RemoveChild(LoadingPage.LoadingPageCom);
+                LoadingPage.LoadingPageCom.Dispose();
                 _fairyService.ReleasePackages(_loadedPkgs);
             });
 
@@ -130,43 +170,6 @@ namespace MetaVirus.Logic.Procedures
             _fsmService.DestroyFsm<EnterBattleProcedure>(FsmName);
             //清除战斗记录
             BattleRecord = null;
-        }
-
-        /// <summary>
-        /// 直接播放一段战斗记录
-        /// </summary>
-        /// <param name="result"></param>
-        public static void EnterBattle(BattleRecord result)
-        {
-            var procedureService = GameFramework.GetService<ProcedureService>();
-            var currProcedure = procedureService.CurrProcedure;
-            var procedureEntity = procedureService.ProcedureFsm;
-            var enterBattle = procedureEntity.GetState<EnterBattleProcedure>();
-            enterBattle.SetBattleRecord(result);
-
-            GameFramework.GetService<DataNodeService>()
-                .SetData(Constants.DataKeys.BattleBackProcedure, currProcedure.GetType());
-
-            procedureEntity.ChangeState<EnterBattleProcedure>();
-        }
-
-        /// <summary>
-        /// 与指定npc发生战斗交互
-        /// </summary>
-        /// <param name="npcId"></param>
-        /// <param name="npcInfo"></param>
-        public static void EnterBattle(int npcId, NpcRefreshInfo npcInfo)
-        {
-            var procedureService = GameFramework.GetService<ProcedureService>();
-            var currProcedure = procedureService.CurrProcedure;
-            var procedureEntity = procedureService.ProcedureFsm;
-            var enterBattle = procedureEntity.GetState<EnterBattleProcedure>();
-            enterBattle.SetBattleInfo(npcId, npcInfo);
-
-            GameFramework.GetService<DataNodeService>()
-                .SetData(Constants.DataKeys.BattleBackProcedure, currProcedure.GetType());
-
-            procedureEntity.ChangeState<EnterBattleProcedure>();
         }
     }
 }

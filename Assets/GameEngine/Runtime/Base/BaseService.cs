@@ -60,5 +60,9 @@ namespace GameEngine.Base
         public virtual void OnUpdate(float elapseTime, float realElapseTime)
         {
         }
+
+        public virtual void OnLowerMemory()
+        {
+        }
     }
 }

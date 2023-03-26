@@ -1,6 +1,6 @@
 ﻿using GameEngine.Fsm;
 using MetaVirus.Logic.Data.Entities;
-using MetaVirus.Logic.Procedures;
+using MetaVirus.Logic.Service;
 using UnityEngine;
 using static MetaVirus.Logic.Data.Constants;
 
@@ -37,7 +37,7 @@ namespace MetaVirus.Logic.FsmStates.NpcFsm
                 fsm.Owner.Animator.SetTrigger(AniParamName.TriggerAttack);
             }
 
-            EnterBattleProcedure.EnterBattle(fsm.Owner.Id, fsm.Owner.Info);
+            BattleService.EnterBattle(fsm.Owner.Id, fsm.Owner.Info);
         }
 
         public override void OnLeave(FsmEntity<NpcEntity> fsm, bool isShutdown)
