@@ -10,6 +10,7 @@ using GameEngine.Base.Attributes;
 using GameEngine.Config;
 using GameEngine.DataNode;
 using GameEngine.Entity;
+using GameEngine.Event;
 using GameEngine.FairyGUI;
 using GameEngine.Fsm;
 using GameEngine.Procedure;
@@ -23,7 +24,11 @@ using MetaVirus.Logic.Service.UI;
 using MetaVirus.Logic.UI;
 using MetaVirus.Logic.UI.Component.Common;
 using MetaVirus.Logic.UI.Windows;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.AddressableAssets.ResourceLocators;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using Object = UnityEngine.Object;
 
 namespace MetaVirus.Logic.Procedures.BattleTest
@@ -56,10 +61,6 @@ namespace MetaVirus.Logic.Procedures.BattleTest
 
         public override IEnumerator OnPrepare(FsmEntity<ProcedureService> fsm)
         {
-            var task = _fairyService.AddPackageAsync("ui-battle");
-            yield return task.AsCoroution();
-            _loadedPkgs = task.Result;
-
             //开启BattleCamera
             var battleCamera = Object.FindObjectOfType<BattleCamera>();
             while (battleCamera == null)
@@ -69,7 +70,82 @@ namespace MetaVirus.Logic.Procedures.BattleTest
             }
 
             battleCamera.TurnOn();
+
             yield return null;
+
+            Addressables.InitializeAsync(true);
+
+            var checkHandler = Addressables.CheckForCatalogUpdates(false);
+            yield return checkHandler;
+
+            List<object> resKeys = new();
+            var downloadSize = 0L;
+
+            var waitWnd = UIWaitingWindow.ShowWaiting("正在检查更新，请稍候...");
+
+            if (checkHandler.Status == AsyncOperationStatus.Succeeded && checkHandler.Result.Count > 0)
+            {
+                var updateHandler = Addressables.UpdateCatalogs(checkHandler.Result, false);
+                yield return updateHandler;
+
+                if (updateHandler.Result != null)
+                {
+                    foreach (var resourceLocator in updateHandler.Result)
+                    {
+                        var sizeHandler = Addressables.GetDownloadSizeAsync(resourceLocator.Keys);
+                        yield return sizeHandler;
+                        if (sizeHandler.Result > 0)
+                        {
+                            resKeys.AddRange(resourceLocator.Keys);
+                            downloadSize += sizeHandler.Result;
+                        }
+
+                        Addressables.Release(sizeHandler);
+                    }
+                }
+
+                Addressables.Release(updateHandler);
+            }
+
+            Addressables.Release(checkHandler);
+            waitWnd.Hide();
+            if (downloadSize > 0)
+            {
+                var sizeStr = "";
+                if (downloadSize < 1024 * 1024)
+                {
+                    var kb = downloadSize / 1024f;
+                    sizeStr = $"{kb:F2}KB";
+                }
+                else
+                {
+                    var mb = downloadSize / 1024f / 1024f;
+                    sizeStr = $"{mb:F2}MB";
+                }
+
+                var progWnd = UIProgressWindow.ShowProgress($"正在更新数据，共{sizeStr}");
+                var downloadHandler =
+                    Addressables.DownloadDependenciesAsync(resKeys, Addressables.MergeMode.Union, false);
+
+                while (!downloadHandler.IsDone)
+                {
+                    progWnd.SetProgress(downloadHandler.PercentComplete);
+                    yield return null;
+                }
+
+                progWnd.SetProgress(100);
+                Addressables.Release(downloadHandler);
+
+                //通知数据更新了
+                GameFramework.GetService<EventService>().Emit(GameEvents.GameEvent.GameDataUpdated, "");
+                yield return new WaitForSeconds(1);
+                progWnd.Hide();
+            }
+
+
+            var task = _fairyService.AddPackageAsync("ui-battle");
+            yield return task.AsCoroution();
+            _loadedPkgs = task.Result;
         }
 
         public override void OnEnter(FsmEntity<ProcedureService> fsm)

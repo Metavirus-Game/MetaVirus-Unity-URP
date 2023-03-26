@@ -25,3 +25,45 @@ MonoBehaviour:
       m_Value: ServerData/[BuildTarget]
     - m_Suffix: LoadPath
       m_Value: http://[PrivateIpAddress]:[HostingServicePort]
+  - m_GroupTypePrefix: CCD.7955fa17-e95b-4c63-9136-069186a26402.f0967cb3-9766-4964-be05-754adf86737b.latest
+    m_Variables:
+    - m_Suffix: CcdBucketName
+      m_Value: StandaloneWindows64
+    - m_Suffix: CcdBucketId
+      m_Value: f0967cb3-9766-4964-be05-754adf86737b
+    - m_Suffix: CcdBadgeName
+      m_Value: latest
+    - m_Suffix: PromoteOnly
+      m_Value: True
+    - m_Suffix: BuildPath
+      m_Value: CCDBuildData/f0967cb3-9766-4964-be05-754adf86737b/latest
+    - m_Suffix: LoadPath
+      m_Value: https://7955fa17-e95b-4c63-9136-069186a26402.client-api.unity3dusercontent.com/client_api/v1/buckets/f0967cb3-9766-4964-be05-754adf86737b/release_by_badge/latest/entry_by_path/content/?path=
+  - m_GroupTypePrefix: CCD.7955fa17-e95b-4c63-9136-069186a26402.417ae825-21dc-481c-956e-a9e8defa7c68.latest
+    m_Variables:
+    - m_Suffix: CcdBucketName
+      m_Value: iOS
+    - m_Suffix: CcdBucketId
+      m_Value: 417ae825-21dc-481c-956e-a9e8defa7c68
+    - m_Suffix: CcdBadgeName
+      m_Value: latest
+    - m_Suffix: PromoteOnly
+      m_Value: True
+    - m_Suffix: BuildPath
+      m_Value: CCDBuildData/417ae825-21dc-481c-956e-a9e8defa7c68/latest
+    - m_Suffix: LoadPath
+      m_Value: https://7955fa17-e95b-4c63-9136-069186a26402.client-api.unity3dusercontent.com/client_api/v1/buckets/417ae825-21dc-481c-956e-a9e8defa7c68/release_by_badge/latest/entry_by_path/content/?path=
+  - m_GroupTypePrefix: CCD.7955fa17-e95b-4c63-9136-069186a26402.8f1c64ad-dfea-4838-8c6e-777fde810ce5.latest
+    m_Variables:
+    - m_Suffix: CcdBucketName
+      m_Value: Android
+    - m_Suffix: CcdBucketId
+      m_Value: 8f1c64ad-dfea-4838-8c6e-777fde810ce5
+    - m_Suffix: CcdBadgeName
+      m_Value: latest
+    - m_Suffix: PromoteOnly
+      m_Value: True
+    - m_Suffix: BuildPath
+      m_Value: CCDBuildData/8f1c64ad-dfea-4838-8c6e-777fde810ce5/latest
+    - m_Suffix: LoadPath
+      m_Value: https://7955fa17-e95b-4c63-9136-069186a26402.client-api.unity3dusercontent.com/client_api/v1/buckets/8f1c64ad-dfea-4838-8c6e-777fde810ce5/release_by_badge/latest/entry_by_path/content/?path=

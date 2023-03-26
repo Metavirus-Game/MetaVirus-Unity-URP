@@ -256,6 +256,8 @@ namespace MetaVirus.Logic.Data
                     return "set_icon_stat_9";
                 case AtkAttribute.Poison:
                     return "btn_icon_potion_1";
+                case AtkAttribute.None:
+                    return "set_icon_role_darkmage";
                 default:
                     return null;
             }
@@ -293,7 +295,7 @@ namespace MetaVirus.Logic.Data
             private const string Map = "map-";
             public const string GameDatas = "GameDatas";
 
-            public const string UIModelLoader = "prefabs/UIModelLoader.prefab";
+            public const string UIModelLoader = "Prefabs/UIModelLoader/UIModelLoader.prefab";
 
             public const string PlayerPrefab = "actor-player/Player.prefab";
 

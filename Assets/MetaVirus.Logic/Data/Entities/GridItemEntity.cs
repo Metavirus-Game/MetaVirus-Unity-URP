@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using cfg.common;
+using GameEngine;
 using GameEngine.Entity;
+using GameEngine.ObjectPool;
 using MetaVirus.Logic.Data.Npc;
 using MetaVirus.Logic.Data.Player;
 using UnityEngine;
@@ -29,19 +31,36 @@ namespace MetaVirus.Logic.Data.Entities
 
         public override void OnRelease()
         {
-            Addressables.ReleaseInstance(GridItemGo);
+            if (GridItemGo != null)
+            {
+                Addressables.ReleaseInstance(GridItemGo);
+                GridItemGo = null;
+            }
         }
 
         public static GridItemEntity NewGridItemEntity(GridItem item)
         {
+            ObjectPool<NetPlayerGridItemEntity> pool = GameFramework
+                .GetService<ObjectPoolService>()
+                .GetObjectPool<NetPlayerGridItemEntity>("Pool_NewGridItemEntity");
+
+
             var type = (GridItemType)item.Type;
             var entity = type switch
             {
-                GridItemType.Player => new NetPlayerGridItemEntity(item),
-                GridItemType.Bot => new NetPlayerGridItemEntity(item),
+                GridItemType.Player => pool.Get<NetPlayerGridItemEntity>().SetGridItem(item),
+                GridItemType.Bot => pool.Get<NetPlayerGridItemEntity>().SetGridItem(item),
                 _ => null,
             };
             return entity;
+        }
+
+        public static void Recycle(IRecyclable recyclable)
+        {
+            ObjectPool<NetPlayerGridItemEntity> pool = GameFramework
+                .GetService<ObjectPoolService>()
+                .GetObjectPool<NetPlayerGridItemEntity>("Pool_NewGridItemEntity");
+            pool.Release(recyclable);
         }
     }
 }

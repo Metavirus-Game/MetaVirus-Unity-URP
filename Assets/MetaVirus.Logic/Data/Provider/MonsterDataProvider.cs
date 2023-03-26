@@ -2,6 +2,7 @@
 using cfg.battle;
 using cfg.common;
 using MetaVirus.Logic.AttrsCalculator;
+using MetaVirus.Logic.Data.Battle;
 using UnityEngine;
 
 namespace MetaVirus.Logic.Data.Provider
@@ -31,6 +32,28 @@ namespace MetaVirus.Logic.Data.Provider
         public int ExpToNextLevel => 0;
 
         public CharacterData Character => _monsterData.Character_Ref;
+
+        public MonsterSkillInfo[] Skills
+        {
+            get
+            {
+                var skills = _monsterData.AtkSkill_Ref;
+                var skillLvs = _monsterData.AtkSkillLevel;
+
+                var l = skills.Length;
+
+                var ret = new MonsterSkillInfo[l];
+                if (l > 0)
+                {
+                    for (var i = 0; i < l; i++)
+                    {
+                        ret[i] = new MonsterSkillInfo(skills[i], skillLvs[i], this);
+                    }
+                }
+
+                return ret;
+            }
+        }
 
         public float GetBaseAttributeGrow(AttributeId attr)
         {
@@ -64,7 +87,10 @@ namespace MetaVirus.Logic.Data.Provider
             var baseRes = GrowTable.Resistances[0].Resis;
             var growRes = GrowTable.Resistances[1].Resis;
 
-            return (int)(baseRes[resIdx] + growRes[resIdx] * Level);
+            var l = Level - 1;
+            l = Mathf.Max(l, 0);
+
+            return (int)(baseRes[resIdx] + growRes[resIdx] * l);
         }
     }
 }

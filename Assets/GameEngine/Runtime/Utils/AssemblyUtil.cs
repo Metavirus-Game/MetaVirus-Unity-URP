@@ -56,6 +56,25 @@ namespace GameEngine.Utils
         }
     }
 
+    public static class ColorExtention
+    {
+        public static string ToHtmlColor(this Color color)
+        {
+            return ((Color32)color).ToHtmlColor();
+        }
+
+        public static string ToHtmlColor(this Color32 color, bool includeAlpha = false)
+        {
+            var clrStr = $"#{color.r:x2}{color.g:x2}{color.b:x2}";
+            if (includeAlpha)
+            {
+                clrStr += $"#{color.a:x2}";
+            }
+
+            return clrStr;
+        }
+    }
+
     public static class AnimatorExtention
     {
         /// <summary>

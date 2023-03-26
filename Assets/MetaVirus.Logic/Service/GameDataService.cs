@@ -14,6 +14,7 @@ using cfg.skill;
 using GameEngine;
 using GameEngine.Base;
 using GameEngine.Base.Exception;
+using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Service.Battle;
 using MetaVirus.Logic.Service.Battle.data;
 using MetaVirus.Logic.Service.Exception;
@@ -59,6 +60,16 @@ namespace MetaVirus.Logic.Service
 #endif
 
         public Tables gameTable { get; private set; }
+
+        public override void ServiceReady()
+        {
+            Event.On<string>(GameEvents.GameEvent.GameDataUpdated, OnGameDataTableUpdated);
+        }
+
+        private void OnGameDataTableUpdated(string args)
+        {
+            LoadGameDataAsync();
+        }
 
 #if UNITY_EDITOR
         public void LoadGameDataFromDisk()
@@ -154,6 +165,26 @@ namespace MetaVirus.Logic.Service
         public Color BattleColorHpDec()
         {
             return IntArrayToColor(CommonConfig.BattleColorHpDec);
+        }
+
+        public string GetSkillAttackTargetDesc(SkillScope scope, AtkTarget target)
+        {
+            var keyAll = "battle.skill.desc.ally.all";
+            var keyOne = "battle.skill.desc.ally.one";
+
+            if (target == AtkTarget.Enemy)
+            {
+                keyAll = "battle.skill.desc.enemy.all";
+                keyOne = "battle.skill.desc.enemy.one";
+            }
+
+
+            var tarKey = scope == SkillScope.All
+                ? keyAll
+                : keyOne;
+
+            var str = GetLocalizeStr(tarKey);
+            return str;
         }
 
         public string GetAtkAttributeName(AtkAttribute atkAttribute)

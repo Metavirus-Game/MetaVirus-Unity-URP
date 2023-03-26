@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FairyGUI.Utils
 {
@@ -78,6 +76,20 @@ namespace FairyGUI.Utils
 
             int width = element.GetInt("width", sourceWidth);
             int height = element.GetInt("height", sourceHeight);
+
+            #region 新增支持scale和color
+
+            string scale = element.GetString("scale", "ScaleFree");
+            string color = element.GetString("color", "#ffffff");
+            if (Enum.TryParse(scale, true, out FillType fillType))
+            {
+                loader.fill = fillType;
+            }
+
+            loader.color = ToolSet.ConvertFromHtmlColor(color);
+
+            #endregion
+
 
             if (width == 0)
                 width = 5;

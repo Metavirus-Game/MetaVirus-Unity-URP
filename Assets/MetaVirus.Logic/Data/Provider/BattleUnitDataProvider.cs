@@ -1,8 +1,10 @@
-﻿using cfg.attr;
+﻿using System;
+using cfg.attr;
 using cfg.battle;
 using cfg.common;
 using GameEngine;
 using MetaVirus.Logic.AttrsCalculator;
+using MetaVirus.Logic.Data.Battle;
 using MetaVirus.Logic.Service;
 using MetaVirus.Logic.Service.Battle;
 using UnityEngine;
@@ -55,6 +57,39 @@ namespace MetaVirus.Logic.Data.Provider
 
         public CharacterData Character { get; }
 
+        public MonsterSkillInfo[] Skills
+        {
+            get
+            {
+                BattleSkillData[] skills = null;
+                int[] skillLvs = null;
+
+                if (_battleUnit.SourceType == Constants.BattleSourceType.MonsterData)
+                {
+                    skills = _monsterData.AtkSkill_Ref;
+                    skillLvs = _monsterData.AtkSkillLevel;
+                }
+                else
+                {
+                    skills = _petData.AtkSkill_Ref;
+                    skillLvs = _petData.AtkSkillLevel;
+                }
+
+                var l = (skills == null || skillLvs == null) ? 0 : Math.Min(skills.Length, skillLvs.Length);
+
+                var ret = new MonsterSkillInfo[l];
+                if (l > 0 && skills != null && skillLvs != null)
+                {
+                    for (var i = 0; i < l; i++)
+                    {
+                        ret[i] = new MonsterSkillInfo(skills[i], skillLvs[i], this);
+                    }
+                }
+
+                return ret;
+            }
+        }
+
         public int GetAttribute(AttributeId attr)
         {
             return _attrsCalculator[attr];
@@ -80,7 +115,10 @@ namespace MetaVirus.Logic.Data.Provider
             var baseRes = GrowTable.Resistances[0].Resis;
             var growRes = GrowTable.Resistances[1].Resis;
 
-            return (int)(baseRes[resIdx] + growRes[resIdx] * Level);
+            var l = Level - 1;
+            l = Mathf.Max(l, 0);
+
+            return (int)(baseRes[resIdx] + growRes[resIdx] * l);
         }
     }
 }

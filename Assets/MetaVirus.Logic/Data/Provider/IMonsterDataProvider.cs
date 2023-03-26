@@ -3,6 +3,7 @@ using cfg.battle;
 using cfg.common;
 using GameEngine;
 using MetaVirus.Logic.AttrsCalculator;
+using MetaVirus.Logic.Data.Battle;
 using MetaVirus.Logic.Service;
 using UnityEngine;
 
@@ -21,6 +22,8 @@ namespace MetaVirus.Logic.Data.Provider
         public int CurrExp { get; }
         public int ExpToNextLevel { get; }
         public CharacterData Character { get; }
+
+        public MonsterSkillInfo[] Skills { get; }
 
         /**
          * 返回基本属性的成长率

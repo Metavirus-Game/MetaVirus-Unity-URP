@@ -72,7 +72,7 @@ namespace MetaVirus.Logic.UI.Windows
 
             var createMonsterComp = ContentComp;
 
-            _modelAnchor = createMonsterComp.GetChild("modelAnchor").asGraph;
+            _modelAnchor = createMonsterComp.GetChildByPath("modelPreview.n3.modelAnchor").asGraph;
 
             _monsterTitle = createMonsterComp.GetChild("txtMonsterName").asRichTextField;
 
@@ -198,6 +198,7 @@ namespace MetaVirus.Logic.UI.Windows
                 var task = Addressables.InstantiateAsync(Constants.ResAddress.UIModelLoader).Task;
                 yield return task.AsCoroution();
                 _uiModelLoader = task.Result.GetComponent<UIModelLoader>();
+                _uiModelLoader.TextureSize = _modelAnchor.size;
             }
 
             _uiModelLoader.LoadModel(_currentMonster.ResDataId, texture =>
@@ -208,7 +209,7 @@ namespace MetaVirus.Logic.UI.Windows
                 _modelImage = new Image
                 {
                     texture = tex,
-                    blendMode = BlendMode.Add
+                    blendMode = BlendMode.Normal
                 };
 
                 _modelAnchor.SetNativeObject(_modelImage);

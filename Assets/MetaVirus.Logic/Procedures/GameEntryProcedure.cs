@@ -17,6 +17,7 @@ using MetaVirus.Logic.Service;
 using MetaVirus.Logic.Service.Arena;
 using MetaVirus.Logic.Service.Battle.UI;
 using MetaVirus.Logic.Service.Npc;
+using MetaVirus.Logic.Service.NpcHeader;
 using MetaVirus.Logic.Service.Player;
 using MetaVirus.Logic.Service.UI;
 using TMPro;
@@ -51,6 +52,7 @@ namespace MetaVirus.Logic.Procedures
             GameFramework.GetService<UIService>();
             GameFramework.GetService<PlayerService>();
             GameFramework.GetService<ArenaService>();
+            GameFramework.GetService<NpcHeaderService>();
         }
 
 
@@ -110,6 +112,18 @@ namespace MetaVirus.Logic.Procedures
 
             FontManager.RegisterFont(tmpFont);
 
+            var font2 = Addressables
+                .LoadAssetAsync<TMP_FontAsset>("UI/Fonts/LilitaOne-Regular.asset") ;
+            yield return font2;
+            
+            tmpFont = new TMPFont
+            {
+                name = Constants.EnLilitaOne,
+                fontAsset = font2.Result
+            };
+
+            FontManager.RegisterFont(tmpFont);
+            
             Debug.Log("Fonts Loaded");
 
             _loadedPkgs = ret.Result;

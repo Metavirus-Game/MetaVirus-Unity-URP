@@ -9,6 +9,7 @@ using MetaVirus.Logic.Data.Entities;
 using MetaVirus.Logic.Data.Events.Player;
 using MetaVirus.Logic.Protocols.Scene;
 using MetaVirus.Logic.Service;
+using MetaVirus.Logic.Service.NpcHeader;
 using MetaVirus.Logic.Service.UI;
 using MetaVirus.Net.Messages.Common;
 using MetaVirus.Net.Messages.Scene;
@@ -25,11 +26,13 @@ namespace MetaVirus.Logic.UI.Windows
         private EventService _eventService;
         private GameDataService _gameDataService;
         private NpcFunctionService _npcFunctionService;
+        private NpcHeaderService _npcHeaderService;
 
         private GLoader3D _modelLoader;
         private GRichTextField _txtGreeting;
         private GRichTextField _txtNpcName;
         private GList _funcList;
+        private GLoader _npcHeader;
 
         private IList<PBNpcFunctionItem> _items;
 
@@ -44,6 +47,7 @@ namespace MetaVirus.Logic.UI.Windows
             _networkService = GameFramework.GetService<NetworkService>();
             _eventService = GameFramework.GetService<EventService>();
             _npcFunctionService = GameFramework.GetService<NpcFunctionService>();
+            _npcHeaderService = GameFramework.GetService<NpcHeaderService>();
             SetBgFadeInSetting(true);
         }
 
@@ -53,6 +57,7 @@ namespace MetaVirus.Logic.UI.Windows
             _modelLoader = comp.GetChild("ModelLoader").asLoader3D;
             _txtGreeting = comp.GetChild("txtGreeting").asRichTextField;
             _txtNpcName = comp.GetChild("txtNpcName").asRichTextField;
+            _npcHeader = comp.GetChildByPath("btnHeader.loader.n1").asLoader;
             _funcList = comp.GetChild("funcList").asList;
             _funcList.itemRenderer = RenderItem;
             _funcList.onClickItem.Set(OnClickItem);
@@ -110,6 +115,13 @@ namespace MetaVirus.Logic.UI.Windows
                 new PlayerInteractingWithNpcEvent(PlayerInteractingWithNpcEvent.EventType.Start, _npcEntity));
 
             _txtNpcName.text = _npcEntity.MapNpc.Name;
+            if (_npcEntity.AvatarValue != 0)
+            {
+                _npcHeaderService.GetNpcHeader(_npcEntity.AvatarValue,
+                    tex => { _npcHeader.texture = new NTexture(tex); });
+            }
+
+
             var touchPb = new TouchNpcRequestCSPb
             {
                 NpcId = _npcEntity.Id
@@ -159,6 +171,10 @@ namespace MetaVirus.Logic.UI.Windows
         public override void Release()
         {
             base.Release();
+            if (_npcEntity.AvatarValue != 0)
+            {
+                _npcHeaderService.ReleaseNpcHeader(_npcEntity.AvatarValue);
+            }
         }
     }
 }

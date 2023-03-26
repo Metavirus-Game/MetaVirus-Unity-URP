@@ -27,11 +27,16 @@ namespace GameEngine.Entity
                 RemoveEntity(e);
             }
 
+            entity.Removed = false;
             _entities.Add(entity);
 
             entity.OnInit(this);
             await entity.LoadEntityAsync();
-
+            if (entity.Removed)
+            {
+                //Load过程中被Release了，重新调用OnRelease确保资源释放正确
+                entity.OnRelease();
+            }
             return entity;
         }
 
@@ -99,6 +104,7 @@ namespace GameEngine.Entity
             if (ret)
             {
                 entity.OnRelease();
+                entity.Removed = true;
             }
 
             return ret;

@@ -191,14 +191,15 @@ namespace GameEngine.Network
 
                 var totalLen = BytesConverter.GetBigEndian(lenBytes);
                 var bodyLen = totalLen - NetBusBasePacket.HeadByteLenPos;
-
+                
                 _memStream.Position -= NetBusBasePacket.HeadByteLenPos;
                 
-                if (StreamRemainingByes < bodyLen)
+                if (StreamRemainingByes < totalLen)
                 {
                     //not enough bytes for body
                     break;
                 }
+                
 
                 var packet = _reader.ReadBytes(totalLen);
                 var mainType = packet[0];

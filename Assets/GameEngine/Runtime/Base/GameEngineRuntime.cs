@@ -65,6 +65,12 @@ namespace GameEngine.Base
         {
             var pool = GetService<ObjectPoolService>();
             pool.RemoveAllUnusedItems();
+            
+            foreach (var baseService in _serviceList)
+            {
+                baseService.OnLowerMemory();
+            }
+            
         }
 
         private T CreateService<T>() where T : BaseService

@@ -5,7 +5,10 @@
         public static class GameEvent
         {
             public const string ServerConnected = "ServerConnected";
+
+            public const string GameDataUpdated = "GameEvent_GameDataUpdated";
         }
+
 
         public static class ControllerEvent
         {

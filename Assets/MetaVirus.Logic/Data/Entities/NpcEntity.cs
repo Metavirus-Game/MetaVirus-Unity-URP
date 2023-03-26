@@ -12,6 +12,7 @@ using MetaVirus.Logic.Data.Events.Player;
 using MetaVirus.Logic.Data.Npc;
 using MetaVirus.Logic.Data.Player;
 using MetaVirus.Logic.FsmStates.NpcFsm;
+using MetaVirus.Logic.Player;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.AI;
@@ -30,6 +31,18 @@ namespace MetaVirus.Logic.Data.Entities
         private readonly EventService _eventService;
 
         public sealed override int Id => MapNpc.Id;
+
+        /// <summary>
+        /// npc的avatar设置，如果不是avatar系统的npc，返回0
+        /// </summary>
+        public ulong AvatarValue
+        {
+            get
+            {
+                var c = _npcResObj.GetComponent<CharacterTemplate>();
+                return c == null ? 0 : c.AvatarToLong();
+            }
+        }
 
         public MapNpc MapNpc { get; }
         public NpcRefreshInfo Info { get; }

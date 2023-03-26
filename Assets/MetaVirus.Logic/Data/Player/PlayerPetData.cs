@@ -3,9 +3,11 @@ using cfg.battle;
 using cfg.common;
 using GameEngine;
 using MetaVirus.Logic.AttrsCalculator;
+using MetaVirus.Logic.Data.Battle;
 using MetaVirus.Logic.Data.Provider;
 using MetaVirus.Logic.Service;
 using MetaVirus.Net.Messages.Common;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace MetaVirus.Logic.Data.Player
@@ -28,6 +30,8 @@ namespace MetaVirus.Logic.Data.Player
         public Quality Quality => PetData.Quality;
 
         public MonsterType Type => PetData.Type_Ref;
+
+        public MonsterSkillInfo[] Skills { get; }
 
         public LevelUpTable LevelUpTable => PetData.LevelUpTable == 0
             ? _gameDataService.QualityToLevelUpTable(Quality)
@@ -73,6 +77,15 @@ namespace MetaVirus.Logic.Data.Player
             PetData = _gameDataService.gameTable.PetDatas.Get(info.PetDataId);
             Character = _gameDataService.gameTable.CharacterDatas.Get(info.CharacterId);
             _attrsCalculator = new MonsterAttrsCalculator(this);
+
+            var skills = PetData.AtkSkill_Ref;
+            var skillLvs = PetData.AtkSkillLevel;
+            var l = Mathf.Min(skills.Length, skillLvs.Length);
+            Skills = new MonsterSkillInfo[l];
+            for (var i = 0; i < l; i++)
+            {
+                Skills[i] = new MonsterSkillInfo(skills[i], skillLvs[i], this);
+            }
         }
 
         public int GetAttribute(AttributeId attr)
@@ -86,7 +99,10 @@ namespace MetaVirus.Logic.Data.Player
             var baseRes = GrowTable.Resistances[0].Resis;
             var growRes = GrowTable.Resistances[1].Resis;
 
-            return (int)(baseRes[resIdx] + growRes[resIdx] * Level);
+            var l = Level - 1;
+            l = Mathf.Max(l, 0);
+
+            return (int)(baseRes[resIdx] + growRes[resIdx] * l);
         }
 
         public int GetBaseAttribute(AttributeId attr)

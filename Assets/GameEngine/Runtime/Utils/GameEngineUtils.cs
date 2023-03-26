@@ -73,7 +73,7 @@ namespace GameEngine.Utils
         {
             gameObject.layer = toLayer;
             if (!includeChildren) return;
-            foreach (var trans in gameObject.GetComponentsInChildren<Transform>())
+            foreach (var trans in gameObject.GetComponentsInChildren<Transform>(true))
             {
                 trans.gameObject.layer = toLayer;
             }

@@ -116,10 +116,14 @@ namespace MetaVirus.Logic.Player
         public AvatarWeaponData MainHand { get; private set; }
 
         // Start is called before the first frame update
-        void Start()
+        void Awake()
         {
             _gameDataService = GameFramework.GetService<GameDataService>();
             _animator = GetComponentInChildren<Animator>();
+        }
+
+        private void Start()
+        {
             RebuildAvatar();
         }
 

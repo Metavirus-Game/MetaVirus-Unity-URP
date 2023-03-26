@@ -16,6 +16,12 @@ namespace GameEngine.Entity
 
         public void OnRelease();
 
+        /// <summary>
+        /// 记录当前Entity是否已经被Remove掉了<br/>
+        /// 主要为了防止在调用Entity.LoadEntityAsync的过程中，Entity被release时，有可能无法正确释放资源
+        /// </summary>
+        public bool Removed { get; set; }
+
         public float TimeScale { get; set; }
     }
 }
