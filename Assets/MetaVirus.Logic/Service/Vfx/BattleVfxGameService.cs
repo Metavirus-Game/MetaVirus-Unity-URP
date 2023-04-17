@@ -212,12 +212,38 @@ namespace MetaVirus.Logic.Service.Vfx
         public int GetSkillHitVfxId(BattleSkillData skillData)
         {
             var hitVfxId = skillData.CastAction.HitVfx;
-            if (IsReplaceSkillHitVfx(skillData.CastAction.Projectile_Ref.Type)
-                && skillData.CastAction.Projectile_Ref.HitVfx != 0)
+            var projectile = skillData.CastAction.Projectile_Ref;
+            var atkAttr = skillData.AtkAttribute;
+            return GetSkillHitVfxId(hitVfxId, projectile, atkAttr);
+            // if (IsReplaceSkillHitVfx(skillData.CastAction.Projectile_Ref.Type)
+            //     && skillData.CastAction.Projectile_Ref.HitVfx != 0)
+            // {
+            //     //动画带有投射物，不是Summon类的，且投射物配置了命中特效
+            //     //Summon和Bomb类型的，会使用技能本身设定的命中特效
+            //     hitVfxId = skillData.CastAction.Projectile_Ref.HitVfx;
+            // }
+            //
+            // if (hitVfxId > 0 && !_loadedVfxes.ContainsKey(hitVfxId))
+            // {
+            //     //没有找到对应的特效，归0，根据技能属性选择
+            //     hitVfxId = 0;
+            // }
+            //
+            // if (hitVfxId != 0) return hitVfxId;
+            //
+            // hitVfxId = skillData.AtkAttribute == AtkAttribute.Physical
+            //     ? _gameDataService.CommonConfig.VfxMeleeHitDefault
+            //     : _gameDataService.CommonConfig.VfxMagicHitDefaut;
+            // return hitVfxId;
+        }
+
+        public int GetSkillHitVfxId(int hitVfxId, ProjectileData projectile, AtkAttribute atkAttribute)
+        {
+            if (IsReplaceSkillHitVfx(projectile.Type) && projectile.HitVfx != 0)
             {
                 //动画带有投射物，不是Summon类的，且投射物配置了命中特效
                 //Summon和Bomb类型的，会使用技能本身设定的命中特效
-                hitVfxId = skillData.CastAction.Projectile_Ref.HitVfx;
+                hitVfxId = projectile.HitVfx;
             }
 
             if (hitVfxId > 0 && !_loadedVfxes.ContainsKey(hitVfxId))
@@ -228,7 +254,7 @@ namespace MetaVirus.Logic.Service.Vfx
 
             if (hitVfxId != 0) return hitVfxId;
 
-            hitVfxId = skillData.AtkAttribute == AtkAttribute.Physical
+            hitVfxId = atkAttribute == AtkAttribute.Physical
                 ? _gameDataService.CommonConfig.VfxMeleeHitDefault
                 : _gameDataService.CommonConfig.VfxMagicHitDefaut;
             return hitVfxId;

@@ -46,6 +46,10 @@ namespace MetaVirus.Logic.Service.Battle.Fsm.BattleUnitFsm
                     case InstructionType.Relive:
                         ChangeState<UnitStateRelive>(fsm);
                         break;
+                    case InstructionType.SimulatorProjectile:
+                        //模拟发射投射物效果，只在ResExplorer中使用
+                        ChangeState<UnitStateSimulatorProjectile>(fsm);
+                        break;
                 }
             }
         }

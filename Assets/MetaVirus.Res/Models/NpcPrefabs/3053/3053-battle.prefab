@@ -34,6 +34,16 @@ PrefabInstance:
         animation clip 'MeleeAttack2'\n\tFrom animation clip 'MeleeAttack3'\n\tFrom
         animation clip 'CastSpell2'\n\tFrom animation clip 'CastSpell3'"
       objectReference: {fileID: 0}
+    - target: {fileID: 4047605151080846595, guid: ebf12721480aeca4f8e88845623b9552,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4081145126218475204, guid: ebf12721480aeca4f8e88845623b9552,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4964617748114723698, guid: ebf12721480aeca4f8e88845623b9552,
         type: 3}
       propertyPath: m_RootOrder
@@ -89,23 +99,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5706201338238151544, guid: ebf12721480aeca4f8e88845623b9552,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 5741541028906273224, guid: ebf12721480aeca4f8e88845623b9552,
         type: 3}
       propertyPath: m_Name
       value: 3053-battle
       objectReference: {fileID: 0}
-    - target: {fileID: 8370883696251324195, guid: ebf12721480aeca4f8e88845623b9552,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 5
-      objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: -765729643806486195, guid: ebf12721480aeca4f8e88845623b9552, type: 3}
+    - {fileID: 4666268079580911964, guid: ebf12721480aeca4f8e88845623b9552, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ebf12721480aeca4f8e88845623b9552, type: 3}
 --- !u!1 &6802623897090768442 stripped
 GameObject:

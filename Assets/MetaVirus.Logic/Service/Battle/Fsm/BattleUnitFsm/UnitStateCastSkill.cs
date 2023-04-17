@@ -64,7 +64,7 @@ namespace MetaVirus.Logic.Service.Battle.Fsm.BattleUnitFsm
             // var projectileInfo =
             //     new BattleProjectileInfo(castAction.ProjectileVfx, projType, castAction.ProjectileSpeed);
 
-            battle.ProjectileManager.DoProjectileAttack(battle, Unit, castAction.Projectile_Ref, onHitTarget,
+            battle.ProjectileManager.DoProjectileAttack(battle, Unit, castAction.Projectile_Ref, onHitTarget, 
                 skillDatas);
         }
 

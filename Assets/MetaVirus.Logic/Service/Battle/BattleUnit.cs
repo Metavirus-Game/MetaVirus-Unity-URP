@@ -5,6 +5,7 @@ using cfg.battle;
 using cfg.common;
 using GameEngine;
 using MetaVirus.Battle.Record;
+using MetaVirus.Logic.Data.Provider;
 using MetaVirus.Logic.Service.Player;
 using UnityEngine;
 using static MetaVirus.Logic.Data.Constants;
@@ -16,26 +17,27 @@ namespace MetaVirus.Logic.Service.Battle
         private readonly GameDataService _gameDataService;
         private readonly PlayerService _playerService;
 
-        private readonly BattleUnitDataPb _data;
+        //private readonly BattleUnitDataPb _data;
+        private readonly IMonsterDataProvider _data;
 
-        public int Id => _data.Id;
-        public BattleUnitSide Side => SideFromUnitId(_data.Id);
-        public int Slot => SlotFromUnitId(_data.Id);
-        public int SourceId => _data.SourceId;
+        public int Id { get; }
+        public BattleUnitSide Side { get; }
+        public int Slot { get; }
+        public int SourceId { get; }
 
         /// <summary>
         /// 战斗单位类型
         /// </summary>
-        public BattleSourceType SourceType => (BattleSourceType)_data.SourceType;
+        public BattleSourceType SourceType { get; }
 
         /// <summary>
         /// 战斗单位使用的资源Id
         /// </summary>
-        public int ResourceId => _data.ResourceId;
+        public int ResourceId { get; }
 
         public int Level => _data.Level;
-        public int Quality => _data.Quality;
-        public float Scale => _data.Scale;
+        public int Quality => (int)_data.Quality;
+        public float Scale { get; }
 
         private readonly Dictionary<int, int> _properties = new();
         private readonly Dictionary<int, int> _resistance = new();
@@ -45,7 +47,7 @@ namespace MetaVirus.Logic.Service.Battle
 
         public NpcResourceData ResourceData { get; }
 
-        public int[] AtkSkillLevel => _data.AtkSkillLevels.ToArray();
+        public int[] AtkSkillLevel { get; }
 
 
         public bool IsDead { get; set; }
@@ -58,11 +60,44 @@ namespace MetaVirus.Logic.Service.Battle
 
         public float CurrActionEnergy => _actionEnergy;
 
-        private BattleUnit(BattleUnitDataPb data)
+        private BattleUnit(int unitId, int monsterId, int level, BattleUnitSide side, int slot)
         {
-            _data = data;
             _gameDataService = GameFramework.GetService<GameDataService>();
             _playerService = GameFramework.GetService<PlayerService>();
+
+            Id = unitId;
+
+            var md = _gameDataService.GetMonsterData(monsterId);
+            _data = new MonsterDataProvider(md, level);
+
+            Side = side;
+            Slot = slot;
+            SourceId = monsterId;
+            SourceType = BattleSourceType.MonsterData;
+            ResourceId = md.ResDataId;
+            Scale = md.Scale;
+            AtkSkillLevel = md.AtkSkillLevel;
+
+            AtkSkills = md.AtkSkill.Select(id => _gameDataService.GetSkillData(id)).ToArray();
+
+            UnitDataProvider = new MonsterBasicDataProvider(md);
+        }
+
+        private BattleUnit(BattleUnitDataPb data)
+        {
+            _data = new BattleUnitDataPbProvider(data);
+            Id = _data.Id;
+
+            _gameDataService = GameFramework.GetService<GameDataService>();
+            _playerService = GameFramework.GetService<PlayerService>();
+
+            Side = SideFromUnitId(_data.Id);
+            Slot = SlotFromUnitId(_data.Id);
+            SourceId = data.SourceId;
+            SourceType = (BattleSourceType)data.SourceType;
+            ResourceId = data.ResourceId;
+            Scale = data.Scale;
+            AtkSkillLevel = data.AtkSkillLevels.ToArray();
 
             for (var i = 0; i < data.Properties.Count; i++)
             {
@@ -76,13 +111,13 @@ namespace MetaVirus.Logic.Service.Battle
 
             List<BattleSkillData> skills = new();
 
-            foreach (var id in _data.AtkSkillIds)
+            foreach (var id in data.AtkSkillIds)
             {
                 skills.Add(_gameDataService.GetSkillData(id));
             }
 
             AtkSkills = skills.ToArray();
- 
+
 
             switch (SourceType)
             {
@@ -97,7 +132,7 @@ namespace MetaVirus.Logic.Service.Battle
                     break;
             }
 
-            ResourceData = _gameDataService.GetResourceData(_data.ResourceId);
+            ResourceData = _gameDataService.GetResourceData(data.ResourceId);
 
             _actionEnergy = GetProperty(AttributeId.CalcActionEnergy);
         }
@@ -346,6 +381,11 @@ namespace MetaVirus.Logic.Service.Battle
         public static BattleUnit FromProtobuf(BattleUnitDataPb protobuf)
         {
             return new BattleUnit(protobuf);
+        }
+
+        public static BattleUnit FromMonsterData(int unitId, int monsterId, int level, BattleUnitSide side, int slot)
+        {
+            return new BattleUnit(unitId, monsterId, level, side, slot);
         }
 
         public static int MakeUnitId(BattleUnitSide side, int slot)

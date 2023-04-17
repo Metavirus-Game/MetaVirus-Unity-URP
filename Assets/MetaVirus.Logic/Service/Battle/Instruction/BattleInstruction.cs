@@ -13,7 +13,8 @@ namespace MetaVirus.Logic.Service.Battle.Instruction
         PropertiesChange = 4,
         OnDamage = 5,
         Relive = 6,
-        Dead
+        Dead,
+        SimulatorProjectile 
     }
 
     public enum InstructionState

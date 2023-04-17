@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4985454155758640659
+--- !u!1 &5021702156139050050
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,7 +8,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 904123416414657909}
+  - component: {fileID: 3672158945267251022}
   m_Layer: 0
   m_Name: HitVfxPos
   m_TagString: Untagged
@@ -16,13 +16,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &904123416414657909
+--- !u!4 &3672158945267251022
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4985454155758640659}
+  m_GameObject: {fileID: 5021702156139050050}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.0038980243, y: 0.71315074, z: 0.096309334}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -389,7 +389,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8152143534247838368}
   - component: {fileID: 8152143534238068068}
-  - component: {fileID: -1874648242084256497}
+  - component: {fileID: -2922977225880235007}
   m_Layer: 0
   m_Name: 2022
   m_TagString: Untagged
@@ -422,8 +422,8 @@ Transform:
   - {fileID: 8152143534247838398}
   - {fileID: 8152143534247838392}
   - {fileID: 8152143534247838376}
-  - {fileID: 4771113894457495029}
-  - {fileID: 904123416414657909}
+  - {fileID: 301400554468227760}
+  - {fileID: 3672158945267251022}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -447,7 +447,8 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!195 &-1874648242084256497
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!195 &-2922977225880235007
 NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -876,7 +877,7 @@ Transform:
   m_Father: {fileID: 8152143534247838368}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &9212266591187300365
+--- !u!1 &8270281155396446652
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -884,7 +885,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4771113894457495029}
+  - component: {fileID: 301400554468227760}
   m_Layer: 0
   m_Name: HUDPos
   m_TagString: Untagged
@@ -892,13 +893,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4771113894457495029
+--- !u!4 &301400554468227760
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9212266591187300365}
+  m_GameObject: {fileID: 8270281155396446652}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.0038980243, y: 1.6263015, z: 0.096309334}
   m_LocalScale: {x: 1, y: 1, z: 1}

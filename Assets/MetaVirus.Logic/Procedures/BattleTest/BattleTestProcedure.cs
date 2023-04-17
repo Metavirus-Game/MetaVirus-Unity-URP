@@ -79,7 +79,7 @@ namespace MetaVirus.Logic.Procedures
         }
 
         public override void OnEnter(FsmEntity<ProcedureService> fsm)
-        {
+        { 
             _battleTestPageComp = UIPackage.CreateObject("BattlePage", "BattleTestSetupPage").asCom;
             _fairyService.AddToGRootFullscreen(_battleTestPageComp);
 

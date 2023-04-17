@@ -39,24 +39,24 @@ namespace MetaVirus.Logic.Service.Battle
 
         protected float Timeline = 0;
 
-        private FsmEntity<BaseBattleInstance> _battleFsm;
+        protected FsmEntity<BaseBattleInstance> BattleFsm;
 
-        private readonly FsmService _fsmService;
-        private readonly GameDataService _gameDataService;
-        private readonly BattleVfxGameService _battleVfxGameService;
-        private readonly FairyGUIService _fairyService;
-        private readonly EventService _eventService;
-        private readonly DataNodeService _dataNodeService;
-        private readonly SoundService _soundService;
-        private ObjectPoolService _objectPoolService;
+        protected readonly FsmService FsmService;
+        protected readonly GameDataService GameDataService;
+        protected readonly BattleVfxGameService BattleVfxGameService;
+        protected readonly FairyGUIService FairyService;
+        protected readonly EventService EventService;
+        protected readonly DataNodeService DataNodeService;
+        protected readonly SoundService SoundService;
+        protected ObjectPoolService ObjectPoolService;
 
-        private readonly Stack<ActionFrame> _frames = new();
+        protected readonly Stack<ActionFrame> Frames = new();
 
         /// <summary>
         /// 返回当前战斗动画帧剩余帧数，如果==0则战斗完毕
         /// </summary>
         /// <returns></returns>
-        public int RemainingBattleFrames => _frames.Count;
+        public int RemainingBattleFrames => Frames.Count;
 
         /// <summary>
         /// 战斗是否播放完毕
@@ -87,18 +87,22 @@ namespace MetaVirus.Logic.Service.Battle
         /// </summary>
         private float _tickTime;
 
-        public BaseBattleInstance(BattleRecord battleRecord, BattleField battleField)
+        public BaseBattleInstance(BattleRecord battleRecord, BattleField battleField) : this()
         {
             BattleField = battleField;
             BattleRecord = battleRecord;
-            _fsmService = GameFramework.GetService<FsmService>();
-            _gameDataService = GameFramework.GetService<GameDataService>();
-            _objectPoolService = GameFramework.GetService<ObjectPoolService>();
-            _battleVfxGameService = GameFramework.GetService<BattleVfxGameService>();
-            _fairyService = GameFramework.GetService<FairyGUIService>();
-            _eventService = GameFramework.GetService<EventService>();
-            _dataNodeService = GameFramework.GetService<DataNodeService>();
-            _soundService = GameFramework.GetService<SoundService>();
+        }
+
+        protected BaseBattleInstance()
+        {
+            FsmService = GameFramework.GetService<FsmService>();
+            GameDataService = GameFramework.GetService<GameDataService>();
+            ObjectPoolService = GameFramework.GetService<ObjectPoolService>();
+            BattleVfxGameService = GameFramework.GetService<BattleVfxGameService>();
+            FairyService = GameFramework.GetService<FairyGUIService>();
+            EventService = GameFramework.GetService<EventService>();
+            DataNodeService = GameFramework.GetService<DataNodeService>();
+            SoundService = GameFramework.GetService<SoundService>();
 
             ProjectileManager = new BattleProjectileManager();
             BattleUIManager = new BattleUIManager(this);
@@ -107,21 +111,21 @@ namespace MetaVirus.Logic.Service.Battle
         public void OnEnter()
         {
             _tickTime = 0;
-            _eventService.Emit(GameEvents.BattleEvent.Battle,
+            EventService.Emit(GameEvents.BattleEvent.Battle,
                 new BattleEvent(BattleId, BattleEvent.BattleEventType.Started));
             ActiveAllEntities();
             Started = true;
-            _battleFsm.Start<BattleStateOverview>();
+            BattleFsm.Start<BattleStateOverview>();
         }
 
         public void Skip()
         {
-            _battleFsm.ChangeState<BattleStateCompleted>();
+            BattleFsm.ChangeState<BattleStateCompleted>();
         }
 
         public void OnLeave()
         {
-            _fsmService.DestroyFsm<BaseBattleInstance>("BattleFsm");
+            FsmService.DestroyFsm<BaseBattleInstance>("BattleFsm");
 
             foreach (var entity in Entities.Values)
             {
@@ -130,15 +134,15 @@ namespace MetaVirus.Logic.Service.Battle
 
             if (_battleMapData is { BattleBgm: > 0 })
             {
-                _soundService.StopBGM(_battleMapData.BattleBgm_Ref.Catalog_Ref.Name, _battleMapData.BattleBgm_Ref.Name,
+                SoundService.StopBGM(_battleMapData.BattleBgm_Ref.Catalog_Ref.Name, _battleMapData.BattleBgm_Ref.Name,
                     unload: true);
             }
 
-            _fairyService.ReleasePackages(_loadedPkgs);
+            FairyService.ReleasePackages(_loadedPkgs);
             Entities.Clear();
             ProjectileManager.Clear();
             BattleUIManager.Clear();
-            _battleVfxGameService.ReleaseVfxes();
+            BattleVfxGameService.ReleaseVfxes();
         }
 
         public void OnUpdate(float elapseTime, float realElapseTime)
@@ -154,18 +158,18 @@ namespace MetaVirus.Logic.Service.Battle
             BattleUIManager.OnUpdate(elapseTime, realElapseTime);
         }
 
-        public async Task AsyncLoadBattle(TaskProgressHandler handler = null)
+        public virtual async Task AsyncLoadBattle(TaskProgressHandler handler = null)
         {
             try
             {
-                var playerInfo = _dataNodeService.GetData<PlayerInfo>(DataKeys.PlayerInfo);
-                _battleMapData = _gameDataService.GetMapData(playerInfo.CurrentMapId);
+                var playerInfo = DataNodeService.GetData<PlayerInfo>(DataKeys.PlayerInfo);
+                _battleMapData = GameDataService.GetMapData(playerInfo.CurrentMapId);
 
-                var pkgTask = await _fairyService.AddPackageAsync("ui-battle");
+                var pkgTask = await FairyService.AddPackageAsync("ui-battle");
 
                 _loadedPkgs = pkgTask;
 
-                _battleFsm = _fsmService.CreateFsm("BattleFsm", this,
+                BattleFsm = FsmService.CreateFsm("BattleFsm", this,
                     new BattleStateIncActionEnergy(),
                     new BattleStateAction(),
                     new BattleStateOverview(),
@@ -176,7 +180,7 @@ namespace MetaVirus.Logic.Service.Battle
                 var frameList = BattleRecord.Frames;
                 for (var i = frameList.Count - 1; i >= 0; i--)
                 {
-                    _frames.Push(frameList[i]);
+                    Frames.Push(frameList[i]);
                 }
 
                 handler?.ReportProgress(10);
@@ -196,7 +200,7 @@ namespace MetaVirus.Logic.Service.Battle
 
                 handler?.ReportProgress(20);
                 //get all common vfx ids
-                var commonVfxes = _gameDataService.ConfigCommonVfxIds;
+                var commonVfxes = GameDataService.ConfigCommonVfxIds;
 
                 //get all skill vfx ids
                 var idSet = new SortedSet<int>();
@@ -204,7 +208,7 @@ namespace MetaVirus.Logic.Service.Battle
 
                 foreach (var entity in Entities.Values)
                 {
-                    idSet.AddRange(_gameDataService.GetAllSkillVfxIds(entity.BattleUnit));
+                    idSet.AddRange(GameDataService.GetAllSkillVfxIds(entity.BattleUnit));
                 }
 
                 idSet.Remove(0);
@@ -214,7 +218,7 @@ namespace MetaVirus.Logic.Service.Battle
                 var vfxhandler = new TaskProgressHandler();
 
                 //load vfxes
-                var task = _battleVfxGameService.AsyncLoadVfxes(idSet.ToArray(), vfxhandler);
+                var task = BattleVfxGameService.AsyncLoadVfxes(idSet.ToArray(), vfxhandler);
                 while (!task.IsCompleted)
                 {
                     await Task.Delay(10);
@@ -235,14 +239,14 @@ namespace MetaVirus.Logic.Service.Battle
                 {
                     var battleBgm = SoundService.ToFullPath(_battleMapData.BattleBgm_Ref.Catalog_Ref.Name,
                         _battleMapData.BattleBgm_Ref.Name);
-                    await _soundService.AsyncLoadSoundClip(battleBgm, _battleMapData.BattleBgm_Ref.AssetAddress,
+                    await SoundService.AsyncLoadSoundClip(battleBgm, _battleMapData.BattleBgm_Ref.AssetAddress,
                         _battleMapData.BattleBgm_Ref.Volume,
                         _battleMapData.BattleBgm_Ref.Loop);
 
-                    _soundService.PlayBGM(battleBgm);
+                    SoundService.PlayBGM(battleBgm);
                 }
 
-                _eventService.Emit(GameEvents.BattleEvent.Battle,
+                EventService.Emit(GameEvents.BattleEvent.Battle,
                     new BattleEvent(BattleId, BattleEvent.BattleEventType.Ready));
                 handler?.ReportProgress(100);
             }
@@ -358,7 +362,7 @@ namespace MetaVirus.Logic.Service.Battle
         /// </summary>
         /// <param name="side"></param>
         /// <returns></returns>
-        public Transform GetFormationCenter(BattleUnitSide side)
+        public virtual Transform GetFormationCenter(BattleUnitSide side)
         {
             var slotTrans = BattleField.GetSlotTrans(side, 5);
             // var unit = GetUnitEntity(side, 5);
@@ -371,7 +375,7 @@ namespace MetaVirus.Logic.Service.Battle
         /// </summary>
         /// <param name="side"></param>
         /// <returns></returns>
-        public Transform GetFormationFrontCenter(BattleUnitSide side)
+        public virtual Transform GetFormationFrontCenter(BattleUnitSide side)
         {
             var slotTrans = BattleField.GetSlotTrans(side, 2);
             var unit = GetUnitEntity(side, 2);
@@ -385,12 +389,12 @@ namespace MetaVirus.Logic.Service.Battle
         /// <returns></returns>
         public ActionFrame CurrentActionFrame(bool pop = false)
         {
-            if (_frames.Count == 0 || _frames.Peek().FrameTime > Timeline)
+            if (Frames.Count == 0 || Frames.Peek().FrameTime > Timeline)
             {
                 return null;
             }
 
-            return pop ? _frames.Pop() : _frames.Peek();
+            return pop ? Frames.Pop() : Frames.Peek();
         }
 
 
@@ -400,6 +404,11 @@ namespace MetaVirus.Logic.Service.Battle
         /// </summary>
         public void IncTimeline(float timeDelta)
         {
+            if (BattleRecord == null)
+            {
+                return;
+            }
+
             var deltaMs = timeDelta * 1000;
             _tickTime += deltaMs;
             //增长时间线

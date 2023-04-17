@@ -59,38 +59,91 @@ namespace GameEngine.Config
         [SerializeField] private bool savePlayerId = false;
         [SerializeField] private int[] timeScaleOptions = new[] { 1, 2, 3 };
 
-        public bool SavePlayerId => savePlayerId;
-        public NextEnterProcedure NextEnterProcedure => nextProcedure;
-        public string Server => server;
-        public int Port => port;
+        public bool SavePlayerId
+        {
+            get => savePlayerId;
+            set => savePlayerId = value;
+        }
+
+        public NextEnterProcedure NextEnterProcedure
+        {
+            get => nextProcedure;
+            set => nextProcedure = value;
+        }
+
+        public string Server
+        {
+            get => server;
+            set => server = value;
+        }
+
+        public int Port
+        {
+            get => port;
+            set => port = value;
+        }
 
         /// <summary>
         /// 战斗服务器端口，临时测试用
         /// </summary>
-        public int BattleServerPort => battleServerPort;
+        public int BattleServerPort
+        {
+            get => battleServerPort;
+            set => battleServerPort = value;
+        }
 
-        public string BattleServerIp => battleServerIp;
+        public string BattleServerIp
+        {
+            get => battleServerIp;
+            set => battleServerIp = value;
+        }
 
         public int TargetFps => targetFps;
 
         public int[] TimeScaleOptions => timeScaleOptions;
 
-        public short ModuleId => moduleId.StartsWith("0x")
-            ? Convert.ToInt16(moduleId.Substring(2), 16)
-            : Convert.ToInt16(moduleId);
+        public short ModuleId
+        {
+            get =>
+                moduleId.StartsWith("0x")
+                    ? Convert.ToInt16(moduleId.Substring(2), 16)
+                    : Convert.ToInt16(moduleId);
+            set => moduleId = $"0x{value:X}";
+        }
 
-        public short InstId => instId.StartsWith("0x")
-            ? Convert.ToInt16(instId[2..], 16)
-            : Convert.ToInt16(instId);
+        public short InstId
+        {
+            get
+            {
+                return instId.StartsWith("0x")
+                    ? Convert.ToInt16(instId[2..], 16)
+                    : Convert.ToInt16(instId);
+            }
+            set => instId = $"0x{value:X}";
+        }
 
-        public int WorldServerId => worldServerId.StartsWith("0x")
-            ? Convert.ToInt32(worldServerId[2..], 16)
-            : Convert.ToInt32(worldServerId);
+        public int WorldServerId
+        {
+            get =>
+                worldServerId.StartsWith("0x")
+                    ? Convert.ToInt32(worldServerId[2..], 16)
+                    : Convert.ToInt32(worldServerId);
+            set => worldServerId = $"0x{value:X}";
+        }
 
         public int ClientGlobalId => (ModuleId << 8) | (InstId & 0xff);
-        public string ChannelName => channelName;
 
-        public bool OfflineTest => offlineTest;
+        public string ChannelName
+        {
+            get => channelName;
+            set => channelName = value;
+        }
+
+        public bool OfflineTest
+        {
+            get => offlineTest;
+            set => offlineTest = value;
+        }
 
 #if UNITY_EDITOR
 

@@ -42,7 +42,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1297387924796217083}
   - component: {fileID: 4963269864201505921}
-  - component: {fileID: 2648088134342897214}
+  - component: {fileID: 4948283876232875534}
   m_Layer: 0
   m_Name: 5041
   m_TagString: Untagged
@@ -65,8 +65,8 @@ Transform:
   - {fileID: 6439185071162992839}
   - {fileID: 3283386474889697488}
   - {fileID: 957026529009453976}
-  - {fileID: 1587680265408800316}
-  - {fileID: 4510763465678636432}
+  - {fileID: 821729375852895462}
+  - {fileID: 2532249791722791786}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -90,7 +90,8 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!195 &2648088134342897214
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!195 &4948283876232875534
 NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,37 +201,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.09342173, y: -0.0063446313, z: 0.00016449392}
     m_Extent: {x: 0.18181446, y: 0.20561573, z: 0.1691108}
   m_DirtyAABB: 0
---- !u!1 &3069086305432711931
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4510763465678636432}
-  m_Layer: 0
-  m_Name: HitVfxPos
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4510763465678636432
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3069086305432711931}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.00016450882, y: 0.55937374, z: -0.006280308}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1297387924796217083}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3495722010002272694
 GameObject:
   m_ObjectHideFlags: 0
@@ -325,7 +295,7 @@ Transform:
   m_Father: {fileID: 7920631704643472864}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6380992995552986804
+--- !u!1 &4808949424265984121
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -333,7 +303,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1587680265408800316}
+  - component: {fileID: 821729375852895462}
   m_Layer: 0
   m_Name: HUDPos
   m_TagString: Untagged
@@ -341,13 +311,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1587680265408800316
+--- !u!4 &821729375852895462
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6380992995552986804}
+  m_GameObject: {fileID: 4808949424265984121}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.00016450882, y: 1.3187475, z: -0.006280308}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -355,4 +325,35 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1297387924796217083}
   m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6467105016506653761
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2532249791722791786}
+  m_Layer: 0
+  m_Name: HitVfxPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2532249791722791786
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6467105016506653761}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.00016450882, y: 0.55937374, z: -0.006280308}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1297387924796217083}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

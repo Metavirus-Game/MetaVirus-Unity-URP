@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -61,6 +62,11 @@ namespace MetaVirus.Logic.Service
 
         public Tables gameTable { get; private set; }
 
+        /// <summary>
+        /// 仅用于技能演示时候，自定义技能使用
+        /// </summary>
+        private Dictionary<int, BattleSkillData> _customSkillMap = new();
+
         public override void ServiceReady()
         {
             Event.On<string>(GameEvents.GameEvent.GameDataUpdated, OnGameDataTableUpdated);
@@ -102,30 +108,53 @@ namespace MetaVirus.Logic.Service
 
         public async Task<Tables> LoadGameDataAsync()
         {
-            var locations = await Addressables
-                .LoadResourceLocationsAsync(ResAddress.GameDatas).Task;
-
-            var gameDatas = new Dictionary<string, TextAsset>();
-
-            foreach (var l in locations)
+            var loadPath = ""; 
+#if UNITY_STANDALONE_WIN
+            var args = Environment.GetCommandLineArgs();
+            if (args.Length >= 3)
             {
-                var asset = await Addressables.LoadAssetAsync<TextAsset>(l).Task;
-                var fileName = l.PrimaryKey;
-                fileName = fileName.Substring(fileName.LastIndexOf("/", StringComparison.Ordinal) + 1);
-                gameDatas[fileName] = asset;
+                if (args[1].ToLower() == "-p")
+                {
+                    if (Directory.Exists(args[2]))
+                    {
+                        loadPath = args[2];
+                    }
+                }
             }
+#endif
 
-
-            //加载所有数据
-            gameTable = new Tables(file =>
+            if (string.IsNullOrEmpty(loadPath))
             {
-                var f = $"{file}.bytes";
-                gameDatas.TryGetValue(f, out var data);
-                if (data != null) return ByteBuf.Wrap(data.bytes);
-                Debug.LogError($"GameData File [{file}] Not Found!");
-                return null;
-            });
+                //从addressables资源中读取
+                var locations = await Addressables
+                    .LoadResourceLocationsAsync(ResAddress.GameDatas).Task;
 
+                var gameDatas = new Dictionary<string, TextAsset>();
+
+                foreach (var l in locations)
+                {
+                    var asset = await Addressables.LoadAssetAsync<TextAsset>(l).Task;
+                    var fileName = l.PrimaryKey;
+                    fileName = fileName.Substring(fileName.LastIndexOf("/", StringComparison.Ordinal) + 1);
+                    gameDatas[fileName] = asset;
+                }
+
+
+                //加载所有数据
+                gameTable = new Tables(file =>
+                {
+                    var f = $"{file}.bytes";
+                    gameDatas.TryGetValue(f, out var data);
+                    if (data != null) return ByteBuf.Wrap(data.bytes);
+                    Debug.LogError($"GameData File [{file}] Not Found!");
+                    return null;
+                });
+            }
+            else
+            {
+                LoadDataFromLocalPath(loadPath);
+                StartCoroutine(MonitorLoadPath(loadPath));
+            }
 
             // var str =
             //     "H4sIAAAAAAAAAL2WQUgUYRTH9/u+cfv8SHdcTEUxJgla5jAOnkSIdI2wg7IglEEdZnfHdWl1l90V7OaMs0NKUgkFHTp18BBFR/HQKQgiCjpZp04eokMduon1ZmbXxonVlWZ2YC7v7f7e4/9/7/uGIn6p9wbVljl+lfZgYUgc3CEfOBOltmnqEfqMP2IWavlx/p5kvZ7ws66t7tAQCx08I1incUQmQ6HlSwk8s0oBrQN6nfcBvQJoXEOv84A2AL3pR9drgEY19KbVdQXQuxEf0Pfd6N0IoE1AG34IornRBj+gQNeUxz1EYOLga7SHLzzF29wefouTDxBj7Hv7Tr/1esI/Oy1y52P0bf+386CDGog4modGE2hmY0pMsqvlOwVVyuTzmZyqFLIlKZWfH5xUy8q1bHGxJCWVcjmnSkU1lS+mpUQxX1CL5axaGp9TFjLqWKqczS9cKSrzaiIZPUM5fqkHlB5ooX38GzTA0X4eiTf9rBGxa5h2jXb+riTOsvhJ6NO3s7ncuFIqH8YKFDlYQaMxNNTBIrb2CFxti73nZByEUmYTlNKCUQqwgk5jpElKaV6lAqhhNMENPRg3ACus0Bhukhu6V6lbftbgocZXAscItaXa6Ren2cWT4OOLs7OHkVFKLCQSNqZiwJXJMBMfcr4Y8I6AA067AgEHroMD1g3pOPAFyzhaCxAIPEcQ6Kh6FIbAEySjYdQr0DD/ySTwJ0jF4PcQxaNkoi2RniMFvIRscMULrjQAPuUCV+qArSuM2OA9B2w2AKYusFkHrHk71hoAt7rAWh2w4QUbDYCZC2z8C/Z/V6pzzMGyjAW1K69aq0eXfazM/O+udMOuAJIJIJUtEgcitU2kxV/Il4V5iWBhnJ6FNeuuPctO/x0TGUXbq1ZazqVlJ28ck9ePyVeOyZv182LKT8O63Ib18S+wPRU4kKmoXTaGf1MRtqdCd01FxpehOOfMxFH3WBA26M2wwfTfBmrbYAZlw1GfwUHYYHpskLe6R8KX09YTJ5Ik/QGEnPEb1A4AAA==";
@@ -135,6 +164,33 @@ namespace MetaVirus.Logic.Service
             // Debug.Log(br);
 
             return gameTable;
+        }
+
+        private void LoadDataFromLocalPath(string loadPath)
+        {
+            //本地数据中读取，仅限测试使用
+            gameTable = new Tables(file =>
+            {
+                var f = $"{file}.bytes";
+                f = Path.Combine(loadPath, f);
+                var data = File.ReadAllBytes(f);
+                return ByteBuf.Wrap(data);
+            });
+        }
+
+        private IEnumerator MonitorLoadPath(string loadPath)
+        {
+            var reloadFile = Path.Combine(loadPath, "reload");
+            while (true)
+            {
+                if (File.Exists(reloadFile))
+                {
+                    LoadDataFromLocalPath(loadPath);
+                    File.Delete(reloadFile);
+                }
+
+                yield return new WaitForSeconds(1);
+            }
         }
 
         public CommonConfig CommonConfig => gameTable.CommonConfigs.DataList[0];
@@ -413,6 +469,10 @@ namespace MetaVirus.Logic.Service
         public MonsterGroupData[] GetAllMonsterGroups()
         {
             return gameTable.MonsterGroupDatas.DataList.ToArray();
+        }
+
+        public void AddCustomSkillData(int skillId)
+        {
         }
 
         public BattleSkillData GetSkillData(int skillId)

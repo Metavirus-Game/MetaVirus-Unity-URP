@@ -68,7 +68,7 @@ namespace MetaVirus.Logic.Service.Battle
             _fsm = _fsmService.CreateFsm("BattleUnitEntity_" + BattleUnit.Id, this,
                 new UnitStateIdle(), new UnitStateCastSkill(), new UnitStateChangeProperties(),
                 new UnitStateAttachBuff(), new UnitStateBuffEffect(), new UnitStateOnDamage(), new UnitStateDead(),
-                new UnitStateRelive()
+                new UnitStateRelive(), new UnitStateSimulatorProjectile()
             );
 
             _vfxGameService = GameFramework.GetService<BattleVfxGameService>();

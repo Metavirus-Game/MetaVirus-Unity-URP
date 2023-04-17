@@ -53,6 +53,7 @@ namespace MetaVirus.Logic.Procedures
             GameFramework.GetService<PlayerService>();
             GameFramework.GetService<ArenaService>();
             GameFramework.GetService<NpcHeaderService>();
+            GameFramework.GetService<UpdateService>();
         }
 
 
