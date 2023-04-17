@@ -12,6 +12,7 @@ using GameEngine.Procedure;
 using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Procedures;
 using MetaVirus.Logic.Service;
+using MetaVirus.ResExplorer.MonsterExplorer;
 using MetaVirus.ResExplorer.Procedures;
 using UnityEngine;
 
@@ -23,11 +24,13 @@ namespace MetaVirus.ResExplorer.UI
         private GameDataService _gameDataService;
         private FairyGUIService _fairyGUIService;
 
-        private GList _lstData;
+        private MonsterResExplorerUI _monsterResExplorerUI;
+        private VfxResExplorerUI _vfxResExplorerUI;
+        private VfxProjectileResExplorerUI _vfxProjectileExplorer;
 
-        private List<NpcResourceData> _monsterDatas;
+        private BattleSimulator _battleSimulator;
 
-        private MonsterEditorComponent _monsterEditorComponent;
+        public const string EventOnResTypeChanged = "ResExplorer_Event_OnResTypeChanged";
 
         public override void PostConstruct()
         {
@@ -39,44 +42,36 @@ namespace MetaVirus.ResExplorer.UI
             Event.Remove(GameEvents.ResourceEvent.AllResLoaded, OnAllResLoaded);
         }
 
-        private void LoadDatas()
-        {
-            _monsterDatas = _gameDataService.gameTable.NpcResourceDatas.DataList;
-        }
-
         private void OnAllResLoaded()
         {
-            LoadDatas();
-
             var comp = UIPackage.CreateObject("ZEditorResExplorer", "ResExplorer").asCom;
+
+            var resTypeCtrl = comp.GetController("resType");
+            resTypeCtrl.onChanged.Set(() =>
+            {
+                var idx = resTypeCtrl.selectedIndex;
+                Event.Emit(EventOnResTypeChanged, idx);
+            });
+
+            _battleSimulator = new BattleSimulator(FindObjectOfType<BattleArea>());
+
             _fairyGUIService.AddToGRootFullscreen(comp);
+            var monsterExplorer = comp.GetChild("monsterExplorer").asCom;
+            _monsterResExplorerUI = new MonsterResExplorerUI(monsterExplorer);
 
-            var monsterComp = UIPackage.CreateObject("ZEditorResExplorer", "MonsterEditor").asCom;
-            _monsterEditorComponent = new MonsterEditorComponent(monsterComp);
+            var vfxExplorer = comp.GetChild("vfxExplorer").asCom;
+            _vfxResExplorerUI = new VfxResExplorerUI(vfxExplorer);
 
-            var container = comp.GetChild("n5").asCom;
-            monsterComp.size = container.size;
-            container.AddChild(monsterComp);
-            monsterComp.AddRelation(container, RelationType.Size);
-
-            // var tree = comp.GetChild("n0").asTree;
-            // FillTree(tree);
-
-            _lstData = comp.GetChild("listData").asList;
-            _lstData.itemRenderer = RenderListData_Monster;
-            _lstData.numItems = _monsterDatas.Count;
-
-            _lstData.onClickItem.Set(OnListItemClicked);
+            var vfxProjectileExplorer = comp.GetChild("vfxProjectileExplorer").asCom;
+            _vfxProjectileExplorer = new VfxProjectileResExplorerUI(vfxProjectileExplorer);
         }
 
-        private void OnListItemClicked(EventContext context)
+        public override void OnUpdate(float elapseTime, float realElapseTime)
         {
-            var obj = (GObject)context.data;
-            var idx = _lstData.GetChildIndex(obj);
-
-            var data = _monsterDatas[idx];
-            _monsterEditorComponent.EditMonster = data;
+            _battleSimulator?.OnUpdate(elapseTime, realElapseTime);
         }
+
+        #region OldUI
 
         private void MakeUI_Old()
         {
@@ -124,18 +119,6 @@ namespace MetaVirus.ResExplorer.UI
                 };
             }
             //textField.name = node.text;
-        }
-
-        void RenderListData_Monster(int index, GObject obj)
-        {
-            var btnData = obj.asButton;
-            var data = _monsterDatas[index];
-            var txtId = btnData.GetChild("txtId");
-            txtId.text = data.Id.ToString();
-            btnData.title = data.Name;
-
-            var bgCtrl = btnData.GetController("bg");
-            bgCtrl.SetSelectedIndex(index % 2);
         }
 
         void OnExpand(GTreeNode node, bool expand)
@@ -194,5 +177,7 @@ namespace MetaVirus.ResExplorer.UI
             npcTemplateList.cell.GetChild("n4").text = "Npc Templates";
             npcTemplateList.data = typeof(NpcTemplateData);
         }
+
+        #endregion
     }
 }

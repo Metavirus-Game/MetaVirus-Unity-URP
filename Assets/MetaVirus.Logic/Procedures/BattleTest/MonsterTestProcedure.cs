@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using FairyGUI;
 using GameEngine;
 using GameEngine.Base.Attributes;
@@ -70,78 +71,9 @@ namespace MetaVirus.Logic.Procedures.BattleTest
             }
 
             battleCamera.TurnOn();
-
             yield return null;
-
-            Addressables.InitializeAsync(true);
-
-            var checkHandler = Addressables.CheckForCatalogUpdates(false);
-            yield return checkHandler;
-
-            List<object> resKeys = new();
-            var downloadSize = 0L;
-
-            var waitWnd = UIWaitingWindow.ShowWaiting("正在检查更新，请稍候...");
-
-            if (checkHandler.Status == AsyncOperationStatus.Succeeded && checkHandler.Result.Count > 0)
-            {
-                var updateHandler = Addressables.UpdateCatalogs(checkHandler.Result, false);
-                yield return updateHandler;
-
-                if (updateHandler.Result != null)
-                {
-                    foreach (var resourceLocator in updateHandler.Result)
-                    {
-                        var sizeHandler = Addressables.GetDownloadSizeAsync(resourceLocator.Keys);
-                        yield return sizeHandler;
-                        if (sizeHandler.Result > 0)
-                        {
-                            resKeys.AddRange(resourceLocator.Keys);
-                            downloadSize += sizeHandler.Result;
-                        }
-
-                        Addressables.Release(sizeHandler);
-                    }
-                }
-
-                Addressables.Release(updateHandler);
-            }
-
-            Addressables.Release(checkHandler);
-            waitWnd.Hide();
-            if (downloadSize > 0)
-            {
-                var sizeStr = "";
-                if (downloadSize < 1024 * 1024)
-                {
-                    var kb = downloadSize / 1024f;
-                    sizeStr = $"{kb:F2}KB";
-                }
-                else
-                {
-                    var mb = downloadSize / 1024f / 1024f;
-                    sizeStr = $"{mb:F2}MB";
-                }
-
-                var progWnd = UIProgressWindow.ShowProgress($"正在更新数据，共{sizeStr}");
-                var downloadHandler =
-                    Addressables.DownloadDependenciesAsync(resKeys, Addressables.MergeMode.Union, false);
-
-                while (!downloadHandler.IsDone)
-                {
-                    progWnd.SetProgress(downloadHandler.PercentComplete);
-                    yield return null;
-                }
-
-                progWnd.SetProgress(100);
-                Addressables.Release(downloadHandler);
-
-                //通知数据更新了
-                GameFramework.GetService<EventService>().Emit(GameEvents.GameEvent.GameDataUpdated, "");
-                yield return new WaitForSeconds(1);
-                progWnd.Hide();
-            }
-
+            
+            yield return GameFramework.GetService<UpdateService>().CheckUpdate();
 
             var task = _fairyService.AddPackageAsync("ui-battle");
             yield return task.AsCoroution();
@@ -255,9 +187,18 @@ namespace MetaVirus.Logic.Procedures.BattleTest
             var upSide = MakeFormationStr(_upFormation);
             var downSide = MakeFormationStr(_downFormation);
 
+
             var task = http.GetByteArrayAsync(
                 $"http://{GameConfig.Inst.BattleServerIp}:{GameConfig.Inst.BattleServerPort}/battle/v1/mvm?upSide={upSide}&downSide={downSide}");
+
             yield return task.AsCoroution();
+
+            if (task.IsFaulted)
+            {
+                wndRunBattle.Hide();
+                UIDialog.ShowErrorMessage("连接错误", "战斗数据获取失败，请检查战斗服务器是否正常启动", null);
+                yield break;
+            }
 
             var bytes = task.Result;
             //var str = Encoding.UTF8.GetString(bytes);

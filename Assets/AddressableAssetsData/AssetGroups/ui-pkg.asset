@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: ui-pkg
+  m_EditorClassIdentifier: 
+  m_GroupName: ui-pkg
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 84aef87a81ed9144ab849257294499f7
+  m_SerializeEntries:
+  - m_GUID: 0fcb4ae3dc72ba94f816ecacd8a6a81e
+    m_Address: Assets/MetaVirus.Res/UI/GameItem_atlas0.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui-gameitem-icons
+  - m_GUID: ebae537c9ec2af14e8cb1f00eb0d7624
+    m_Address: Assets/MetaVirus.Res/UI/GameItem_fui.bytes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui-gameitem-icons
+  - m_GUID: 64ccfbf5cd5bfbd4c91fa61fcfd32885
+    m_Address: Assets/MetaVirus.Res/UI/UnitPortraits_atlas0.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui-portrait
+  - m_GUID: 901560e0714d5244390b31d1ee92b64e
+    m_Address: Assets/MetaVirus.Res/UI/UnitPortraits_fui.bytes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui-portrait
+  - m_GUID: 083861a100695644d860516ec6214c6d
+    m_Address: Assets/MetaVirus.Res/UI/Common_fui.bytes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui-common
+  - m_GUID: fe704852243ea8c418f7fe9a96d2272d
+    m_Address: Assets/MetaVirus.Res/UI/Common_atlas1.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui-common
+  - m_GUID: 68d80dcf7be74144c868fc9891bd622d
+    m_Address: Assets/MetaVirus.Res/UI/Common_atlas0.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui-common
+  - m_GUID: 27f6349df7b535a46a60aeaef9ea01d1
+    m_Address: Assets/MetaVirus.Res/UI/Common_atlas0_1.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui-common
+  - m_GUID: 706bfdc9c0af123459d4f4f13b5f2f0f
+    m_Address: Assets/MetaVirus.Res/UI/Common_atlas0_2.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui-common
+  - m_GUID: 51f2387c3fc86b841a451014239c61b0
+    m_Address: Assets/MetaVirus.Res/UI/LoadingPage_atlas0.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui-loading
+  - m_GUID: 1dd0de7caa77cc04cab872967b039cc0
+    m_Address: Assets/MetaVirus.Res/UI/LoadingPage_fui.bytes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui-loading
+  - m_GUID: c3ac5f8dfcbd7be4ca2c20bc3a30412a
+    m_Address: Assets/MetaVirus.Res/UI/MainPage_atlas0.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui-mainpage
+  - m_GUID: 3fea711b63ea78f4cb4aa11d699beafb
+    m_Address: Assets/MetaVirus.Res/UI/MainPage_fui.bytes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui-mainpage
+  - m_GUID: e6c0645a6a6ef4c4e98b59d40f4be282
+    m_Address: Assets/MetaVirus.Res/UI/MainPage_atlas0_1.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui-mainpage
+  - m_GUID: 0712f18a960d6694eb539711c5d6b412
+    m_Address: Assets/MetaVirus.Res/UI/GamePlay_fui.bytes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui-gameplay
+  - m_GUID: 244a9b14db5e6364285d563900798aca
+    m_Address: Assets/MetaVirus.Res/UI/BattlePage_fui.bytes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui-battle
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: d5d06a2a805ea174ba5053de60c9d1f6, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 7b44ee7754093ba44b21655d809edca6, type: 2}
+    - {fileID: 11400000, guid: d57f8327e3fa116459415e8a02a96378, type: 2}

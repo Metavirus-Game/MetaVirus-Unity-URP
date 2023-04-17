@@ -58,7 +58,18 @@ namespace MetaVirus.Logic.Service.Battle.Fsm.BattleUnitFsm
                     }
 
                     //播放命中动画
-                    var vfxId = attackEffect?.HitVfx ?? _vfxGameService.GetSkillHitVfxId(skill.Skill);
+                    var vfxId = 0;
+                    if (skill != null)
+                    {
+                        vfxId = attackEffect?.HitVfx ?? _vfxGameService.GetSkillHitVfxId(skill.Skill);
+                    }
+                    else
+                    {
+                        //skill == null的情况，只会出现在ResExplorer的特效预览中
+                        vfxId = attackEffect?.HitVfx ?? _vfxGameService.GetSkillHitVfxId(Instruction.HitVfxId,
+                            Instruction.ProjectileData, Instruction.AtkAttribute);
+                    }
+
                     if (vfxId > 0)
                     {
                         var bindPos = unitAni.GetVfxBindPos(vfxId);
@@ -75,7 +86,7 @@ namespace MetaVirus.Logic.Service.Battle.Fsm.BattleUnitFsm
                 }
                 else
                 {
-                    //恢复系特效
+                    //恢复系特效，恢复系特效不会出现skill==null的情况，ResExplorer不会以恢复特效类型进行模拟
                     var vfxId = attackEffect?.HitVfx ?? _vfxGameService.GetSkillHealVfxId(skill.Skill);
                     if (vfxId > 0)
                     {
