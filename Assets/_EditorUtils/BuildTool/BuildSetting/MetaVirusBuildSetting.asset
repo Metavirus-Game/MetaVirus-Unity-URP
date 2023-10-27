@@ -15,7 +15,7 @@ MonoBehaviour:
   buildSettings:
   - name: MetaVirus
     gameConfig:
-      server: 3.96.184.235
+      server: 3.96.234.252
       port: 18889
       battleServerIp: 35.183.11.95
       battleServerPort: 8881
@@ -30,7 +30,22 @@ MonoBehaviour:
     - {fileID: 102900000, guid: fb8e7689e4ca4764f9a218e864eb7d7a, type: 3}
   - name: MetaVirus-BattleTest
     gameConfig:
-      server: 3.96.184.235
+      server: 3.96.234.252
+      port: 18889
+      battleServerIp: 15.222.78.167
+      battleServerPort: 8881
+      moduleId: 0x40
+      instId: 0x1
+      channelName: MetaVirus
+      worldServerId: 0x3F01
+      nextProcedure: 3
+      offlineTest: 0
+      savePlayerId: 1
+    buildScenes:
+    - {fileID: 102900000, guid: fb8e7689e4ca4764f9a218e864eb7d7a, type: 3}
+  - name: MetaVirus-BattleTest-Local
+    gameConfig:
+      server: 3.96.234.252
       port: 18889
       battleServerIp: 127.0.0.1
       battleServerPort: 8881
