@@ -3,7 +3,10 @@ using System.Threading.Tasks;
 using GameEngine;
 using GameEngine.Config;
 using GameEngine.Fsm;
+using GameEngine.Procedure;
+using GameEngine.Utils;
 using MetaVirus.Logic.Procedures;
+using MetaVirus.Logic.Service;
 using MetaVirus.Logic.UI;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -22,42 +25,57 @@ namespace MetaVirus.Logic.FsmStates.MainPage
 
         public override void OnEnter(FsmEntity<MainPageProcedure> fsm)
         {
-            _wndUpdate = UIWaitingWindow.ShowWaiting(_localize.GetLanguageText("Common_Loading_Content_Updating"));
+            //_wndUpdate = UIWaitingWindow.ShowWaiting(_localize.GetLanguageText("Common_Loading_Content_Updating"));
             //check update
-            CheckUpdates(fsm);
+            GameFramework.Inst.StartCoroutine(CheckUpdates(fsm));
         }
 
-        private async void CheckUpdates(FsmEntity<MainPageProcedure> fsm)
+        private IEnumerator CheckUpdates(FsmEntity<MainPageProcedure> fsm)
         {
-            var list = await Addressables.CheckForCatalogUpdates().Task;
-            Debug.Log(list);
+            var updateTask = GameFramework.GetService<UpdateService>().AsyncUpdate();
+            yield return updateTask.AsCoroution();
 
-            //TODO 模拟更新延迟，改为更新逻辑
-            await Task.Delay(1000);
-
-            var hasUpdate = false;
-
-            if (hasUpdate)
+            if (updateTask.Result > 0)
             {
-                //TODO 走更新逻辑
-                _wndUpdate.Hide();
+                //数据有更新，重新加载游戏
+                fsm.Owner.ChangeProcedure<ReloadAfterUpdateProcedure>();
+                yield break;
+            }
+
+            // 连接服务器
+            //ChangeState<MainPageStateConnectServer>(fsm);
+            if (GameConfig.Inst.OfflineTest)
+            {
+                ChangeState<MainPageEnterOfflineTest>(fsm);
             }
             else
             {
-                _wndUpdate.Hide(() =>
-                {
-                    //连接服务器
-                    //ChangeState<MainPageStateConnectServer>(fsm);
-                    if (GameConfig.Inst.OfflineTest)
-                    {
-                        ChangeState<MainPageEnterOfflineTest>(fsm);
-                    }
-                    else
-                    {
-                        ChangeState<MainPageStateEnterGame>(fsm);
-                    }
-                });
+                ChangeState<MainPageStateEnterGame>(fsm);
             }
+
+            // var hasUpdate = false;
+            //
+            // if (hasUpdate)
+            // {
+            //     //TODO 走更新逻辑
+            //     _wndUpdate.Hide();
+            // }
+            // else
+            // {
+            //     _wndUpdate.Hide(() =>
+            //     {
+            //         //连接服务器
+            //         //ChangeState<MainPageStateConnectServer>(fsm);
+            //         if (GameConfig.Inst.OfflineTest)
+            //         {
+            //             ChangeState<MainPageEnterOfflineTest>(fsm);
+            //         }
+            //         else
+            //         {
+            //             ChangeState<MainPageStateEnterGame>(fsm);
+            //         }
+            //     });
+            // }
         }
 
         public override void OnLeave(FsmEntity<MainPageProcedure> fsm, bool isShutdown)

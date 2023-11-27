@@ -75,14 +75,14 @@ namespace GameEngine.ObjectPool
                 if (Count >= _capacity)
                 {
                     Debug.LogWarning($"{Name} is full, can't recycle item, dropped");
+                    item.OnRecycle();
                     item.OnDestroy();
                 }
                 else
                 {
                     _availableStack.Push(item);
+                    item.OnRecycle();
                 }
-
-                item.OnRecycle();
             }
             else
             {

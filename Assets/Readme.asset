@@ -25,5 +25,7 @@ MonoBehaviour:
     text: Data使用Luban实现
     linkText: Luban Github
     url: https://github.com/focus-creative-games/luban
+  - heading: !!!特别注意!!!
+    text: 制作addressable分组时，场景的unity文件和场景相关的其他资源文件要分离开，否则会出现制作update包时，场景的assets相关bundle被删除，导致客户端热更新后，场景信息丢失的问题，具体参见map-scenes中的map-0001作为参考。
     
   loadedLayout: 1

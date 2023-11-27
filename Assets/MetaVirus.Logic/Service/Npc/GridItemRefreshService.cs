@@ -29,6 +29,7 @@ namespace MetaVirus.Logic.Service.Npc
         private GameDataService _gameDataService;
         private EventService _eventService;
         private NetworkService _networkService;
+        private ObjectPoolService _objectPoolService;
 
         private int _currentMapId = -1;
 
@@ -53,6 +54,7 @@ namespace MetaVirus.Logic.Service.Npc
             _eventService = GameFramework.GetService<EventService>();
             _networkService = GameFramework.GetService<NetworkService>();
             _entityService = GameFramework.GetService<EntityService>();
+            _objectPoolService = GameFramework.GetService<ObjectPoolService>();
         }
 
         public override void ServiceReady()
@@ -66,6 +68,11 @@ namespace MetaVirus.Logic.Service.Npc
 
             _eventService.On<MapChangedEvent>(GameEvents.MapEvent.MapChanged, OnMapChanged);
 
+            _objectPoolService.NewObjectPool<NetPlayerGridItemEntity>("Pool_NewGridItemEntity");
+
+            ObjectPool<NetPlayerGridItemEntity> pool = GameFramework
+                .GetService<ObjectPoolService>()
+                .GetObjectPool<NetPlayerGridItemEntity>("Pool_NewGridItemEntity");
         }
 
         private void AddEntityToGroup(GridItemEntity entity)

@@ -75,7 +75,7 @@ namespace MetaVirus.Logic.Service.Npc
             if (packet.IsSuccess)
             {
                 if (_currentMapId == -1) return;
-                
+
                 var p = (ScNotifyRefreshNpc)packet.Packet;
                 var npcs = p.ProtoBufMsg.RefreshNpcs;
 

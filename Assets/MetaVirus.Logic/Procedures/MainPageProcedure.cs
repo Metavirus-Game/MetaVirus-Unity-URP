@@ -31,6 +31,8 @@ namespace MetaVirus.Logic.Procedures
 
         public GComponent BtnEnter { get; private set; }
 
+        public GComponent LoginButtons { get; private set; }
+
         private FsmEntity<MainPageProcedure> _fsmMainPage;
 
         public override void OnInit(FsmEntity<ProcedureService> fsm)
@@ -80,7 +82,9 @@ namespace MetaVirus.Logic.Procedures
             btnEnterGame.visible = false;
 
             BtnEnter = btnEnterGame;
-            
+
+            LoginButtons = MainPageCom.GetChild("LoginButtons").asCom;
+
             //加载创建角色的资源
             // var scene =await Addressables.LoadSceneAsync("map-createactor/CreateActor.unity", LoadSceneMode.Additive).Task;
             // SceneManager.SetActiveScene(scene.Scene);

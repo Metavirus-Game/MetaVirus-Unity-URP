@@ -102,7 +102,8 @@ namespace MetaVirus.Logic.Player
 
         private void OnDestroy()
         {
-            GameFramework.GetService<FsmService>().DestroyFsm<NetPlayerController>(_fsm.Name);
+            if (_fsm != null)
+                GameFramework.GetService<FsmService>().DestroyFsm<NetPlayerController>(_fsm.Name);
         }
 
         public void AddWayPoint(Vector3 position, Vector3 rotation)

@@ -84,6 +84,8 @@ namespace MetaVirus.Logic.Data
 
         public static class DataKeys
         {
+            public const string AccountInfo = "CommonData.Account.Info";
+            
             public const string LoginPlayerId = "CommonData.Login.Player.Id";
 
             public const string PlayerInfo = "CommonData.Player.Info";

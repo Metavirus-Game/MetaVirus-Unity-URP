@@ -35,6 +35,8 @@ namespace GameEngine.Network
 
         private UnityAction<SocketEvent, string> _onSocketEventAction;
 
+        private UnityAction<SocketEvent, string> _connectEventActionListener;
+
         public UnityAction<SocketEvent, string> OnSocketEventAction
         {
             get => _onSocketEventAction;
@@ -119,7 +121,7 @@ namespace GameEngine.Network
 
             if (onSocketEventAction != null)
             {
-                _onSocketEventAction = onSocketEventAction;
+                _connectEventActionListener = onSocketEventAction;
             }
 
             if (!_socket.IsConnected())
@@ -191,15 +193,15 @@ namespace GameEngine.Network
 
                 var totalLen = BytesConverter.GetBigEndian(lenBytes);
                 var bodyLen = totalLen - NetBusBasePacket.HeadByteLenPos;
-                
+
                 _memStream.Position -= NetBusBasePacket.HeadByteLenPos;
-                
+
                 if (StreamRemainingByes < totalLen)
                 {
                     //not enough bytes for body
                     break;
                 }
-                
+
 
                 var packet = _reader.ReadBytes(totalLen);
                 var mainType = packet[0];
@@ -262,6 +264,7 @@ namespace GameEngine.Network
 
                 Debug.Log($"Network State {state}");
 
+                _connectEventActionListener?.Invoke(state, "");
                 _onSocketEventAction?.Invoke(state, "");
             });
         }
@@ -365,7 +368,7 @@ namespace GameEngine.Network
                                 //异常断开连接
                                 _isReady = false;
                                 //尝试重连
-                                StartCoroutine(TryReconnect());
+                                //StartCoroutine(TryReconnect());
                                 break;
                             case SocketEvent.NotConnect:
                                 //没有连接
@@ -376,6 +379,7 @@ namespace GameEngine.Network
                         if (socketEvt.Key != SocketEvent.Connected)
                         {
                             Debug.LogError($"Network State {socketEvt.Key}");
+                            _connectEventActionListener?.Invoke(socketEvt.Key, socketEvt.Value);
                             _onSocketEventAction?.Invoke(socketEvt.Key, socketEvt.Value);
                         }
                     }

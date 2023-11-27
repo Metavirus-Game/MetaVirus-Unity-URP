@@ -73,6 +73,7 @@ namespace MetaVirus.Logic.Data.Player
                 CurrentLayerId = playerData.LayerId,
                 Position = playerData.Position.ToVector3(),
                 CurrentMapId = -1,
+                NextMapId = playerData.MapId,
                 sceneServerId = sceneServerId,
                 PlayerParties = parties.ToArray(),
                 AttackPartyId = playerData.AttackParty,

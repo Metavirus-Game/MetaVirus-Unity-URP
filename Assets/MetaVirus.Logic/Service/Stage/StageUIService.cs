@@ -1,14 +1,17 @@
 ﻿using System.Collections;
 using FairyGUI;
 using GameEngine.Base;
+using GameEngine.Common;
 using GameEngine.Entity;
 using GameEngine.Event;
 using GameEngine.FairyGUI;
+using GameEngine.Network;
 using GameEngine.Utils;
 using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Data.Events;
 using MetaVirus.Logic.Service.UI;
 using MetaVirus.Logic.UI.Component.NpcInteractive;
+using UnityEngine;
 
 namespace MetaVirus.Logic.Service
 {
@@ -20,6 +23,8 @@ namespace MetaVirus.Logic.Service
         private EventService _eventService;
         private FairyGUIService _fairyService;
         private NpcInteractiveListManager _npcInteractiveListManager;
+
+        private NetworkService _networkService;
 
         private UIJoystickController _uiJoystick;
 
@@ -36,6 +41,7 @@ namespace MetaVirus.Logic.Service
             _entityService = GetService<EntityService>();
             _fairyService = GetService<FairyGUIService>();
             _gameDataService = GetService<GameDataService>();
+            _networkService = GetService<NetworkService>();
         }
 
         public override void ServiceReady()
@@ -79,6 +85,13 @@ namespace MetaVirus.Logic.Service
             {
                 _uiService.OpenWindow(item.UiName);
             }
+
+
+            //for test
+            // if (item.Name == "Inventory")
+            // {
+            //     _networkService.Disconnect();
+            // }
         }
 
         private void RenderMenu(int index, GObject item)
