@@ -10,13 +10,10 @@ using GameEngine.ObjectPool;
 using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Data.Events;
 using MetaVirus.Logic.Data.Npc;
-using MetaVirus.Logic.Data.Player;
 using MetaVirus.Logic.Protocols.Scene;
 using MetaVirus.Logic.Utils;
-using MetaVirus.Net.Messages.Common;
 using Unity.VisualScripting;
 using UnityEngine;
-using static MetaVirus.Logic.Data.Constants;
 
 namespace MetaVirus.Logic.Service.Npc
 {

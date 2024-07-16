@@ -1,15 +1,14 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using cfg.battle;
 using cfg.common;
+using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Linq;
 using GameEngine;
-using GameEngine.Utils;
+using GameEngine.Resource;
 using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Service.Battle;
 using MetaVirus.ResExplorer.Resource;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.Events;
 
 public class ModelLoader : MonoBehaviour
@@ -35,6 +34,7 @@ public class ModelLoader : MonoBehaviour
     private AnimatorOverrideController _currentAniCtrl;
 
     private ExplorerResourceService _explorerResourceService;
+    private YooAssetsService _yooAssetsService;
 
     private readonly List<AnimationClip> _animationClips = new();
 
@@ -49,6 +49,7 @@ public class ModelLoader : MonoBehaviour
     private void Awake()
     {
         _explorerResourceService = GameFramework.GetService<ExplorerResourceService>();
+        _yooAssetsService = GameFramework.GetService<YooAssetsService>();
         _modelCamera = GetComponentInChildren<Camera>();
     }
 
@@ -85,7 +86,7 @@ public class ModelLoader : MonoBehaviour
 
         if (_modelLoaded != null)
         {
-            Addressables.ReleaseInstance(_modelLoaded);
+            //Addressables.ReleaseInstance(_modelLoaded);
         }
 
         if (_npcResourceData != null)
@@ -97,9 +98,9 @@ public class ModelLoader : MonoBehaviour
     private IEnumerator LoadModel(UnityAction<NpcResourceData> onDataLoaded = null)
     {
         var resAddress = Constants.ResAddress.BattleUnitRes(_npcResourceData.Id);
-        var task = Addressables.InstantiateAsync(resAddress).Task;
-        yield return task.AsCoroution();
-        _modelLoaded = task.Result;
+        //var task = Addressables.InstantiateAsync(resAddress).Task;
+        var task = _yooAssetsService.InstanceAsync(resAddress);
+        yield return task.ToCoroutine(r => _modelLoaded = r);
         _modelLoaded.transform.SetParent(_anchor, false);
         _modelLoaded.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
         var bua = _modelLoaded.GetComponent<BattleUnitAni>();
@@ -124,11 +125,13 @@ public class ModelLoader : MonoBehaviour
 
         foreach (var animPath in anims)
         {
-            var aniTask = Addressables.LoadAssetAsync<AnimationClip>(animPath).Task;
-            yield return aniTask.AsCoroution();
-            if (aniTask.Result != null)
+            // var aniTask = Addressables.LoadAssetAsync<AnimationClip>(animPath).Task;
+            var handle = _yooAssetsService.GetPackage().LoadAssetAsync<AnimationClip>(animPath);
+            yield return handle;
+            var r = handle.GetAssetObject<AnimationClip>();
+            if (r != null)
             {
-                _animationClips.Add(aniTask.Result);
+                _animationClips.Add(r);
             }
         }
 

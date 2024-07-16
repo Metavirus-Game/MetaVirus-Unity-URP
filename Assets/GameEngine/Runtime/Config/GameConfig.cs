@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -13,6 +14,23 @@ namespace GameEngine.Config
         BattleTestProcedure,
         MonsterTestProcedure,
         UITestProcedure
+    }
+
+    public enum GameVersion
+    {
+        Local = 0,
+        Preview = 1,
+        Production
+    }
+
+    [Serializable]
+    public class GameServer
+    {
+        public GameVersion version;
+        public string address;
+        public int port;
+        public string worldServerId;
+        public string accountServer;
     }
 
 
@@ -43,16 +61,21 @@ namespace GameEngine.Config
         }
 
 
-        [Header("Network Config")] [SerializeField]
-        private string server;
+        [SerializeField] private GameVersion gameVersion;
 
-        [SerializeField] private int port;
+        [Header("Network Config")] [SerializeField]
+        private GameServer[] servers;
+
+//        [SerializeField] private string server;
+        //       [SerializeField] private int port;
         [SerializeField] private string battleServerIp;
         [SerializeField] private int battleServerPort;
         [SerializeField] private string moduleId;
         [SerializeField] private string instId;
+
         [SerializeField] private string channelName;
-        [SerializeField] private string worldServerId;
+
+        // [SerializeField] private string worldServerId;
         [SerializeField] private int targetFps = 60;
         [SerializeField] private NextEnterProcedure nextProcedure = NextEnterProcedure.MainPageProcedure;
         [SerializeField] private bool offlineTest = true;
@@ -65,22 +88,40 @@ namespace GameEngine.Config
             set => savePlayerId = value;
         }
 
+        public GameVersion GameVersion => gameVersion;
+
         public NextEnterProcedure NextEnterProcedure
         {
             get => nextProcedure;
             set => nextProcedure = value;
         }
 
+        public string AccountServer => servers.First(s => s.version == gameVersion)?.accountServer ?? "";
+
         public string Server
         {
-            get => server;
-            set => server = value;
+            get
+            {
+                var sc = servers.First(s => s.version == gameVersion);
+                return sc?.address ?? "";
+            }
+            set
+            {
+                //TODO 
+            }
         }
 
         public int Port
         {
-            get => port;
-            set => port = value;
+            get
+            {
+                var sc = servers.First(s => s.version == gameVersion);
+                return sc?.port ?? 0;
+            }
+            set
+            {
+                //TODO
+            }
         }
 
         /// <summary>
@@ -113,22 +154,27 @@ namespace GameEngine.Config
 
         public short InstId
         {
-            get
-            {
-                return instId.StartsWith("0x")
+            get =>
+                instId.StartsWith("0x")
                     ? Convert.ToInt16(instId[2..], 16)
                     : Convert.ToInt16(instId);
-            }
             set => instId = $"0x{value:X}";
         }
 
         public int WorldServerId
         {
-            get =>
-                worldServerId.StartsWith("0x")
+            get
+            {
+                var sc = servers.First(s => s.version == gameVersion);
+                var worldServerId = sc?.worldServerId ?? "";
+                return worldServerId.StartsWith("0x")
                     ? Convert.ToInt32(worldServerId[2..], 16)
                     : Convert.ToInt32(worldServerId);
-            set => worldServerId = $"0x{value:X}";
+            }
+            set
+            {
+                //worldServerId = $"0x{value:X}";
+            }
         }
 
         public int ClientGlobalId => (ModuleId << 8) | (InstId & 0xff);

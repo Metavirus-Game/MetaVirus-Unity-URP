@@ -4,26 +4,22 @@ using cfg.map;
 using FairyGUI;
 using GameEngine;
 using GameEngine.Base.Attributes;
-using GameEngine.Common;
 using GameEngine.DataNode;
 using GameEngine.Event;
 using GameEngine.FairyGUI;
 using GameEngine.Fsm;
 using GameEngine.Procedure;
+using GameEngine.Resource;
 using GameEngine.Sound;
 using GameEngine.Utils;
-using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Data.Entities;
-using MetaVirus.Logic.Data.Events;
 using MetaVirus.Logic.Data.Player;
 using MetaVirus.Logic.Service;
 using MetaVirus.Logic.Service.Exception;
 using MetaVirus.Logic.UI;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
+using YooAsset;
 using static MetaVirus.Logic.Data.Constants;
 
 namespace MetaVirus.Logic.Procedures
@@ -41,10 +37,12 @@ namespace MetaVirus.Logic.Procedures
         private GameDataService _gameDataService;
         private SoundService _soundService;
         private EventService _eventService;
+        private YooAssetsService _yooAssetsService;
 
         private LoadingPage _loadingPage;
 
-        private AsyncOperationHandle<SceneInstance> _handle;
+        // private AsyncOperationHandle<SceneInstance> _handle;
+        private SceneHandle _handle;
 
         private int _toMapId;
         private Type _toProcedure;
@@ -60,6 +58,7 @@ namespace MetaVirus.Logic.Procedures
             _gameDataService = GameFramework.GetService<GameDataService>();
             _eventService = GameFramework.GetService<EventService>();
             _soundService = GameFramework.GetService<SoundService>();
+            _yooAssetsService = GameFramework.GetService<YooAssetsService>();
         }
 
         public void SetChangeMapInfo(int toMapId, Type fromProcedure, Type toProcedure, Vector3 toPosition)
@@ -72,7 +71,7 @@ namespace MetaVirus.Logic.Procedures
 
         public override IEnumerator OnPrepare(FsmEntity<ProcedureService> fsm)
         {
-            var ret = _fairyService.AddPackageAsync("ui-loading");
+            var ret = _fairyService.AddPackageAsync("LoadingPage");
             yield return ret.AsCoroution();
             _loadedPkgs = ret.Result;
 
@@ -91,9 +90,10 @@ namespace MetaVirus.Logic.Procedures
 
         private IEnumerator LoadNext()
         {
+            var package = _yooAssetsService.GetPackage();
             var info = _dataService.GetData<PlayerInfo>(DataKeys.PlayerInfo);
 
-            AsyncOperation op = null;
+            //AsyncOperation op = null;
             var progress = _loadingPage.ProgressBar;
             MapData currMapData = null;
             MapData toMapData = null;
@@ -124,42 +124,52 @@ namespace MetaVirus.Logic.Procedures
 
                 var toSceneAddress = ResAddress.MapRes(_toMapId);
 
-                if (_handle.IsValid() && _handle.Status == AsyncOperationStatus.Succeeded)
+                // if (_handle.IsValid() && _handle.Status == AsyncOperationStatus.Succeeded)
+                // {
+                //     //卸载前一个handle
+                //     yield return Addressables.UnloadSceneAsync(_handle).Task.AsCoroution();
+                // }
+
+                if (_handle != null)
                 {
-                    //卸载前一个handle
-                    yield return Addressables.UnloadSceneAsync(_handle).Task.AsCoroution();
+                    var unloadOp = _handle.UnloadAsync();
+                    yield return unloadOp;
+                    _handle = null;
                 }
 
 
                 //加载地图资源
-                _handle = Addressables.LoadSceneAsync(toSceneAddress, LoadSceneMode.Single, false);
-                progress.value = _handle.PercentComplete * 100;
+                _handle = package.LoadSceneAsync(toSceneAddress, LoadSceneMode.Single, true);
+                progress.value = _handle.Progress * 100;
 
-                while (!_handle.IsDone)
+                // _handle = Addressables.LoadSceneAsync(toSceneAddress, LoadSceneMode.Single, false);
+                // progress.value = _handle.PercentComplete * 100;
+
+                while (_handle.Progress < 0.899f)
                 {
-                    progress.value = _handle.PercentComplete * 100;
+                    progress.value = _handle.Progress * 100;
                     yield return null;
                 }
 
-                op = _handle.Result.ActivateAsync();
-                op.allowSceneActivation = false;
+                //op = _handle.Result.ActivateAsync();
+                //op.allowSceneActivation = false;
 
-                if (_handle.Status == AsyncOperationStatus.Failed)
+                if (_handle.Status == EOperationStatus.Failed)
                 {
                     //加载失败了
-                    if (_handle.OperationException is InvalidKeyException)
+                    // if (_handle.OperationException is InvalidKeyException)
+                    // {
+                    //加载地图错误，没有资源
+                    UIDialog.ShowErrorMessage("错误", "地图没找到!", (id, btn, dialog) =>
                     {
-                        //加载地图错误，没有资源
-                        UIDialog.ShowErrorMessage("错误", "地图没找到!", (id, btn, dialog) =>
-                        {
-                            dialog.Hide();
-                            ChangeProcedure(_fromProcedure);
-                        });
-                        yield break;
-                    }
+                        dialog.Hide();
+                        ChangeProcedure(_fromProcedure);
+                    });
+                    yield break;
+                    // }
                 }
 
-                yield return new WaitUntil(() => op.progress >= 0.9f);
+                yield return new WaitUntil(() => _handle.Progress >= 0.899f);
             }
 
             progress.value = 100;
@@ -218,7 +228,8 @@ namespace MetaVirus.Logic.Procedures
             info.CurrentMapId = _toMapId;
             info.Position = _toPosition;
 
-            if (op != null) op.allowSceneActivation = true;
+            //if (op != null) op.allowSceneActivation = true;
+            _handle.UnSuspend();
             yield return null;
 
             //切换进入下一个Procedure
@@ -246,7 +257,7 @@ namespace MetaVirus.Logic.Procedures
 
         public static void BackToCurrentMap()
         {
-            var mapId = GameFramework.GetService<DataNodeService>().GetData<int>(Constants.DataKeys.MapCurrentId);
+            var mapId = GameFramework.GetService<DataNodeService>().GetData<int>(DataKeys.MapCurrentId);
             var entity = PlayerEntity.Current;
             ChangeMap(mapId, entity.Position);
         }

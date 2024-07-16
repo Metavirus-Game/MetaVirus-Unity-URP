@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using YooAsset;
 
 namespace GameEngine.Sound
 {
@@ -15,6 +16,8 @@ namespace GameEngine.Sound
         internal int Reference { get; set; } = 0;
 
         public SoundCatalog catalog { get; set; }
+        
+        public AssetHandle ResHandle { get; set; }
 
         internal int IncRef()
         {

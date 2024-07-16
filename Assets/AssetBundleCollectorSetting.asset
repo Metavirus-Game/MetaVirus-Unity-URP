@@ -1,0 +1,252 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 185f6993d5150494d98da50e26cb1c25, type: 3}
+  m_Name: AssetBundleCollectorSetting
+  m_EditorClassIdentifier: 
+  ShowPackageView: 0
+  ShowEditorAlias: 0
+  UniqueBundleName: 0
+  Packages:
+  - PackageName: DefaultPackage
+    PackageDesc: 
+    EnableAddressable: 1
+    LocationToLower: 0
+    IncludeAssetGUID: 0
+    IgnoreDefaultType: 1
+    AutoCollectShaders: 1
+    Groups:
+    - GroupName: npc-cute-res
+      GroupDesc: 
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/MetaVirus.Res/Models/CuteRes-01
+        CollectorGUID: 58e4b2df1cb5d5447913ee362dabc9d4
+        CollectorType: 0
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/MetaVirus.Res/Models/CuteRes-02
+        CollectorGUID: 5f510dfedd3f32f42a4af517b074c5ac
+        CollectorType: 0
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/MetaVirus.Res/Models/NpcCuteRes-S4
+        CollectorGUID: 33a9e0281cf0bd8438c35b9079654b6c
+        CollectorType: 0
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: GameData
+      GroupDesc: 
+      AssetTags: GameDatas
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/MetaVirus.Res/GameDatas
+        CollectorGUID: 0dc5b05d51e7fef4ca75867b78ac7a33
+        CollectorType: 0
+        AddressRuleName: AddressByGroupAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: UI
+      GroupDesc: 
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/MetaVirus.Res/Fonts
+        CollectorGUID: 33a2ab71d70f45c4781b44bcab0aba00
+        CollectorType: 0
+        AddressRuleName: AddressDisable
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/MetaVirus.Res/UI
+        CollectorGUID: 8f859819bea6cc644b2efab890d48334
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: res-ui
+        UserData: 
+    - GroupName: Map
+      GroupDesc: 
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/MetaVirus.Res/Scenes/Maps/Common
+        CollectorGUID: ae86b20c0f924614281aad1da6ef6e33
+        CollectorType: 0
+        AddressRuleName: AddressDisable
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/MetaVirus.Res/Scenes/Maps/EnvRes
+        CollectorGUID: d2df641c856ca60449fea538b8673ac2
+        CollectorType: 0
+        AddressRuleName: AddressDisable
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/MetaVirus.Res/Scenes/Maps/0001/Assets
+        CollectorGUID: 7c8aeebf408054ed7ab54ce5a423b2bf
+        CollectorType: 0
+        AddressRuleName: AddressDisable
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/MetaVirus.Res/Scenes/Maps/0001/map.unity
+        CollectorGUID: b6809f635e249054f880ca14f00ffecb
+        CollectorType: 0
+        AddressRuleName: AddressDisable
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/MetaVirus.Res/Scenes/2.MainScene/Res/Particle_Tonado.prefab
+        CollectorGUID: 92cd6bad75c2ad44eaf9b14e9cbf496d
+        CollectorType: 0
+        AddressRuleName: AddressDisable
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: BGM
+      GroupDesc: 
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/MetaVirus.Res/Audios/BGM
+        CollectorGUID: cd41a1be7aedb86498f0cbbe7fc20569
+        CollectorType: 0
+        AddressRuleName: AddressByFullPathAndName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: VFX
+      GroupDesc: 
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/MetaVirus.Res/Vfx/Prefabs/Interactive
+        CollectorGUID: 151f5a358e8de5740b0edb51a730716d
+        CollectorType: 0
+        AddressRuleName: AddressByGroupNameFullPathAndName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/MetaVirus.Res/Vfx/Prefabs/Environment
+        CollectorGUID: 4d8c6ce83ce5bd5489be2baf6a32ede1
+        CollectorType: 0
+        AddressRuleName: AddressByGroupNameFullPathAndName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/MetaVirus.Res/Vfx/Prefabs/Combat
+        CollectorGUID: 93b1c896979ba924ca9236f6904b1af0
+        CollectorType: 0
+        AddressRuleName: AddressByGroupNameFullPathAndName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/MetaVirus.Res/Vfx/Materials
+        CollectorGUID: abfeabc4292287c4fb47ec1c6d9cb0d8
+        CollectorType: 0
+        AddressRuleName: AddressDisable
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/MetaVirus.Res/Vfx/Textures
+        CollectorGUID: 0b9445ddd21ab2d4490748dc2cb0621e
+        CollectorType: 0
+        AddressRuleName: AddressDisable
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: TinyHeroRes
+      GroupDesc: 
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/MetaVirus.Res/Models/TinyHeroRes
+        CollectorGUID: 4dba14312945fc143ad76882d3ff42d6
+        CollectorType: 0
+        AddressRuleName: AddressByFullPathAndName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: npc-prefabs
+      GroupDesc: 
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/MetaVirus.Res/Models/NpcPrefabs
+        CollectorGUID: d763268571b2fae428b5de855f83b99f
+        CollectorType: 0
+        AddressRuleName: AddressByGroupNameAndSubPathName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: actor-player
+      GroupDesc: 
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/MetaVirus.Res/Actors/Player
+        CollectorGUID: b0a5ec3c8fe6f644e93babff4f4fc4b3
+        CollectorType: 0
+        AddressRuleName: AddressByGroupNameAndSubPathName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: Prefabs
+      GroupDesc: 
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/MetaVirus.Res/Prefabs/BattleField .prefab
+        CollectorGUID: 2cec52e48e0f0594090aed077f44cfce
+        CollectorType: 0
+        AddressRuleName: AddressDisable
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/MetaVirus.Res/Prefabs/UIModelLoader
+        CollectorGUID: 6bdc411a515000f4a848f1c3e05b8ab3
+        CollectorType: 0
+        AddressRuleName: AddressByGroupNameFullPathAndName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 

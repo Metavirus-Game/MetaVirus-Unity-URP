@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using cfg.avatar;
+using Cysharp.Threading.Tasks;
 using FairyGUI;
 using GameEngine;
 using GameEngine.Config;
+using GameEngine.Event;
 using GameEngine.Network;
+using GameEngine.Resource;
 using GameEngine.Utils;
+using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Player;
 using MetaVirus.Logic.Protocols.User;
 using MetaVirus.Logic.Service;
-using MetaVirus.Logic.Service.Player;
 using MetaVirus.Logic.Service.UI;
 using MetaVirus.Logic.UI.Component.Common;
 using MetaVirus.Net.Messages.User;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.Events;
 using static MetaVirus.Logic.Service.GameDataService;
 
@@ -52,6 +54,7 @@ namespace MetaVirus.Logic.UI.Windows
         {
             GameFramework.Inst.StartCoroutine(LoadModel());
             var comp = UIPackage.CreateObject("Common", "CreateActorUI").asCom;
+            GameFramework.GetService<EventService>().Emit(GameEvents.GameEvent.CreateActorOpened);
             return comp;
         }
 
@@ -59,11 +62,15 @@ namespace MetaVirus.Logic.UI.Windows
         {
             _modelAnchor = GameObject.Find("ModelAnchor");
 
-            var task = Addressables.InstantiateAsync(PrefabAddress);
-            yield return task;
+            // var task = Addressables.InstantiateAsync(PrefabAddress);
+            // yield return task;
 
-            task.Result.SetActive(true);
-            _characterTemplate = task.Result.GetComponent<CharacterTemplate>();
+            var task = GameFramework.GetService<YooAssetsService>().InstanceAsync(PrefabAddress);
+            GameObject result = null;
+            yield return task.ToCoroutine(r => result = r);
+
+            result.SetActive(true);
+            _characterTemplate = result.GetComponent<CharacterTemplate>();
             _characterTemplate.gameObject.SetLayerAll(LayerMask.NameToLayer("UI"));
 
             _characterTemplate.transform.SetParent(_modelAnchor.transform, false);
@@ -117,6 +124,8 @@ namespace MetaVirus.Logic.UI.Windows
                     var pb = resp.GetPacket<CreateActorResponseSc>().ProtoBufMsg;
                     if (pb.ResultCode == 0)
                     {
+                        GameFramework.GetService<EventService>()
+                            .Emit(GameEvents.GameEvent.CreateActorDone);
                         //成功，进入游戏
                         OnActorCreated?.Invoke(pb.PlayerId);
                     }
@@ -369,7 +378,8 @@ namespace MetaVirus.Logic.UI.Windows
         {
             if (_characterTemplate != null)
             {
-                Addressables.ReleaseInstance(_characterTemplate.gameObject);
+                // Addressables.ReleaseInstance(_characterTemplate.gameObject);
+                GameFramework.GetService<YooAssetsService>().ReleaseInstance(_characterTemplate.gameObject);
             }
         }
 

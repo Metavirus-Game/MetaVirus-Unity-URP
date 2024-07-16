@@ -5,7 +5,6 @@ using GameEngine.Base;
 using GameEngine.Base.Attributes;
 using GameEngine.Common;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace GameEngine
 {
@@ -80,31 +79,36 @@ namespace GameEngine
             // });
         }
 
+        /// <summary>
+        /// TODO 换到GameData中
+        /// </summary>
+        /// <param name="language"></param>
+        /// <param name="assetAddress"></param>
         private void LoadLangText(Language language, string assetAddress)
         {
-            var handle = Addressables.LoadAssetAsync<TextAsset>(assetAddress);
-            handle.Completed += operationHandle =>
-            {
-                var txt = operationHandle.Result.text;
-                var lt = new LanguageTable();
-                var lines = txt.Split('\n');
-                foreach (var line in lines)
-                {
-                    var l = line;
-                    if (line.Trim().StartsWith("#")) continue;
-                    if (l.EndsWith("\r"))
-                    {
-                        l = l.Substring(0, l.Length - 1);
-                    }
-
-                    var kv = l.Split('=');
-                    if (kv.Length != 2) continue;
-                    lt.Add(kv[0].Trim(), kv[1].Trim());
-                }
-
-                langTables.Add(language, lt);
-                Addressables.Release(handle);
-            };
+            // var handle = Addressables.LoadAssetAsync<TextAsset>(assetAddress);
+            // handle.Completed += operationHandle =>
+            // {
+            //     var txt = operationHandle.Result.text;
+            //     var lt = new LanguageTable();
+            //     var lines = txt.Split('\n');
+            //     foreach (var line in lines)
+            //     {
+            //         var l = line;
+            //         if (line.Trim().StartsWith("#")) continue;
+            //         if (l.EndsWith("\r"))
+            //         {
+            //             l = l.Substring(0, l.Length - 1);
+            //         }
+            //
+            //         var kv = l.Split('=');
+            //         if (kv.Length != 2) continue;
+            //         lt.Add(kv[0].Trim(), kv[1].Trim());
+            //     }
+            //
+            //     langTables.Add(language, lt);
+            //     Addressables.Release(handle);
+            // };
         }
 
         private void LoadLangTexts()

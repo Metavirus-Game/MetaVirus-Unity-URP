@@ -59,12 +59,16 @@ namespace GameEngine.Procedure
                 $"FSM name[{Name}] type[{nameof(ProcedureService)}] state[{stateType.Name}] not found");
 
             currStateTime = 0;
-            GameFramework.Inst.StartCoroutine(CurrProcedure.OnPrepare(this));
-            currState.OnEnter(this);
-
-            _eventService.Emit(Events.Engine.ProcedureChanged, new ProcedureChangedEvent(null, CurrProcedure));
+            GameFramework.Inst.StartCoroutine(_StartCurrentProcedure());
 
             Debug.Log($"FsmEntity[{Name}] - State[{state.Name}] --- OnEnter");
+        }
+
+        private IEnumerator _StartCurrentProcedure()
+        {
+            yield return CurrProcedure.OnPrepare(this);
+            currState.OnEnter(this);
+            _eventService.Emit(Events.Engine.ProcedureChanged, new ProcedureChangedEvent(null, CurrProcedure));
         }
 
         public override void ChangeState(Type stateType)

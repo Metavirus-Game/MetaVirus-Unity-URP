@@ -44,7 +44,7 @@ public class JoystickController : MonoBehaviour
     {
         _fairyService = GameFramework.GetService<FairyGUIService>();
 
-        var task = _fairyService.AddPackageAsync("ui-gameplay");
+        var task = _fairyService.AddPackageAsync("GamePlay");
         yield return task.AsCoroution();
 
         _ui = UIPackage.CreateObject("GamePlay", "StageUI").asCom;

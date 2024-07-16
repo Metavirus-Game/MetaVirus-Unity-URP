@@ -1,22 +1,19 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using AmazingAssets.TerrainToMesh;
 using FairyGUI;
 using GameEngine;
 using GameEngine.DataNode;
+using GameEngine.Event;
 using GameEngine.Utils;
+using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Data.Entities;
 using MetaVirus.Logic.Data.Player;
-using MetaVirus.Logic.Data.Provider;
 using MetaVirus.Logic.Service;
 using MetaVirus.Logic.Service.Arena;
 using MetaVirus.Logic.Service.Arena.data;
 using MetaVirus.Logic.Service.Player;
 using MetaVirus.Logic.Service.UI;
 using MetaVirus.Logic.UI.Component.MonsterPanel.Formation;
-using UnityEngine;
-using Constants = MetaVirus.Logic.Data.Constants;
 
 namespace MetaVirus.Logic.UI.Windows
 {
@@ -24,6 +21,7 @@ namespace MetaVirus.Logic.UI.Windows
     {
         private DataNodeService _dataNodeService;
         private ArenaService _arenaService;
+        private EventService _eventService;
         private PlayerService _playerService;
         private int _currOpponentId;
 
@@ -60,6 +58,7 @@ namespace MetaVirus.Logic.UI.Windows
             _dataNodeService = GameFramework.GetService<DataNodeService>();
             _arenaService = GameFramework.GetService<ArenaService>();
             _playerService = GameFramework.GetService<PlayerService>();
+            _eventService = GameFramework.GetService<EventService>();
             _currOpponentId = _dataNodeService.GetDataAndClear<int>(Constants.DataKeys.UIArenaMatchingOpponentData);
 
             //当前阵型ID初始化为玩家当前选择的出战的小队Id
@@ -115,6 +114,7 @@ namespace MetaVirus.Logic.UI.Windows
             else
             {
                 var br = result.Result;
+                _eventService.Emit(GameEvents.ArenaEvent.ArenaMatch, br.Result);
                 BattleService.EnterArenaMatch(br);
             }
         }

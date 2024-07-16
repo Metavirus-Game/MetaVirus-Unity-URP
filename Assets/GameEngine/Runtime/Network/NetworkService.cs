@@ -326,6 +326,8 @@ namespace GameEngine.Network
                 _waitingPackets[packet.Serial] = new WaitingPacket(packet.Serial, onResp);
             }
 
+            Debug.Log($"Send Packet [{packet.MsgCode:x4}] To [{packet.DstId:x4}]");
+
             _socket.WriteMessage(packet.Encode());
             return packet.Serial;
         }

@@ -3,11 +3,13 @@ using System.Threading.Tasks;
 using cfg.battle;
 using cfg.common;
 using cfg.skill;
+using Cysharp.Threading.Tasks;
+using GameEngine;
 using GameEngine.Base;
+using GameEngine.Resource;
 using GameEngine.Utils;
 using MetaVirus.Logic.Utils;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.Events;
 
 namespace MetaVirus.Logic.Service.Vfx
@@ -23,7 +25,7 @@ namespace MetaVirus.Logic.Service.Vfx
 
         private readonly List<VfxInstInfo> _vfxInstPool = new();
 
-        private readonly List<GameObject> _assetObjects = new();
+        // private readonly List<GameObject> _assetObjects = new();
 
         public override void PostConstruct()
         {
@@ -76,6 +78,7 @@ namespace MetaVirus.Logic.Service.Vfx
 
         public async Task AsyncLoadVfxes(int[] vfxIds, TaskProgressHandler handler = null)
         {
+            var yooService = GameFramework.GetService<YooAssetsService>();
             handler?.ReportProgress(0);
             var progress = 0;
             var p = (int)(100f / vfxIds.Length);
@@ -92,23 +95,28 @@ namespace MetaVirus.Logic.Service.Vfx
                     continue;
                 }
 
-                var go = await Addressables.LoadAssetAsync<GameObject>(vfxData.AssetName).Task;
-                go.SetActive(false);
-                _assetObjects.Add(go);
+                //var go = await Addressables.LoadAssetAsync<GameObject>(vfxData.AssetName).Task;
+                // var handle = yooService.GetPackage().LoadAssetAsync<GameObject>(vfxData.AssetName);
+                // await handle.ToUniTask();
+                // var go = handle.GetAssetObject<GameObject>();
+                // go.SetActive(false);
+                // _assetObjects.Add(go);
 
                 var layerHidder = LayerMask.NameToLayer("Hidden");
 
-                var resObj = await Addressables.InstantiateAsync(vfxData.AssetName).Task;
+                //var resObj = await Addressables.InstantiateAsync(vfxData.AssetName).Task;
+                var resObj = await yooService.InstanceAsync(vfxData.AssetName);
                 resObj.SetLayerAll(layerHidder);
                 resObj.SetActive(true);
                 GameObject criResObj = null;
 
                 if (!string.IsNullOrEmpty(vfxData.CriAssetName))
                 {
-                    var go1 = await Addressables.LoadAssetAsync<GameObject>(vfxData.CriAssetName).Task;
-                    go1.SetActive(false);
-                    _assetObjects.Add(go1);
-                    criResObj = await Addressables.InstantiateAsync(vfxData.CriAssetName).Task;
+                    // var go1 = await Addressables.LoadAssetAsync<GameObject>(vfxData.CriAssetName).Task;
+                    // go1.SetActive(false);
+                    // _assetObjects.Add(go1);
+                    //criResObj = await Addressables.InstantiateAsync(vfxData.CriAssetName).Task;
+                    criResObj = await yooService.InstanceAsync(vfxData.CriAssetName);
                     criResObj.SetActive(true);
                     criResObj.SetLayerAll(layerHidder);
                 }
@@ -148,22 +156,25 @@ namespace MetaVirus.Logic.Service.Vfx
                 Destroy(vfx.VfxObj);
             }
 
+            var yooService = GameFramework.GetService<YooAssetsService>();
             foreach (var vfx in _loadedVfxes.Values)
             {
-                Addressables.ReleaseInstance(vfx.VfxObject);
+                //Addressables.ReleaseInstance(vfx.VfxObject);
+                yooService.ReleaseInstance(vfx.VfxObject);
                 if (vfx.CriVfxObject != null)
                 {
-                    Addressables.ReleaseInstance(vfx.CriVfxObject);
+                    //Addressables.ReleaseInstance(vfx.CriVfxObject);
+                    yooService.ReleaseInstance(vfx.CriVfxObject);
                 }
             }
 
-            foreach (var ao in _assetObjects)
-            {
-                Addressables.Release(ao);
-            }
+            // foreach (var ao in _assetObjects)
+            // {
+            //     Addressables.Release(ao);
+            // }
 
             _vfxInstPool.Clear();
-            _assetObjects.Clear();
+            // _assetObjects.Clear();
             _loadedVfxes.Clear();
             _instedVfxes.Clear();
         }

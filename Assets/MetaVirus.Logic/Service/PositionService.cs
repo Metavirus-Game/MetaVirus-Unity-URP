@@ -60,7 +60,7 @@ namespace MetaVirus.Logic.Service
             if (evt.EvtType == MapChangedEvent.MapChangeEventType.Enter)
             {
                 currentMapId = evt.MapId;
-                
+
                 var playerInfo = _playerService.CurrentPlayerInfo;
                 if (playerInfo != null)
                 {
@@ -70,19 +70,18 @@ namespace MetaVirus.Logic.Service
                     };
                     var report = new CsPlayerReportEnterMap(pbPid);
                     _networkService.SendPacketTo(report, playerInfo.sceneServerId);
+                    Debug.Log("report EnterMap to server " + playerInfo.sceneServerId);
+                    ReportPosition(playerInfo.sceneServerId);
                 }
 
                 lastReportPos = _playerService.CurrentPlayer.Position;
                 lastReportTime = Time.realtimeSinceStartup;
-                
             }
             // else if (evt.EvtType == MapChangedEvent.MapChangeEventType.Leave)
             // {
             //     currentMapId = -1;
             //     lastReportPos = null;
             // }
-
-            
         }
 
         public override void PreDestroy()

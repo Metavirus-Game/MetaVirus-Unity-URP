@@ -220,11 +220,41 @@ namespace MetaVirus.Logic.Service.UI
 
         protected void AddCompToParentFull(GComponent parentComp, GComponent comp)
         {
-            comp.SetSize(parentComp.size.x, parentComp.size.y);
+            var safeArea = GRoot.inst.GlobalToLocal(Screen.safeArea);
+            var viewRect = new Rect
+            {
+                x = parentComp.x,
+                y = parentComp.y,
+                width = parentComp.width,
+                height = parentComp.height,
+            };
+
+            var children = comp.GetChildren();
+            if (children.Length > 0 && children[0].gameObjectName.Equals("CommonFrame"))
+            {
+                //背景frame，拉长到全屏
+                var background = children[0].asCom.GetChild("background");
+                viewRect = new Rect
+                {
+                    x = Mathf.Max(safeArea.x, parentComp.x),
+                    y = Mathf.Max(safeArea.y, parentComp.y),
+                    width = Mathf.Min(safeArea.width, parentComp.size.x),
+                    height = Mathf.Min(safeArea.height, parentComp.size.y)
+                };
+
+                if (viewRect.y > 0)
+                {
+                    background.SetPosition(-viewRect.x, -viewRect.y, 0);
+                    background.SetSize(parentComp.width, parentComp.height);
+                }
+            }
+
+
+            comp.SetSize(viewRect.width, viewRect.height);
             _background.AddRelation(parentComp, RelationType.Size);
             comp.SetPivot(0, 0);
             comp.pivotAsAnchor = true;
-            comp.SetPosition(0, 0, 0);
+            comp.SetPosition(viewRect.x, viewRect.y, 0);
             parentComp.AddChild(comp);
         }
 

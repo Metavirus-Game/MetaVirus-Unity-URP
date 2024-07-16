@@ -58,7 +58,7 @@ namespace MetaVirus.Logic.Service
         private IEnumerator LoadResources()
         {
             yield return null;
-            var task = _fairyService.AddPackageAsync("ui-gameplay");
+            var task = _fairyService.AddPackageAsync("GamePlay");
             yield return task.AsCoroution();
 
             _packages = task.Result;

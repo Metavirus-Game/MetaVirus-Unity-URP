@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using FairyGUI;
 using GameEngine;
 using GameEngine.Base.Attributes;
 using GameEngine.Config;
 using GameEngine.DataNode;
 using GameEngine.Entity;
-using GameEngine.Event;
 using GameEngine.FairyGUI;
 using GameEngine.Fsm;
 using GameEngine.Procedure;
@@ -25,12 +21,7 @@ using MetaVirus.Logic.Service.UI;
 using MetaVirus.Logic.UI;
 using MetaVirus.Logic.UI.Component.Common;
 using MetaVirus.Logic.UI.Windows;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.AddressableAssets.ResourceLocators;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using Object = UnityEngine.Object;
 
 namespace MetaVirus.Logic.Procedures.BattleTest
 {
@@ -75,7 +66,7 @@ namespace MetaVirus.Logic.Procedures.BattleTest
             
             yield return GameFramework.GetService<UpdateService>().CheckUpdate();
 
-            var task = _fairyService.AddPackageAsync("ui-battle");
+            var task = _fairyService.AddPackageAsync("BattlePage");
             yield return task.AsCoroution();
             _loadedPkgs = task.Result;
         }

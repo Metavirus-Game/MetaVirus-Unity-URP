@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/MetaVirus.Res/UI-Unity/Uss/Common.uss?fileID=7433441132597879392&amp;guid=7ec15c4d0b3c442c4b12d0f1b3b02ff7&amp;type=3#Common" />
+    <ui:VisualElement name="entry_background" style="flex-grow: 1; background-image: url(&apos;project://database/Assets/MetaVirus.Res/UI-Unity/Textures/bg.png?fileID=2800000&amp;guid=d6e2de382be694a269dd3856c645d3e6&amp;type=3#bg&apos;); -unity-background-scale-mode: scale-and-crop;">
+        <ui:VisualElement name="entry-title_container" style="flex-grow: 1; position: absolute; width: 70%; height: 200px; align-items: stretch; align-self: auto; left: 15%; top: 30px;">
+            <ui:Label tabindex="-1" text="MetaVirus" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-font-definition: url(&apos;project://database/Assets/MetaVirus.Res/Fonts/JosefinSans-Bold%20SDF.asset?fileID=11400000&amp;guid=19cccb07c427e4b1e80d551ab92fa195&amp;type=2#JosefinSans-Bold SDF&apos;); color: rgb(255, 255, 255); font-size: 60px; -unity-text-outline-width: 1px; -unity-font-style: normal; -unity-font: url(&apos;project://database/Assets/MetaVirus.Res/Fonts/JosefinSans-Bold.ttf?fileID=12800000&amp;guid=c6977a34b1df7d546b04fe4e8d307eb8&amp;type=3#JosefinSans-Bold&apos;); -unity-text-outline-color: rgb(0, 0, 0); text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.67);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

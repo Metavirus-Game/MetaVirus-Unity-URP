@@ -61,7 +61,7 @@ namespace MetaVirus.Logic.Procedures
         {
             //加载battle相关ui
 
-            var task = _fairyService.AddPackageAsync("ui-battle");
+            var task = _fairyService.AddPackageAsync("BattlePage");
             yield return task.AsCoroution();
             _loadedPkgs = task.Result;
 

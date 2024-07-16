@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using cfg.common;
+using Cysharp.Threading.Tasks;
+using GameEngine;
 using GameEngine.Base;
+using GameEngine.Resource;
 using MetaVirus.Logic.Player;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.Events;
 using UnityEngine.Networking;
 
@@ -87,10 +89,13 @@ namespace MetaVirus.Logic.Service.NpcHeader
 
         private IEnumerator LoadHeaderCapturer()
         {
-            var op = Addressables.InstantiateAsync(HeaderCapturerPrefabAssets);
-            yield return op;
+            // var op = Addressables.InstantiateAsync(HeaderCapturerPrefabAssets);
+            // yield return op;
 
-            var go = op.Result;
+            var op = GameFramework.GetService<YooAssetsService>().InstanceAsync(HeaderCapturerPrefabAssets);
+            GameObject go = null;
+            yield return op.ToCoroutine(r => { go = r; });
+
             _capturerCamera = go.GetComponentInChildren<Camera>();
             _capturerAnchor = go.transform.Find("ModelAnchor");
             _playerTemplate = go.GetComponentInChildren<CharacterTemplate>();

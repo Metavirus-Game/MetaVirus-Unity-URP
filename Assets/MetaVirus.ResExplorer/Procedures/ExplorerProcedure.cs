@@ -9,15 +9,14 @@ using GameEngine.Event;
 using GameEngine.FairyGUI;
 using GameEngine.Fsm;
 using GameEngine.Procedure;
+using GameEngine.Resource;
 using GameEngine.Utils;
 using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Service;
 using MetaVirus.Logic.Service.Battle.UI;
-using MetaVirus.Logic.UI;
 using MetaVirus.ResExplorer.UI;
 using TMPro;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace MetaVirus.ResExplorer.Procedures
 {
@@ -47,14 +46,14 @@ namespace MetaVirus.ResExplorer.Procedures
             var tasks = new List<Task>();
 
             //加载common ui资源
-            var ret = _fairyService.AddPackageAsync("ui-common");
+            var ret = _fairyService.AddPackageAsync("Common");
             yield return ret.AsCoroution();
-            
+
             yield return GameFramework.GetService<UpdateService>().CheckUpdate();
-            
+
             //yield return ret.AsCoroution();
             //Debug.Log("Common UI Loaded");
-            
+
             //加载游戏数据
             var t = _gameDataService.LoadGameDataAsync();
             tasks.Add(t);
@@ -62,31 +61,35 @@ namespace MetaVirus.ResExplorer.Procedures
             // Debug.Log("GameData Loaded");
 
             //加载gameitem icons资源
-            ret = _fairyService.AddPackageAsync("ui-gameitem-icons");
+            ret = _fairyService.AddPackageAsync("GameItem");
             tasks.Add(ret);
             // yield return ret.AsCoroution();
             // Debug.Log("Gameitem Icons Loaded");
 
             //加载怪物头像
-            ret = _fairyService.AddPackageAsync("ui-portrait");
+            ret = _fairyService.AddPackageAsync("UnitPortraits");
             tasks.Add(ret);
             // yield return ret.AsCoroution();
             // Debug.Log("Portrait UI Loaded");
 
             //加载编辑器用资源
-            ret = _fairyService.AddPackageAsync("ui-res-explorer");
+            ret = _fairyService.AddPackageAsync("ZEditorResExplorer");
             tasks.Add(ret);
             // yield return ret.AsCoroution();
             // Debug.Log("res explorer UI loaded");
 
-            var fontTask = Addressables.LoadAssetAsync<TMP_FontAsset>("UI/Fonts/JosefinSans-Bold.asset").Task;
-            yield return fontTask.AsCoroution();
-            
+            //var fontTask = Addressables.LoadAssetAsync<TMP_FontAsset>("UI/Fonts/JosefinSans-Bold.asset").Task;
+            //yield return fontTask.AsCoroution();
+
+            var fontTask = GameFramework.GetService<YooAssetsService>().GetPackage()
+                .LoadAssetAsync<TMP_FontAsset>("UI/Fonts/JosefinSans-Bold.asset");
+            yield return fontTask;
+
             //加载英文及数字字体
             var tmpFont = new FloatingTextFont
             {
                 name = Constants.EnJosefinSans,
-                fontAsset = fontTask.Result
+                fontAsset = fontTask.GetAssetObject<TMP_FontAsset>()
             };
 
             FontManager.RegisterFont(tmpFont);
@@ -96,7 +99,7 @@ namespace MetaVirus.ResExplorer.Procedures
             {
                 yield return task.AsCoroution();
             }
-            
+
             //_loadedPkgs = ret.Result;
 
             GameFramework.GetService<EventService>().Emit(GameEvents.ResourceEvent.AllResLoaded);

@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GameEngine.Base;
+using GameEngine.Resource;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
+using YooAsset;
+using Cysharp.Threading.Tasks;
 
 namespace GameEngine.Sound
 {
@@ -91,7 +92,65 @@ namespace GameEngine.Sound
             return clip;
         }
 
+        public async UniTask<SoundClip> LoadSoundClip(string soundAddress)
+        {
+            var package = GetService<YooAssetsService>().GetPackage();
+            var handle = package.LoadAssetAsync<AudioClip>(soundAddress);
+            await handle.ToUniTask();
+            SoundClip soundClip = null;
+            switch (handle.Status)
+            {
+                case EOperationStatus.None:
+                    Debug.Log($"SoundService -- SoundClip[{soundAddress}] Status None");
+                    break;
+                case EOperationStatus.Failed:
+                    Debug.Log($"SoundService -- SoundClip[{soundAddress}] Load Failed");
+                    break;
+                case EOperationStatus.Succeed:
+                    Debug.Log($"SoundService -- SoundClip[{soundAddress}] Loaded");
+                    var go = new GameObject(soundAddress);
+                    soundClip = go.AddComponent<SoundClip>();
+                    soundClip.clip = handle.GetAssetObject<AudioClip>();
+                    soundClip.ResHandle = handle;
+                    break;
+            }
+
+            return soundClip;
+        }
+
         public IEnumerator LoadSoundClipCor(string soundCatalog, string soundName, string soundAddress,
+            float volume, bool loop, bool allowUnload = true)
+        {
+            var catalog = GetSoundCatalog(soundCatalog);
+            if (catalog == null)
+            {
+                Debug.LogError($"Sound Catalog {soundCatalog} not found");
+                yield break;
+            }
+
+            Debug.Log($"SoundService -- SoundClip[{soundCatalog}/{soundName}] Loading");
+
+            var soundClip = catalog.GetSoundClip(soundName);
+            if (soundClip == null)
+            {
+                var task = LoadSoundClip(soundAddress);
+                yield return task.ToCoroutine(r => soundClip = r);
+            }
+
+            if (soundClip != null)
+            {
+                soundClip.transform.SetParent(catalog.transform, false);
+                soundClip.name = soundName;
+                soundClip.volume = volume;
+                soundClip.loop = loop;
+                catalog.AddClip(soundClip);
+
+                soundClip.AllowUnload = allowUnload;
+                soundClip.IncRef();
+            }
+        }
+
+        public IEnumerator LoadSoundClipCor_Old(string soundCatalog, string soundName, string soundAddress,
             float volume, bool loop, bool allowUnload = true)
         {
             var catalog = GetSoundCatalog(soundCatalog);
@@ -107,23 +166,26 @@ namespace GameEngine.Sound
             var soundClip = catalog.GetSoundClip(soundName);
             if (soundClip == null)
             {
-                var handle = Addressables.LoadAssetAsync<AudioClip>(soundAddress);
-                while (handle.Status == AsyncOperationStatus.None)
+                var package = GetService<YooAssetsService>().GetPackage();
+                var handle = package.LoadAssetAsync<AudioClip>(soundAddress);
+                //var handle = Addressables.LoadAssetAsync<AudioClip>(soundAddress);
+                while (handle.Status == EOperationStatus.None)
                 {
                     Debug.Log($"SoundService -- SoundClip[{soundCatalog}/{soundName}] Status None");
-                    if (handle.OperationException != null)
+                    if (handle.LastError != null)
                     {
-                        Debug.Log(handle.OperationException);
+                        Debug.Log(handle.LastError);
                     }
+
                     yield return null;
                 }
 
                 Debug.Log($"SoundService -- SoundClip[{soundCatalog}/{soundName}] Status {handle.Status}");
 
-                if (handle.Status == AsyncOperationStatus.Failed)
+                if (handle.Status == EOperationStatus.Failed)
                 {
                     Debug.Log($"SoundService -- SoundClip[{soundCatalog}/{soundName}] Load Failed");
-                    Debug.Log(handle.OperationException);
+                    Debug.Log(handle.LastError);
                 }
                 else
                 {
@@ -131,7 +193,7 @@ namespace GameEngine.Sound
                     var go = new GameObject(soundName);
                     go.transform.SetParent(catalog.transform, false);
                     soundClip = go.AddComponent<SoundClip>();
-                    soundClip.clip = handle.Result;
+                    soundClip.clip = handle.GetAssetObject<AudioClip>();
                     soundClip.name = soundName;
                     soundClip.volume = volume;
                     soundClip.loop = loop;
@@ -146,7 +208,7 @@ namespace GameEngine.Sound
             }
         }
 
-        public async Task<SoundClip> AsyncLoadSoundClip(string soundCatalog, string soundName, string soundAddress,
+        public async UniTask<SoundClip> AsyncLoadSoundClip(string soundCatalog, string soundName, string soundAddress,
             float volume, bool loop, bool allowUnload = true)
         {
             var catalog = GetSoundCatalog(soundCatalog);
@@ -164,16 +226,19 @@ namespace GameEngine.Sound
             {
                 try
                 {
-                    var audioClip = await Addressables.LoadAssetAsync<AudioClip>(soundAddress).Task;
-                    Debug.Log($"SoundService -- SoundClip[{soundCatalog}/{soundName}] Loaded");
-                    var go = new GameObject(soundName);
-                    go.transform.SetParent(catalog.transform, false);
-                    soundClip = go.AddComponent<SoundClip>();
-                    soundClip.clip = audioClip;
-                    soundClip.name = soundName;
-                    soundClip.volume = volume;
-                    soundClip.loop = loop;
-                    catalog.AddClip(soundClip);
+                    // var audioClip = await Addressables.LoadAssetAsync<AudioClip>(soundAddress).Task;
+                    // Debug.Log($"SoundService -- SoundClip[{soundCatalog}/{soundName}] Loaded");
+                    // var go = new GameObject(soundName);
+
+                    soundClip = await LoadSoundClip(soundAddress);
+                    if (soundClip != null)
+                    {
+                        soundClip.transform.SetParent(catalog.transform, false);
+                        soundClip.name = soundName;
+                        soundClip.volume = volume;
+                        soundClip.loop = loop;
+                        catalog.AddClip(soundClip);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -211,7 +276,7 @@ namespace GameEngine.Sound
             }
 
             catalog.RemoveClip(soundClip);
-            Addressables.Release(soundClip.clip);
+            soundClip.ResHandle?.Release();
             Destroy(soundClip.gameObject);
         }
 

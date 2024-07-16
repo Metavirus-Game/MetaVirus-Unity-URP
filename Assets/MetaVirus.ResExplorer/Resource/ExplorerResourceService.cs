@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GameEngine.Base;
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace MetaVirus.ResExplorer.Resource
 {
@@ -24,21 +20,11 @@ namespace MetaVirus.ResExplorer.Resource
 
         private void LoadResPath()
         {
-            var resEnum = Addressables.ResourceLocators;
-
-            foreach (var locator in resEnum)
-            {
-                foreach (var t in locator.Keys)
-                {
-                    _resPath.Add(t.ToString());
-                }
-            }
-
-            // while (resEnum.MoveNext())
+            // var resEnum = Addressables.ResourceLocators;
+            //
+            // foreach (var locator in resEnum)
             // {
-            //     var r = resEnum.Current;
-            //     var arr = r?.Keys.ToArray() ?? Array.Empty<object>();
-            //     foreach (var t in arr)
+            //     foreach (var t in locator.Keys)
             //     {
             //         _resPath.Add(t.ToString());
             //     }

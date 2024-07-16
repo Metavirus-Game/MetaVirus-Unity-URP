@@ -85,7 +85,10 @@ namespace MetaVirus.Logic.Data
         public static class DataKeys
         {
             public const string AccountInfo = "CommonData.Account.Info";
-            
+
+            public const string RegisterInfo = "CommonData.Register.Info";
+            public const string EmailSignInInfo = "CommonData.Login.Email.Info";
+
             public const string LoginPlayerId = "CommonData.Login.Player.Id";
 
             public const string PlayerInfo = "CommonData.Player.Info";
@@ -328,9 +331,14 @@ namespace MetaVirus.Logic.Data
                 return $"{Npc}/{npcId}/{npcId}.prefab";
             }
 
+            // public static string MapRes(int mapId)
+            // {
+            //     return $"{Map}{mapId:d4}/map.unity";
+            // }
+            
             public static string MapRes(int mapId)
             {
-                return $"{Map}{mapId:d4}/map.unity";
+                return $"Assets/MetaVirus.Res/Scenes/Maps/{mapId:d4}/map.unity";
             }
         }
 

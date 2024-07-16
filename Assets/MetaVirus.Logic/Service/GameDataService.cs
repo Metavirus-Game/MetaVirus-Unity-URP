@@ -12,19 +12,17 @@ using cfg.battle;
 using cfg.common;
 using cfg.map;
 using cfg.skill;
+using Cysharp.Threading.Tasks;
 using GameEngine;
 using GameEngine.Base;
-using GameEngine.Base.Exception;
+using GameEngine.Resource;
 using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Service.Battle;
 using MetaVirus.Logic.Service.Battle.data;
 using MetaVirus.Logic.Service.Exception;
-using SimpleJSON;
-using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using static MetaVirus.Logic.Data.Constants;
 
 namespace MetaVirus.Logic.Service
@@ -108,7 +106,7 @@ namespace MetaVirus.Logic.Service
 
         public async Task<Tables> LoadGameDataAsync()
         {
-            var loadPath = ""; 
+            var loadPath = "";
 #if UNITY_STANDALONE_WIN
             var args = Environment.GetCommandLineArgs();
             if (args.Length >= 3)
@@ -125,27 +123,43 @@ namespace MetaVirus.Logic.Service
 
             if (string.IsNullOrEmpty(loadPath))
             {
-                //从addressables资源中读取
-                var locations = await Addressables
-                    .LoadResourceLocationsAsync(ResAddress.GameDatas).Task;
+                var yooService = GameFramework.GetService<YooAssetsService>();
+                var pkg = yooService.GetPackage();
+                var infos = pkg.GetAssetInfos(ResAddress.GameDatas);
+                var gameBytes = new Dictionary<string, byte[]>();
 
-                var gameDatas = new Dictionary<string, TextAsset>();
-
-                foreach (var l in locations)
+                foreach (var assetInfo in infos)
                 {
-                    var asset = await Addressables.LoadAssetAsync<TextAsset>(l).Task;
-                    var fileName = l.PrimaryKey;
-                    fileName = fileName.Substring(fileName.LastIndexOf("/", StringComparison.Ordinal) + 1);
-                    gameDatas[fileName] = asset;
+                    var handle = pkg.LoadAssetAsync<TextAsset>(assetInfo.AssetPath);
+                    await handle.ToUniTask();
+                    var fileInfo = new FileInfo(assetInfo.AssetPath);
+                    var fileName = fileInfo.Name;
+                    var asset = handle.GetAssetObject<TextAsset>();
+                    gameBytes[fileName] = asset.bytes;
+                    handle.Release();
                 }
+
+                //从addressables资源中读取
+                // var locations = await Addressables
+                //     .LoadResourceLocationsAsync(ResAddress.GameDatas).Task;
+                //
+                // var gameDatas = new Dictionary<string, TextAsset>();
+                //
+                // foreach (var l in locations)
+                // {
+                //     var asset = await Addressables.LoadAssetAsync<TextAsset>(l).Task;
+                //     var fileName = l.PrimaryKey;
+                //     fileName = fileName.Substring(fileName.LastIndexOf("/", StringComparison.Ordinal) + 1);
+                //     gameDatas[fileName] = asset;
+                // }
 
 
                 //加载所有数据
                 gameTable = new Tables(file =>
                 {
                     var f = $"{file}.bytes";
-                    gameDatas.TryGetValue(f, out var data);
-                    if (data != null) return ByteBuf.Wrap(data.bytes);
+                    gameBytes.TryGetValue(f, out var data);
+                    if (data != null) return ByteBuf.Wrap(data);
                     Debug.LogError($"GameData File [{file}] Not Found!");
                     return null;
                 });

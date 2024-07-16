@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using GameEngine;
 using GameEngine.Entity;
 using GameEngine.Event;
 using GameEngine.ObjectPool;
-using GameEngine.Utils;
+using GameEngine.Resource;
 using MetaVirus.Logic.Data.Events;
 using MetaVirus.Logic.Data.Npc;
-using MetaVirus.Logic.Data.Player;
 using MetaVirus.Logic.Player;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using Object = UnityEngine.Object;
 
 namespace MetaVirus.Logic.Data.Entities
 {
@@ -48,7 +43,7 @@ namespace MetaVirus.Logic.Data.Entities
                 _netPlayerController.SetControlData(GridItemGo, GridItem);
                 _netPlayerController.SetRotation(GridItem.Rotation);
                 _characterTemplate.ParseFromLongData(GridItem.Avatar);
-                
+
                 _netPlayerObj.transform.position = GridItem.Position;
                 _netPlayerObj.name = $"NetPlayer_{GridItem.ID}-{GridItem.Name}";
                 _netPlayerObj.SetActive(true);
@@ -61,9 +56,14 @@ namespace MetaVirus.Logic.Data.Entities
             const string netPlayerAddress = Constants.ResAddress.NetPlayerPrefab;
             var prefabAddress = Constants.ResAddress.PlayerResPrefab(GridItem.Gender);
 
+            var yooService = GameFramework.GetService<YooAssetsService>();
 
-            var pTask = Addressables.InstantiateAsync(netPlayerAddress).Task;
-            var gTask = Addressables.InstantiateAsync(prefabAddress).Task;
+            //var pTask = Addressables.InstantiateAsync(netPlayerAddress).Task;
+            //var gTask = Addressables.InstantiateAsync(prefabAddress).Task;
+
+            var pTask = yooService.InstanceAsync(netPlayerAddress);
+            var gTask = yooService.InstanceAsync(prefabAddress);
+
 
             //加载NetPlayer
             var player = await pTask;
@@ -154,13 +154,15 @@ namespace MetaVirus.Logic.Data.Entities
         {
             if (GridItemGo != null)
             {
-                Addressables.ReleaseInstance(GridItemGo);
+                //Addressables.ReleaseInstance(GridItemGo);
+                GameFramework.GetService<YooAssetsService>().ReleaseInstance(GridItemGo);
                 GridItemGo = null;
             }
 
             if (_netPlayerObj != null)
             {
-                Addressables.ReleaseInstance(_netPlayerObj);
+                // Addressables.ReleaseInstance(_netPlayerObj);
+                GameFramework.GetService<YooAssetsService>().ReleaseInstance(_netPlayerObj);
                 _netPlayerObj = null;
             }
         }

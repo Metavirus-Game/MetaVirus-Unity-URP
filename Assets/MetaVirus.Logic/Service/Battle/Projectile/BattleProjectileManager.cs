@@ -1,17 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using cfg.battle;
-using cfg.skill;
 using GameEngine;
 using GameEngine.ObjectPool;
+using GameEngine.Resource;
 using MetaVirus.Battle.Record;
 using MetaVirus.Logic.Service.Battle.data;
 using MetaVirus.Logic.Service.Vfx;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.Events;
-using static MetaVirus.Logic.Data.Constants;
 
 namespace MetaVirus.Logic.Service.Battle.Projectile
 {
@@ -77,7 +73,8 @@ namespace MetaVirus.Logic.Service.Battle.Projectile
                     continue;
                 }
 
-                var go = await Addressables.InstantiateAsync(resData.Projectile).Task;
+                //var go = await Addressables.InstantiateAsync(resData.Projectile).Task;
+                var go = await GameFramework.GetService<YooAssetsService>().InstanceAsync(resData.Projectile);
                 go.SetActive(false);
                 go.transform.SetParent(_projectileRoot);
                 _projectileObjs[resId] = go;
@@ -164,7 +161,8 @@ namespace MetaVirus.Logic.Service.Battle.Projectile
         {
             foreach (var obj in _projectileObjs.Values)
             {
-                Addressables.ReleaseInstance(obj);
+                //Addressables.ReleaseInstance(obj);
+                GameFramework.GetService<YooAssetsService>().ReleaseInstance(obj);
             }
 
             _projectileObjs.Clear();

@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FairyGUI;
 using GameEngine.Base;
+using GameEngine.Resource;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.Events;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.Serialization;
+using YooAsset;
 
 namespace GameEngine.FairyGUI
 {
@@ -35,8 +32,8 @@ namespace GameEngine.FairyGUI
          * key      => addressables assets path
          * value    => AsyncOperationHandle
          */
-        private readonly Dictionary<string, AsyncOperationHandle<object>> _pathToHandle =
-            new Dictionary<string, AsyncOperationHandle<object>>();
+        private readonly Dictionary<string, AssetHandle> _pathToHandle =
+            new Dictionary<string, AssetHandle>();
 
         public override void ServiceReady()
         {
@@ -48,23 +45,39 @@ namespace GameEngine.FairyGUI
             }
         }
 
+
+        /**
+         * 根据UI的名称提取相应的ui文件
+         */
+        public AssetInfo[] GetUIAssetInfos(string uiName)
+        {
+            var package = GetService<YooAssetsService>().GetPackage();
+            var infos = package.GetAssetInfos("res-ui");
+            var ret = infos.Where(assetInfo => assetInfo.AssetPath.IndexOf(uiName, StringComparison.Ordinal) != -1)
+                .ToArray();
+            return ret;
+        }
+
         /**
          * 向FairyGUI的Package中添加标签为 {addressableLable} 的UI资源
          * 会自动根据获取的资源名称，生成对应的FairyGUI包名，并已包名分组保存
          * Release的时候，释放包名，即可释放对应的资源
-         * <param name="addressableLables">Addressables系统中指定的资源Label</param>
+         * <param name="uiNames">ui名称</param>
          */
-        public async Task<string[]> AddPackageAsync(params string[] addressableLables)
+        public async Task<string[]> AddPackageAsync(params string[] uiNames)
         {
+            var yooPkg = GetService<YooAssetsService>().GetPackage();
             var loadedPkgs = new HashSet<string>();
-            foreach (var addressableLable in addressableLables)
+            foreach (var uiName in uiNames)
             {
-                var list = Addressables.LoadResourceLocationsAsync(addressableLable);
-                await list.Task;
+                //var list = Addressables.LoadResourceLocationsAsync(addressableLable);
+                //await list.Task;
 
-                foreach (var location in list.Result)
+                var uiInfos = GetUIAssetInfos(uiName);
+
+                foreach (var info in uiInfos)
                 {
-                    var resName = location.PrimaryKey;
+                    var resName = info.AssetPath;
                     var fIdx = resName.LastIndexOf('/') + 1;
                     var eIdx = resName.IndexOf('_', fIdx);
 
@@ -79,15 +92,15 @@ namespace GameEngine.FairyGUI
                         _pkgToPath[packageName] = assetList;
                     }
 
-                    if (!assetList.Contains(location.PrimaryKey))
+                    if (!assetList.Contains(info.Address))
                     {
-                        assetList.Add(location.PrimaryKey);
+                        assetList.Add(info.Address);
                     }
 
-                    var handler = Addressables.LoadAssetAsync<object>(location);
+                    var handler = yooPkg.LoadAssetAsync(info); //Addressables.LoadAssetAsync<object>(location);
                     await handler.Task;
 
-                    _pathToHandle[location.PrimaryKey] = handler;
+                    _pathToHandle[info.AssetPath] = handler;
                 }
             }
 
@@ -98,70 +111,71 @@ namespace GameEngine.FairyGUI
                     {
                         method = DestroyMethod.None;
                         var key = $"{resPrefix}{s}{extension}";
-
-                        return _pathToHandle.ContainsKey(key) ? _pathToHandle[key].Result : null;
+                        _pathToHandle.TryGetValue(key, out var handler);
+                        var asset = handler?.AssetObject;
+                        return asset;
                     });
             }
 
             return loadedPkgs.ToArray();
         }
 
-        public void AddPackage(string addressableLable, UnityAction<string[]> onLoaded = null)
-        {
-            AddPackage(new string[] { addressableLable }, onLoaded);
-        }
-
-        public async void AddPackage(string[] addressableLables, UnityAction<string[]> onLoaded = null)
-        {
-            var loadedPkgs = new HashSet<string>();
-
-            foreach (var addressableLable in addressableLables)
-            {
-                var list = await Addressables.LoadResourceLocationsAsync(addressableLable).Task;
-
-                foreach (var location in list)
-                {
-                    var resName = location.PrimaryKey;
-                    var fIdx = resName.LastIndexOf('/') + 1;
-                    var eIdx = resName.LastIndexOf('_');
-
-                    var packageName = resName.Substring(fIdx, eIdx - fIdx);
-
-                    loadedPkgs.Add(packageName);
-
-                    _pkgToPath.TryGetValue(packageName, out var assetList);
-                    if (assetList == null)
-                    {
-                        assetList = new List<string>();
-                        _pkgToPath[packageName] = assetList;
-                    }
-
-                    if (!assetList.Contains(location.PrimaryKey))
-                    {
-                        assetList.Add(location.PrimaryKey);
-                    }
-
-                    var handler = Addressables.LoadAssetAsync<object>(location);
-                    await handler.Task;
-
-                    _pathToHandle[location.PrimaryKey] = handler;
-                }
-            }
-
-            foreach (var loadedPkg in loadedPkgs)
-            {
-                UIPackage.AddPackage(loadedPkg,
-                    (string s, string extension, Type type, out DestroyMethod method) =>
-                    {
-                        method = DestroyMethod.None;
-                        var key = $"{resPrefix}{s}{extension}";
-
-                        return _pathToHandle.ContainsKey(key) ? _pathToHandle[key].Result : null;
-                    });
-            }
-
-            onLoaded?.Invoke(loadedPkgs.ToArray());
-        }
+        // public void AddPackage(string addressableLable, UnityAction<string[]> onLoaded = null)
+        // {
+        //     AddPackage(new string[] { addressableLable }, onLoaded);
+        // }
+        //
+        // public async void AddPackage(string[] addressableLables, UnityAction<string[]> onLoaded = null)
+        // {
+        //     var loadedPkgs = new HashSet<string>();
+        //
+        //     foreach (var addressableLable in addressableLables)
+        //     {
+        //         var list = await Addressables.LoadResourceLocationsAsync(addressableLable).Task;
+        //
+        //         foreach (var location in list)
+        //         {
+        //             var resName = location.PrimaryKey;
+        //             var fIdx = resName.LastIndexOf('/') + 1;
+        //             var eIdx = resName.LastIndexOf('_');
+        //
+        //             var packageName = resName.Substring(fIdx, eIdx - fIdx);
+        //
+        //             loadedPkgs.Add(packageName);
+        //
+        //             _pkgToPath.TryGetValue(packageName, out var assetList);
+        //             if (assetList == null)
+        //             {
+        //                 assetList = new List<string>();
+        //                 _pkgToPath[packageName] = assetList;
+        //             }
+        //
+        //             if (!assetList.Contains(location.PrimaryKey))
+        //             {
+        //                 assetList.Add(location.PrimaryKey);
+        //             }
+        //
+        //             var handler = Addressables.LoadAssetAsync<object>(location);
+        //             await handler.Task;
+        //
+        //             _pathToHandle[location.PrimaryKey] = handler;
+        //         }
+        //     }
+        //
+        //     foreach (var loadedPkg in loadedPkgs)
+        //     {
+        //         UIPackage.AddPackage(loadedPkg,
+        //             (string s, string extension, Type type, out DestroyMethod method) =>
+        //             {
+        //                 method = DestroyMethod.None;
+        //                 var key = $"{resPrefix}{s}{extension}";
+        //
+        //                 return _pathToHandle.ContainsKey(key) ? _pathToHandle[key].Result : null;
+        //             });
+        //     }
+        //
+        //     onLoaded?.Invoke(loadedPkgs.ToArray());
+        // }
 
         public void ReleasePackages(IEnumerable<string> packages)
         {
@@ -188,11 +202,9 @@ namespace GameEngine.FairyGUI
                     if (_pathToHandle.ContainsKey(path))
                     {
                         var handle = _pathToHandle[path];
-                        Addressables.Release(handle);
-                        if (!handle.IsValid())
-                        {
-                            _pathToHandle.Remove(path);
-                        }
+                        //Addressables.Release(handle);
+                        handle.Release();
+                        _pathToHandle.Remove(path);
                     }
                 }
             }

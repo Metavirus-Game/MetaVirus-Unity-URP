@@ -1,12 +1,9 @@
-﻿using System.Threading.Tasks;
-using cfg.common;
+﻿using cfg.common;
 using GameEngine;
-using GameEngine.Entity;
 using GameEngine.ObjectPool;
+using GameEngine.Resource;
 using MetaVirus.Logic.Data.Npc;
-using MetaVirus.Logic.Data.Player;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace MetaVirus.Logic.Data.Entities
 {
@@ -33,7 +30,8 @@ namespace MetaVirus.Logic.Data.Entities
         {
             if (GridItemGo != null)
             {
-                Addressables.ReleaseInstance(GridItemGo);
+                //Addressables.ReleaseInstance(GridItemGo);
+                GameFramework.GetService<YooAssetsService>().ReleaseInstance(GridItemGo);
                 GridItemGo = null;
             }
         }

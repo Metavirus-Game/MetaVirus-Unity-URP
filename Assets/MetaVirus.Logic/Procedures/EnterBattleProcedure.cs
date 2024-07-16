@@ -97,7 +97,7 @@ namespace MetaVirus.Logic.Procedures
             }
 
             //加载Loading和battle ui
-            var ret = _fairyService.AddPackageAsync("ui-loading");
+            var ret = _fairyService.AddPackageAsync("LoadingPage");
             yield return ret.AsCoroution();
             _loadedPkgs = ret.Result;
 

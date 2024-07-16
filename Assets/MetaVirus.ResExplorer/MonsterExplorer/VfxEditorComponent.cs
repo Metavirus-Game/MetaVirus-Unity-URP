@@ -9,7 +9,6 @@ using GameEngine.Utils;
 using MetaVirus.Logic.Service.Vfx;
 using MetaVirus.ResExplorer.UI;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace MetaVirus.ResExplorer.MonsterExplorer
 {

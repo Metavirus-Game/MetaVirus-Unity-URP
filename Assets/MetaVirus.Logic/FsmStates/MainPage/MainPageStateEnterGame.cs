@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FairyGUI;
+using Firebase.Auth;
 using GameEngine;
 using GameEngine.Common;
 using GameEngine.Config;
 using GameEngine.DataNode;
 using GameEngine.Entity;
+using GameEngine.Event;
 using GameEngine.Fsm;
 using GameEngine.Network;
 using GameEngine.Utils;
@@ -24,9 +26,11 @@ using MetaVirus.Logic.UI.Windows;
 using MetaVirus.Logic.Utils;
 using MetaVirus.Net.Messages.User;
 using UnityEngine;
+using WalletConnect.Web3Modal;
 using static GameEngine.GameFramework;
 using static MetaVirus.Logic.Data.Constants;
 using static MetaVirus.Logic.Service.GameDataService;
+using Object = UnityEngine.Object;
 
 namespace MetaVirus.Logic.FsmStates.MainPage
 {
@@ -38,8 +42,12 @@ namespace MetaVirus.Logic.FsmStates.MainPage
         private NetworkService _networkService;
         private PlayerService _playerService;
         private LoginService _loginService;
+        private UIService _uiService;
         private GButton _btnNexGami;
         private GButton _btnGuest;
+        private EventService _eventService;
+
+        private UniWebView _uniWebView;
 
         public override void OnInit(FsmEntity<MainPageProcedure> fsm)
         {
@@ -48,17 +56,24 @@ namespace MetaVirus.Logic.FsmStates.MainPage
             _networkService = GetService<NetworkService>();
             _playerService = GetService<PlayerService>();
             _loginService = GetService<LoginService>();
+            _uiService = GetService<UIService>();
+            _eventService = GetService<EventService>();
+            Web3Modal.InitializeAsync();
         }
 
         private void OnDeepLinkActivated(string param)
         {
-            //UIDialog.ShowDialog("OnDeepLinkActivated", "param:" + param, new[] { "Ok" }, new[] { LT("common.text.ok") },
-            //  ((arg0, s, dialog) => { dialog.Hide(); }));
+            // UIDialog.ShowDialog("OnDeepLinkActivated", "param:" + param, new[] { "Ok" }, new[] { LT("common.text.ok") },
+            //   ((arg0, s, dialog) => { dialog.Hide(); }));
             EnterGameByParam(param);
         }
 
         public override void OnEnter(FsmEntity<MainPageProcedure> fsm)
         {
+            var go = new GameObject("UniWebview");
+            _uniWebView = go.AddComponent<UniWebView>();
+            _uniWebView.Frame = new Rect(0, 0, Screen.width, Screen.height);
+
             Application.deepLinkActivated += OnDeepLinkActivated;
 
             var enterCtrl = fsm.Owner.MainPageCom.GetController("enter");
@@ -74,11 +89,35 @@ namespace MetaVirus.Logic.FsmStates.MainPage
             var btnSignInWithGoogle = loginButtons.GetChild("btnGoogle").asButton;
             var btnSignInWithTwitter = loginButtons.GetChild("btnTwitter").asButton;
             var btnSignInWithNexGami = loginButtons.GetChild("btnNexGami").asButton;
-            var btnSignInAsGuest = loginButtons.GetChild("btnGuest").asButton;
-            btnSignInWithNexGami.onClick.Add(SignInWithNexGami);
-            btnSignInAsGuest.onClick.Add(SignInAsGuest);
+            //var btnSignInAsGuest = loginButtons.GetChild("btnGuest").asButton;
+
+            var enableNexGamiSignIn = true;
+#if UNITY_IOS && !UNITY_EDITOR
+            enableNexGamiSignIn = IOSCanOpenURL.CheckUrl("com.lightesport.im.mobile://");
+#endif
+            btnSignInWithNexGami.visible = enableNexGamiSignIn;
+            btnSignInWithNexGami.onClick.Set(SignInWithNexGami);
+            //btnSignInAsGuest.onClick.Add(SignInAsGuest);
+            btnSignInWithEmail.onClick.Set(SignInWithEmail);
             _btnNexGami = btnSignInWithNexGami;
-            _btnGuest = btnSignInAsGuest;
+            //_btnGuest = btnSignInAsGuest;
+
+            _eventService.On(GameEvents.AccountEvent.EmailSignUpSuccess, OnEmailSingUpSuccess);
+        }
+
+        private void OnEmailSingUpSuccess()
+        {
+            //弹出登录窗口
+            SignInWithEmail();
+        }
+
+        private void SignInWithEmail()
+        {
+            var signInWnd = _uiService.OpenWindow<UISignInWindow>();
+            signInWnd.OnSignIn = lr =>
+            {
+                Inst.StartCoroutine(EnterGame(lr.accountId, lr.msg, LoginService.ChannelEmail));
+            };
         }
 
         private void SignInAsGuest()
@@ -89,10 +128,19 @@ namespace MetaVirus.Logic.FsmStates.MainPage
         private void SignInWithNexGami()
         {
 #if UNITY_ANDROID
-            Application.OpenURL("com.nexgami.im.mobile://loginRequest?name=MetaVirus");
+            Application.OpenURL("https://www.nexgami.com/android/loginRequest?name=MetaVirus");
 #elif UNITY_IOS
-            Application.OpenURL("https://www.nexgami.com/app/loginRequest?name=MetaVirus");
+            // const string url = "https://www.nexgami.com/app/loginRequest?name=MetaVirus";
+            // Application.OpenURL("https://www.nexgami.com/app/loginRequest?name=MetaVirus");
 #endif
+
+            // https://nexgami-d9e01.firebaseapp.com/__/auth/handler?apiKey=AIzaSyACUdbpe9_OsEAF1MevoTvia_P8WFjO9Po&appName=%5BDEFAULT%5D&authType=signInViaPopup&redirectUrl=http%3A%2F%2Flocalhost%3A3000%2Flaunchpad%2F1&v=10.9.0&eventId=5426037992&providerId=google.com&customParameters=%7B"prompt"%3A"select_account"%7D&scopes=profile%2Cemail
+
+            // _uniWebView.Load(
+            //     "https://accounts.google.com/o/oauth2/auth/oauthchooseaccount?response_type=code&client_id=310675491806-d44rhdib9l46g9tg6qs6nsbn1a7hnl4c.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fnexgami-d9e01.firebaseapp.com%2F__%2Fauth%2Fhandler&state=AMbdmDlzBKnEtT73ZQA8WRm0KtaMfr2c_g26NwMKW-svLqITTJyLHoA6EeqPpYURfxoO_y7WykSGW3GMZkgioPuNOXxXGkgFUV1YSrCZZck9KjsdTxecJGzJ41rINAH20jrjxKeFfY_iN9BTj1A5oBTn-A8Z1H82hVMvY0inGlx8_kq5AlNVRGxsLpqHsTykmq-qA045dJ3RcHjgE_WqR4F_USeDt2vT1JKPoXHr9D9iQ9CE8rzbDqp2lsQHomnf1gIMLHpOCAkdpo3Lzz7YPmL1uI6KEaiR56bTtvbRm_zvdckeNhidkHAGzlablOD3U_kOCLR8yPQ&scope=openid%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20profile%20email&prompt=select_account&context_uri=http%3A%2F%2Flocalhost%3A3000&service=lso&o2v=1&ddm=0&flowName=GeneralOAuthFlow");
+            // _uniWebView.Show();
+
+            Web3Modal.OpenModal();
         }
 
 
@@ -103,12 +151,12 @@ namespace MetaVirus.Logic.FsmStates.MainPage
 
         private void EnterGameByParam(string param = null)
         {
-            param ??= "NexGami.MetaVirus://128&asdf";
+            param ??= "NexGami.MetaVirus://128+asdf";
 
-            if (param.StartsWith("NexGami.MetaVirus://"))
+            if (param.StartsWith("nexgami.metavirus://"))
             {
-                var p = param["NexGami.MetaVirus://".Length..];
-                var ps = p.Split("&");
+                var p = param["nexgami.metavirus://".Length..];
+                var ps = p.Split("+");
                 if (ps.Length < 2) return;
                 long.TryParse(ps[0], out var id);
                 var key = ps[1];
@@ -117,7 +165,7 @@ namespace MetaVirus.Logic.FsmStates.MainPage
             }
         }
 
-        private IEnumerator EnterGame(long loginId, string loginKey)
+        private IEnumerator EnterGame(long loginId, string loginKey, string channel = null)
         {
             //连接服务器
             //string connectMsg = null;
@@ -152,7 +200,7 @@ namespace MetaVirus.Logic.FsmStates.MainPage
             //     wnd.Hide();
             // }
 
-            var wnd = UIWaitingWindow.ShowWaiting(L("MainPage_Stage_ConnectServer_Connecting"));
+            var wnd = UIWaitingWindow.ShowWaiting(LT("mainpage.stage.connecting"));
             var task = _loginService.ConnectServer();
             yield return task.AsCoroution();
             wnd.Hide();
@@ -161,7 +209,7 @@ namespace MetaVirus.Logic.FsmStates.MainPage
 
             if (connectMsg != "connected")
             {
-                UIDialog.ShowErrorMessage(L("Network_Error_Dialog_Title"), L(connectMsg),
+                UIDialog.ShowErrorMessage(LT("network.error.dialog.title"), LT(connectMsg),
                     (idx, id, dialog) =>
                     {
                         Debug.Log($"{id} clicked");
@@ -217,14 +265,20 @@ namespace MetaVirus.Logic.FsmStates.MainPage
             //     }
             // }
 
-            var tLogin = _loginService.LoginAccount(loginId, loginKey);
+            var tLogin = _loginService.LoginAccount(loginId, loginKey, channel);
             yield return tLogin.AsCoroution();
 
-            var sessionKey = tLogin.Result;
-            if (sessionKey == "")
+            var r = tLogin.Result;
+            if (r.retCode == -1 || r.message == "")
             {
+                var msg = LT("network.error.connect.server.failed");
+                if (r.message != "")
+                {
+                    msg = r.message;
+                }
+
                 _wndEntering.Hide();
-                UIDialog.ShowErrorMessage(L("Network_Error_Dialog_Title"), L("MainPage_Stage_AccountLogin_Failed"),
+                UIDialog.ShowErrorMessage(LT("Network_Error_Dialog_Title"), msg,
                     (idx, id, dialog) =>
                     {
                         _networkService.Disconnect();
@@ -276,6 +330,7 @@ namespace MetaVirus.Logic.FsmStates.MainPage
             Application.deepLinkActivated -= OnDeepLinkActivated;
             // fsm.Owner.BtnEnter.visible = false;
             // fsm.Owner.BtnEnter.onClick.Remove(BtnEnterGame);
+            _eventService.Remove(GameEvents.AccountEvent.EmailSignUpSuccess, OnEmailSingUpSuccess);
         }
     }
 }

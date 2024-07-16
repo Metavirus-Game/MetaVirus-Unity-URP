@@ -1,5 +1,11 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Net;
+using System.Security.Policy;
+using System.Text;
 using System.Threading.Tasks;
+using Firebase.Analytics;
 using GameEngine;
 using GameEngine.Base;
 using GameEngine.Common;
@@ -8,20 +14,59 @@ using GameEngine.DataNode;
 using GameEngine.Network;
 using GameEngine.Utils;
 using MetaVirus.Logic.Data;
+using MetaVirus.Logic.Data.Network;
 using MetaVirus.Logic.Data.Player;
 using MetaVirus.Logic.Protocols.User;
 using MetaVirus.Logic.Service.Player;
 using MetaVirus.Logic.UI;
 using MetaVirus.Net.Messages.User;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Networking;
 
 namespace MetaVirus.Logic.Service
 {
+    internal abstract class Api
+    {
+        public static string LoginUrl => GameConfig.Inst.AccountServer + "account/loginRequestV2";
+        public static string RegisterUrl => GameConfig.Inst.AccountServer + "account/registerRequest";
+        public static string VerifyCode => GameConfig.Inst.AccountServer + "account/verifyCode";
+        public static string ResendCode => GameConfig.Inst.AccountServer + "account/resendCode";
+        public static string LoginCheck => GameConfig.Inst.AccountServer + "account/loginCheck";
+        public static string DeleteAccount => GameConfig.Inst.AccountServer + "account/deleteAccount";
+    }
+
+    internal class LoginRequest
+    {
+        public string username;
+        public string password;
+        public string channel;
+        public string serviceId;
+        public string referralCode;
+    }
+
+    internal class VerifyCodeRequest
+    {
+        public string username;
+        public string token;
+        public string code;
+    }
+
+    public class LoginAccountResult
+    {
+        public string message;
+        public int retCode;
+    }
+
     public class LoginService : BaseService
     {
+        public const string ChannelEmail = "metavirus_email";
+        public const string ServiceIDEmail = "MetaVirus";
+
         private NetworkService _networkService;
         private DataNodeService _dataNodeService;
         private PlayerService _playerService;
+
 
         public override void ServiceReady()
         {
@@ -45,7 +90,7 @@ namespace MetaVirus.Logic.Service
                     connectMsg = evt switch
                     {
                         EngineConsts.SocketEvent.Connected => "connected",
-                        EngineConsts.SocketEvent.ConnectFailed => "Network_Connect_Server_Failed",
+                        EngineConsts.SocketEvent.ConnectFailed => "network.error.connect.server.failed",
                         EngineConsts.SocketEvent.Exception => msg,
                         _ => "unknown"
                     };
@@ -62,13 +107,179 @@ namespace MetaVirus.Logic.Service
             return connectMsg;
         }
 
-        public async Task<string> LoginAccount(long loginId, string loginKey)
+        private UnityWebRequestAsyncOperation HttpPost(string url, object data)
+        {
+            var json = JsonUtility.ToJson(data);
+            var req = UnityWebRequest.PostWwwForm(url, json);
+            req.SetRequestHeader("Content-Type", "application/json;charset=utf-8");
+            var uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
+            uploadHandler.contentType = "application/json;charset=utf-8";
+            req.uploadHandler = uploadHandler;
+            var op = req.SendWebRequest();
+            return op;
+        }
+
+        public IEnumerator DeleteAccount(long accountId, string email, string loginKey,
+            UnityAction<bool> onDeleteResult)
+        {
+            var url = Api.DeleteAccount +
+                      $"?accountId={accountId}&loginKey={loginKey}&username={email}&serviceId={ServiceIDEmail}&channel={ChannelEmail}";
+            var req = UnityWebRequest.Get(url);
+            yield return req.SendWebRequest();
+            if (req.result == UnityWebRequest.Result.Success)
+            {
+                var r = JsonUtility.FromJson<RmiResult<string>>(req.downloadHandler.text);
+                onDeleteResult?.Invoke(r.code == 0);
+            }
+            else
+            {
+                onDeleteResult?.Invoke(false);
+            }
+        }
+
+        public IEnumerator SignInWithEmail(string email, string password, UnityAction<LoginResult> onLoginResult)
+        {
+            var loginUrl = Api.LoginUrl;
+            var form = new LoginRequest
+            {
+                username = email,
+                password = password,
+                channel = ChannelEmail,
+                serviceId = ServiceIDEmail,
+                referralCode = "",
+            };
+
+            var op = HttpPost(loginUrl, form);
+            yield return op;
+
+            var req = op.webRequest;
+
+            var failed = new LoginResult
+            {
+                accountId = -1,
+                loginState = LoginResult.LoginStateFailed
+            };
+
+            if (req.result == UnityWebRequest.Result.Success)
+            {
+                var result = JsonUtility.FromJson<RmiResult<LoginResult>>(req.downloadHandler.text);
+                onLoginResult?.Invoke(result.code == 0 ? result.retObject : failed);
+            }
+            else
+            {
+                onLoginResult?.Invoke(failed);
+            }
+        }
+
+        /// <summary>
+        /// 使用邮箱进行注册，成功回调verifyCodeToken，失败回调null
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <param name="onSinUpResult"></param>
+        /// <returns></returns>
+        public IEnumerator SignUpWithEmail(string email, string password, UnityAction<bool, string> onSinUpResult)
+        {
+            var regUrl = Api.RegisterUrl;
+            var form = new LoginRequest
+            {
+                username = email,
+                password = password,
+                channel = ChannelEmail,
+                serviceId = ServiceIDEmail,
+                referralCode = "",
+            };
+
+            var op = HttpPost(regUrl, form);
+            yield return op;
+
+            var req = op.webRequest;
+
+            if (req.result == UnityWebRequest.Result.Success)
+            {
+                var result = JsonUtility.FromJson<RmiResult<string>>(req.downloadHandler.text);
+                onSinUpResult?.Invoke(result.code == 0, result.msg);
+            }
+            else
+            {
+                onSinUpResult?.Invoke(false, "Please try again later");
+            }
+        }
+
+        public IEnumerator LoginCheck(long accountId, string loginKey, UnityAction<bool> onCheckResult)
+        {
+            var url = Api.LoginCheck +
+                      $"?accountId={accountId}&loginKey={loginKey}&serviceId={ServiceIDEmail}&channel={ChannelEmail}";
+            var req = UnityWebRequest.Get(url);
+            yield return req.SendWebRequest();
+
+            if (req.result == UnityWebRequest.Result.Success)
+            {
+                var r = JsonUtility.FromJson<RmiResult<string>>(req.downloadHandler.text);
+                onCheckResult?.Invoke(r.code == 0);
+            }
+            else
+            {
+                onCheckResult?.Invoke(false);
+            }
+        }
+
+        public IEnumerator ResendCode(string email, string token, UnityAction<bool, string> onResendResult)
+        {
+            var url = Api.ResendCode + "?username=" + email + "&token=" + token;
+            var req = UnityWebRequest.Get(url);
+            yield return req.SendWebRequest();
+
+            if (req.result == UnityWebRequest.Result.Success)
+            {
+                var r = JsonUtility.FromJson<RmiResult<string>>(req.downloadHandler.text);
+                onResendResult?.Invoke(r.code == 0, r.msg);
+            }
+            else
+            {
+                onResendResult?.Invoke(false, "Network error, please try again later...");
+            }
+        }
+
+        public IEnumerator VerifyRegCode(string email, string vcToken, string code, UnityAction<string> onVerifyResult)
+        {
+            var verifyUrl = Api.VerifyCode;
+            var form = new VerifyCodeRequest
+            {
+                username = email,
+                token = vcToken,
+                code = code
+            };
+
+            var op = HttpPost(verifyUrl, form);
+            yield return op;
+
+            var req = op.webRequest;
+            if (req.result == UnityWebRequest.Result.Success)
+            {
+                var result = JsonUtility.FromJson<RmiResult<string>>(req.downloadHandler.text);
+                if (result.code == 0)
+                {
+                    onVerifyResult?.Invoke("");
+                }
+                else
+                {
+                    onVerifyResult?.Invoke(result.msg);
+                }
+            }
+            else
+            {
+                onVerifyResult?.Invoke("Please try again later...");
+            }
+        }
+
+        public async Task<LoginAccountResult> LoginAccount(long loginId, string loginKey, string channel = null)
         {
             var accReq = new AccountLoginPbReq
             {
                 Username = loginId.ToString(),
                 Password = loginKey,
-                ExtraInfo = GameConfig.Inst.ChannelName
+                ExtraInfo = channel ?? GameConfig.Inst.ChannelName
             };
 
 
@@ -88,7 +299,7 @@ namespace MetaVirus.Logic.Service
             }
 
             string sessionKey = null;
-
+            string message = null;
             //登陆账号
             var t1 = _networkService.SendPacketToAsync(new AccountLoginRequest(accReq), GameConfig.Inst.WorldServerId);
             await t1;
@@ -102,16 +313,48 @@ namespace MetaVirus.Logic.Service
                 var resp = r.GetPacket<AccountLoginResponse>();
                 if (resp != null)
                 {
-                    sessionKey = resp.ProtoBufMsg.SessionKey;
-                    if (sessionKey != "")
+                    if (resp.ProtoBufMsg.RetCode == -2)
                     {
-                        var accInfo = new AccountInfo(loginId, sessionKey);
-                        _dataNodeService.SetData(Constants.DataKeys.AccountInfo, accInfo);
+                        //login closed, open a webpage
+                        if (resp.ProtoBufMsg.HasMessage)
+                        {
+                            Application.OpenURL(resp.ProtoBufMsg.Message);
+                            message = "server does not open";
+                        }
+                    }
+                    else if (resp.ProtoBufMsg.RetCode == -1)
+                    {
+                        if (resp.ProtoBufMsg.HasMessage)
+                        {
+                            message = resp.ProtoBufMsg.Message;
+                            sessionKey = null;
+                        }
+                        else
+                        {
+                            message = "";
+                        }
+                    }
+                    else
+                    {
+                        sessionKey = resp.ProtoBufMsg.SessionKey;
+                        if (sessionKey != "")
+                        {
+                            var accInfo = new AccountInfo(loginId, sessionKey,
+                                channel ?? GameConfig.Inst.ChannelName);
+                            Event.Emit(GameEvents.AccountEvent.AccountLogin);
+                            _dataNodeService.SetData(Constants.DataKeys.AccountInfo, accInfo);
+                        }
                     }
                 }
             }
 
-            return sessionKey;
+            var ret = new LoginAccountResult
+            {
+                message = message ?? sessionKey,
+                retCode = message == null ? 0 : -1
+            };
+
+            return ret;
         }
 
         public async Task<int> LoginGame()
@@ -122,7 +365,8 @@ namespace MetaVirus.Logic.Service
                 SessionKey = accInfo.LoginKey
             };
 
-            var t1 = _networkService.SendPacketToAsync(new GameLoginRequest(gameReq), GameConfig.Inst.WorldServerId);
+            var t1 = _networkService.SendPacketToAsync(new GameLoginRequest(gameReq),
+                GameConfig.Inst.WorldServerId);
             await t1;
 
             var pId = -1;
@@ -173,6 +417,7 @@ namespace MetaVirus.Logic.Service
                 }
 
                 _playerService.OnPlayerLoaded();
+                Event.Emit(GameEvents.AccountEvent.PlayerLogin);
             }
 
             return p;

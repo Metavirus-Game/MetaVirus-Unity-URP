@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using GameEngine;
 using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Service.Battle;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 public class BattleArea : MonoBehaviour
 {
@@ -107,17 +105,18 @@ public class BattleArea : MonoBehaviour
 
     private static IEnumerator RandomLoadbattleUnit(Transform parent)
     {
-        var id = RandomUnitId();
-
-        var path = Constants.ResAddress.BattleUnitRes(id);
-        var r = Addressables.InstantiateAsync(path);
-        yield return r;
-        var obj = r.Result;
-
-        obj.transform.SetParent(parent);
-        obj.transform.localPosition = Vector3.zero;
-        obj.transform.localRotation = Quaternion.identity;
-        obj.SetActive(true);
-        obj.GetComponent<BattleUnitAni>().OnActive();
+        // var id = RandomUnitId();
+        //
+        // var path = Constants.ResAddress.BattleUnitRes(id);
+        // var r = Addressables.InstantiateAsync(path);
+        // yield return r;
+        // var obj = r.Result;
+        //
+        // obj.transform.SetParent(parent);
+        // obj.transform.localPosition = Vector3.zero;
+        // obj.transform.localRotation = Quaternion.identity;
+        // obj.SetActive(true);
+        // obj.GetComponent<BattleUnitAni>().OnActive();
+        yield return null;
     }
 }

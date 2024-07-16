@@ -1,15 +1,12 @@
 ﻿using System.Collections;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using GameEngine;
 using GameEngine.Config;
 using GameEngine.Fsm;
-using GameEngine.Procedure;
 using GameEngine.Utils;
 using MetaVirus.Logic.Procedures;
 using MetaVirus.Logic.Service;
 using MetaVirus.Logic.UI;
-using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace MetaVirus.Logic.FsmStates.MainPage
 {
@@ -27,15 +24,37 @@ namespace MetaVirus.Logic.FsmStates.MainPage
         {
             //_wndUpdate = UIWaitingWindow.ShowWaiting(_localize.GetLanguageText("Common_Loading_Content_Updating"));
             //check update
-            GameFramework.Inst.StartCoroutine(CheckUpdates(fsm));
+            //GameFramework.Inst.StartCoroutine(CheckUpdates(fsm));
+            _ = AsyncCheckUpdates(fsm);
         }
 
+        private async UniTask AsyncCheckUpdates(FsmEntity<MainPageProcedure> fsm)
+        {
+            var count = await GameFramework.GetService<UpdateService>().AsyncUpdate();
+            if (count > 0)
+            {
+                //数据有更新，重新加载游戏
+                fsm.Owner.ChangeProcedure<ReloadAfterUpdateProcedure>();
+                return;
+            }
+
+            if (GameConfig.Inst.OfflineTest)
+            {
+                ChangeState<MainPageEnterOfflineTest>(fsm);
+            }
+            else
+            {
+                ChangeState<MainPageStateEnterGame>(fsm);
+            }
+        }
+
+        //废弃了
         private IEnumerator CheckUpdates(FsmEntity<MainPageProcedure> fsm)
         {
             var updateTask = GameFramework.GetService<UpdateService>().AsyncUpdate();
-            yield return updateTask.AsCoroution();
 
-            if (updateTask.Result > 0)
+            yield return updateTask.ToCoroutine();
+            if (updateTask.GetAwaiter().GetResult() > 0)
             {
                 //数据有更新，重新加载游戏
                 fsm.Owner.ChangeProcedure<ReloadAfterUpdateProcedure>();

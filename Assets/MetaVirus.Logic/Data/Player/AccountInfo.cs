@@ -5,10 +5,13 @@ namespace MetaVirus.Logic.Data.Player
         public long AccountId { get; }
         public string LoginKey { get; }
 
-        public AccountInfo(long id, string key)
+        public string Channel { get; }
+
+        public AccountInfo(long id, string key, string channel)
         {
             AccountId = id;
             LoginKey = key;
+            Channel = channel;
         }
     }
 }

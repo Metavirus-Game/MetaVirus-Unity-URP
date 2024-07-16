@@ -34,7 +34,11 @@ namespace MetaVirus.Logic.Procedures
         {
             if (evt is EngineConsts.SocketEvent.Disconnected or EngineConsts.SocketEvent.Exception)
             {
-                ChangeProcedure<ReconnectProcedure>();
+                var accInfo = _dataNodeService.GetData<AccountInfo>(Constants.DataKeys.AccountInfo);
+                if (accInfo != null)
+                {
+                    ChangeProcedure<ReconnectProcedure>();
+                }
             }
         }
 
@@ -43,6 +47,8 @@ namespace MetaVirus.Logic.Procedures
             _networkService = GetService<NetworkService>();
             _loginService = GetService<LoginService>();
             _dataNodeService = GetService<DataNodeService>();
+            _uiService = GetService<UIService>();
+
             _networkService.OnSocketEventAction += OnSocketEvent;
         }
 
@@ -113,8 +119,8 @@ namespace MetaVirus.Logic.Procedures
 
             var tl = _loginService.LoginAccount(accInfo.AccountId, accInfo.LoginKey);
             yield return tl.AsCoroution();
-            var sessionKey = tl.Result;
-            if (sessionKey == "")
+            var r = tl.Result;
+            if (r.retCode != 0 || r.message == "")
             {
                 Debug.Log("login account failed, sessionKey is null");
                 yield return new WaitForSeconds(_retryInterval);

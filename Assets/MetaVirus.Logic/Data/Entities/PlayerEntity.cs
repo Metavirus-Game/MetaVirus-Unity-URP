@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameEngine;
-using GameEngine.DataNode;
 using GameEngine.Entity;
 using GameEngine.Event;
+using GameEngine.Resource;
 using MetaVirus.Logic.Data.Events;
 using MetaVirus.Logic.Data.Events.Player;
 using MetaVirus.Logic.Data.Player;
 using MetaVirus.Logic.Player;
 using MetaVirus.Logic.Service.Player;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using static MetaVirus.Logic.Data.Constants;
 
 namespace MetaVirus.Logic.Data.Entities
@@ -137,8 +136,13 @@ namespace MetaVirus.Logic.Data.Entities
 
         public override void OnRelease()
         {
-            Addressables.ReleaseInstance(PlayerController.PlayerObject);
-            Addressables.ReleaseInstance(Player);
+            //Addressables.ReleaseInstance(PlayerController.PlayerObject);
+            //Addressables.ReleaseInstance(Player);
+
+            var yooService = GameFramework.GetService<YooAssetsService>();
+            yooService.ReleaseInstance(PlayerController.PlayerObject);
+            yooService.ReleaseInstance(Player);
+            
             _eventService.Remove<NpcEvent>(GameEvents.MapEvent.NpcEvent, OnNpcEvent);
         }
 
@@ -163,11 +167,15 @@ namespace MetaVirus.Logic.Data.Entities
             var prefabAddress = ResAddress.PlayerResPrefab(PlayerInfo.Gender);
             const string playerAddress = ResAddress.PlayerPrefab;
 
+            var yooService = GameFramework.GetService<YooAssetsService>();
+            
             //加载角色资源
-            var playerObj = await Addressables.InstantiateAsync(prefabAddress).Task;
+            //var playerObj = await Addressables.InstantiateAsync(prefabAddress).Task;
+            var playerObj = await yooService.InstanceAsync(prefabAddress);
 
             //加载Player
-            var player = await Addressables.InstantiateAsync(playerAddress).Task;
+            //var player = await Addressables.InstantiateAsync(playerAddress).Task;
+            var player = await yooService.InstanceAsync(playerAddress);
 
             var p = player.GetComponent<PlayerController>();
             playerObj.SetActive(true);

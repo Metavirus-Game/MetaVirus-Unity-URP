@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using cfg.battle;
 using cfg.common;
+using Cysharp.Threading.Tasks;
 using FairyGUI;
 using GameEngine;
 using GameEngine.Network;
-using GameEngine.Utils;
+using GameEngine.Resource;
 using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Data.Entities;
 using MetaVirus.Logic.Data.Player;
@@ -16,8 +17,6 @@ using MetaVirus.Logic.Service.UI;
 using MetaVirus.Logic.UI.Component.MonsterPanel;
 using MetaVirus.Net.Messages.Test;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.AI;
 
 namespace MetaVirus.Logic.UI.Windows
 {
@@ -144,7 +143,8 @@ namespace MetaVirus.Logic.UI.Windows
 
             if (_uiModelLoader != null)
             {
-                Addressables.ReleaseInstance(_uiModelLoader.gameObject);
+                //Addressables.ReleaseInstance(_uiModelLoader.gameObject);
+                GameFramework.GetService<YooAssetsService>().ReleaseInstance(_uiModelLoader.gameObject);
             }
         }
 
@@ -195,9 +195,15 @@ namespace MetaVirus.Logic.UI.Windows
         {
             if (_uiModelLoader == null)
             {
-                var task = Addressables.InstantiateAsync(Constants.ResAddress.UIModelLoader).Task;
-                yield return task.AsCoroution();
-                _uiModelLoader = task.Result.GetComponent<UIModelLoader>();
+                // var task = Addressables.InstantiateAsync(Constants.ResAddress.UIModelLoader).Task;
+                // yield return task.AsCoroution();
+                // _uiModelLoader = task.Result.GetComponent<UIModelLoader>();
+
+                var task = GameFramework.GetService<YooAssetsService>()
+                    .InstanceAsync(Constants.ResAddress.UIModelLoader);
+                GameObject go = null;
+                yield return task.ToCoroutine(r => go = r);
+                _uiModelLoader = go.GetComponent<UIModelLoader>();
                 _uiModelLoader.TextureSize = _modelAnchor.size;
             }
 

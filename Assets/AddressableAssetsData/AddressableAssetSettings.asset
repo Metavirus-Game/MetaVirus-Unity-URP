@@ -47,23 +47,23 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6e302d7fda2666f419c3478abeb2d046, type: 2}
   - {fileID: 11400000, guid: 659b108d6efdce84bbfdd6e7ab95444c, type: 2}
   - {fileID: 11400000, guid: f66154ccd85438c479808b0b3ea04de1, type: 2}
-  - {fileID: 11400000, guid: 39898bc3ae656d8418a650b1db3e469a, type: 2}
-  - {fileID: 11400000, guid: e8de71c2631a2e745975ddc2bec3a017, type: 2}
   - {fileID: 11400000, guid: e8db403847912fd489bd44cdfec3de08, type: 2}
   - {fileID: 11400000, guid: 1715ded8bd92c944c9cff1da65e00d5c, type: 2}
-  - {fileID: 11400000, guid: 55c557f9eb2e96e4595a6d057b56139b, type: 2}
-  - {fileID: 11400000, guid: f14e1fcbf1dd1e046b44189f1a9e8ea5, type: 2}
-  - {fileID: 11400000, guid: 8475bdc28ab711b488edda07005d7d2e, type: 2}
-  - {fileID: 11400000, guid: fe89775fa666c4057bc98389f407d850, type: 2}
-  - {fileID: 11400000, guid: 6c326e358e9c6ea4ea628be400faef59, type: 2}
-  - {fileID: 11400000, guid: 0d25ac9d2cb1061469db016339878779, type: 2}
-  - {fileID: 11400000, guid: fa040fb0365f0e8479b4bac155c544ff, type: 2}
   - {fileID: 11400000, guid: c37e0306d0649534bae51ccb819d6e9e, type: 2}
+  - {fileID: 11400000, guid: 2df6858735930ad4f89057e012aa57ac, type: 2}
   - {fileID: 11400000, guid: 514a13a2953a379408cbf03663845ada, type: 2}
   - {fileID: 11400000, guid: bc9ba56d143602f4ca07d817985c0321, type: 2}
   - {fileID: 11400000, guid: 35cdf9f570bb9464b82953eb88071c3f, type: 2}
-  - {fileID: 11400000, guid: 2df6858735930ad4f89057e012aa57ac, type: 2}
+  - {fileID: 11400000, guid: 55c557f9eb2e96e4595a6d057b56139b, type: 2}
   - {fileID: 11400000, guid: f80b13fb0a5d66f40af5f0a75a7ec8e5, type: 2}
+  - {fileID: 11400000, guid: e8de71c2631a2e745975ddc2bec3a017, type: 2}
+  - {fileID: 11400000, guid: 39898bc3ae656d8418a650b1db3e469a, type: 2}
+  - {fileID: 11400000, guid: fa040fb0365f0e8479b4bac155c544ff, type: 2}
+  - {fileID: 11400000, guid: 0d25ac9d2cb1061469db016339878779, type: 2}
+  - {fileID: 11400000, guid: 6c326e358e9c6ea4ea628be400faef59, type: 2}
+  - {fileID: 11400000, guid: fe89775fa666c4057bc98389f407d850, type: 2}
+  - {fileID: 11400000, guid: 8475bdc28ab711b488edda07005d7d2e, type: 2}
+  - {fileID: 11400000, guid: f14e1fcbf1dd1e046b44189f1a9e8ea5, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -87,7 +87,7 @@ MonoBehaviour:
         m_Value: http://[PrivateIpAddress]:[HostingServicePort]
     - m_InheritedParent: 
       m_Id: 70554d5e9f5f8854fbb92c02392af7a3
-      m_ProfileName: Preview
+      m_ProfileName: android
       m_Values:
       - m_Id: 96a04a7e63ef7f540ba2e83caee35388
         m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
@@ -96,12 +96,12 @@ MonoBehaviour:
       - m_Id: 268133bec7791fe4b8c6f48b9ef1095f
         m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
       - m_Id: a28deac6bbb67924cb6ad05291281ff3
-        m_Value: CCDBuildData/300f2965-9e7d-45ad-b9da-dc2142726944/latest
+        m_Value: CCDBuildData/8f1c64ad-dfea-4838-8c6e-777fde810ce5/latest
       - m_Id: 0261a531e87077146a8de114f195882f
-        m_Value: https://7955fa17-e95b-4c63-9136-069186a26402.client-api.unity3dusercontent.com/client_api/v1/buckets/300f2965-9e7d-45ad-b9da-dc2142726944/release_by_badge/latest/entry_by_path/content/?path=
+        m_Value: https://7955fa17-e95b-4c63-9136-069186a26402.client-api.unity3dusercontent.com/client_api/v1/buckets/8f1c64ad-dfea-4838-8c6e-777fde810ce5/release_by_badge/latest/entry_by_path/content/?path=
     - m_InheritedParent: 
       m_Id: d5a171024a9c74932bbbeb221d1de672
-      m_ProfileName: Release
+      m_ProfileName: ios
       m_Values:
       - m_Id: 96a04a7e63ef7f540ba2e83caee35388
         m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
@@ -160,7 +160,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8e96fd86166d9f9499343f5a673b11ee, type: 2}
   - {fileID: 11400000, guid: 2e28cd63a35d14444b736cac1be13b4d, type: 2}
   - {fileID: 11400000, guid: 898745e2c5d7d374cb246fe1905e47c7, type: 2}
-  m_ActiveProfileId: d5a171024a9c74932bbbeb221d1de672
+  m_ActiveProfileId: 70554d5e9f5f8854fbb92c02392af7a3
   m_HostingServicesManager:
     m_HostingServiceInfos:
     - classRef: UnityEditor.AddressableAssets.HostingServices.HttpHostingService,
@@ -177,7 +177,7 @@ MonoBehaviour:
           m_Key: HostingServiceUploadSpeed
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.String
-          m_Data: Library/com.unity.addressables/aa/iOS/iOS;CCDBuildData/54abd7b8-5143-4fb3-bf01-2e3ae1fe9b2b/latest
+          m_Data: Library/com.unity.addressables/aa/Android/Android
           m_Key: ContentRoot
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.Boolean

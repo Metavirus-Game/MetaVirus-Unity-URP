@@ -7,14 +7,13 @@ using GameEngine.DataNode;
 using GameEngine.Entity;
 using GameEngine.Event;
 using GameEngine.Fsm;
+using GameEngine.Resource;
 using MetaVirus.Logic.Data.Events;
 using MetaVirus.Logic.Data.Events.Player;
 using MetaVirus.Logic.Data.Npc;
-using MetaVirus.Logic.Data.Player;
 using MetaVirus.Logic.FsmStates.NpcFsm;
 using MetaVirus.Logic.Player;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.AI;
 using static MetaVirus.Logic.Data.GameEvents;
 using static MetaVirus.Logic.Data.Constants;
@@ -133,8 +132,12 @@ namespace MetaVirus.Logic.Data.Entities
 
             Debug.Log($"Loading Npc From Address : {npcResAddress}");
 
-            _npcResObj = await Addressables.InstantiateAsync(npcResAddress).Task;
-            _npcResObj.name = $"MapNpc[{MapNpc.Id:X}]";
+            var yooService = GameFramework.GetService<YooAssetsService>();
+
+            //_npcResObj = await Addressables.InstantiateAsync(npcResAddress).Task;
+            //_npcResObj.name = $"MapNpc[{MapNpc.Id:X}]";
+
+            _npcResObj = await yooService.InstanceAsync(npcResAddress, objectName: $"MapNpc[{MapNpc.Id:X}]");
 
             Object.DontDestroyOnLoad(_npcResObj);
             _npcResObj.transform.position = MapNpc.Position;
@@ -240,7 +243,8 @@ namespace MetaVirus.Logic.Data.Entities
         {
             if (_npcResObj != null)
             {
-                Addressables.ReleaseInstance(_npcResObj);
+                //Addressables.ReleaseInstance(_npcResObj);
+                GameFramework.GetService<YooAssetsService>().ReleaseInstance(_npcResObj);
             }
 
             GameFramework.GetService<FsmService>().DestroyFsm<NpcEntity>(_fsm.Name);

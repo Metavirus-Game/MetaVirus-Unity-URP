@@ -2,11 +2,26 @@
 {
     public static class GameEvents
     {
+        public static class AccountEvent
+        {
+            public const string AccountLogin = "AccountEvent_LoginAccount";
+            public const string PlayerLogin = "AccountEvent_PlayerAccount";
+            /// <summary>
+            /// Email注册成功后发送事件
+            /// </summary>
+            public const string EmailSignUpSuccess = "AccountEvent_EmailSignUpSuccess";
+        }
+
         public static class GameEvent
         {
             public const string ServerConnected = "ServerConnected";
 
             public const string GameDataUpdated = "GameEvent_GameDataUpdated";
+
+            public const string OpenGame = "GameEvent_OpenGame";
+            public const string OpenMainPage = "GameEvent_OpenMainPage";
+            public const string CreateActorOpened = "GameEvent_CreateActorOpened";
+            public const string CreateActorDone = "GameEvent_CreateActorDone";
         }
 
 
@@ -65,6 +80,8 @@
         public static class ArenaEvent
         {
             public const string NewRecordNotifition = "ArenaEvent_NewRecordNotifition";
+
+            public const string ArenaMatch = "GameEvent_ArenaMatch";
         }
     }
 }

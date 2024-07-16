@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using GameEngine.Config;
 using UnityEditor;
 using UnityEngine;
@@ -10,6 +11,18 @@ public class BuildWindow : EditorWindow
     {
         var wnd = GetWindow<BuildWindow>("Lottery Build Tool");
         wnd.Show();
+    }
+
+    [MenuItem("Tools/clear addressable cache", false, 50)]
+    static void ClearAddressableCache()
+    {
+        var list = Directory.GetDirectories(Application.persistentDataPath);
+        foreach (var s in list)
+        {
+            Directory.Delete(s, true);
+        }
+
+        Caching.ClearCache();
     }
 
     private Vector2 _scroll = Vector2.zero;
@@ -67,7 +80,7 @@ public class BuildWindow : EditorWindow
                 }
 
                 GUILayout.Space(20);
-                
+
                 if (GUILayout.Button(EditorGUIUtility.IconContent("TreeEditor.Trash"), "IconButton",
                         GUILayout.Width(20)))
                 {

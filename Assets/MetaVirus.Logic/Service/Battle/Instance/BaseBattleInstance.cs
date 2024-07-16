@@ -165,7 +165,7 @@ namespace MetaVirus.Logic.Service.Battle
                 var playerInfo = DataNodeService.GetData<PlayerInfo>(DataKeys.PlayerInfo);
                 _battleMapData = GameDataService.GetMapData(playerInfo.CurrentMapId);
 
-                var pkgTask = await FairyService.AddPackageAsync("ui-battle");
+                var pkgTask = await FairyService.AddPackageAsync("BattlePage");
 
                 _loadedPkgs = pkgTask;
 

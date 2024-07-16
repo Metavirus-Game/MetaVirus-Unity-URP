@@ -1,18 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using FairyGUI;
 using GameEngine;
 using GameEngine.Base.Attributes;
+using GameEngine.Config;
+using GameEngine.Event;
 using GameEngine.FairyGUI;
 using GameEngine.Fsm;
 using GameEngine.Procedure;
-using GameEngine.Utils;
+using GameEngine.Resource;
+using MetaVirus.Logic.Data;
 using MetaVirus.Logic.FsmStates.MainPage;
-using MetaVirus.Logic.UI;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.SceneManagement;
 using static GameEngine.GameFramework;
 
 namespace MetaVirus.Logic.Procedures
@@ -43,10 +42,11 @@ namespace MetaVirus.Logic.Procedures
 
         public override IEnumerator OnPrepare(FsmEntity<ProcedureService> fsm)
         {
-            var ret = _fairyService.AddPackageAsync("ui-mainpage");
-            yield return ret.AsCoroution();
+            // var ret = _fairyService.AddPackageAsync("ui-mainpage");
+            // yield return ret.AsCoroution();
 
-            _loadedPkgs = ret.Result;
+            //mainpage 已经在GameEntryProcedure中加载了
+            _loadedPkgs = new[] { "MainPage" };
 
             CreateMainPage();
 
@@ -61,6 +61,9 @@ namespace MetaVirus.Logic.Procedures
             );
 
             _fsmMainPage.Start<MainPageStateOpen>();
+
+            GetService<EventService>().Emit(GameEvents.GameEvent.OpenMainPage);
+            yield return null;
         }
 
         private async void CreateMainPage()
@@ -69,8 +72,17 @@ namespace MetaVirus.Logic.Procedures
 
             _fairyService.AddToGRootFullscreen(MainPageCom);
 
-            var go = await Addressables.InstantiateAsync(
-                "Assets/MetaVirus.Res/Scenes/2.MainScene/Res/Particle_Tonado.prefab").Task;
+            if (GameConfig.Inst.GameVersion == GameVersion.Preview)
+            {
+                var txtDemo = MainPageCom.GetChild("txtTitle").asTextField;
+                txtDemo.text = "Preview";
+            }
+
+            // var go = await Addressables.InstantiateAsync(
+            //     "Assets/MetaVirus.Res/Scenes/2.MainScene/Res/Particle_Tonado.prefab").Task;
+
+            var go = await GetService<YooAssetsService>()
+                .InstanceAsync("Assets/MetaVirus.Res/Scenes/2.MainScene/Res/Particle_Tonado.prefab");
             _loadedObjes.Add(go);
 
             go.transform.localScale = new Vector3(70, 70, 70);
@@ -102,7 +114,8 @@ namespace MetaVirus.Logic.Procedures
 
             foreach (var obj in _loadedObjes)
             {
-                Addressables.ReleaseInstance(obj);
+                //Addressables.ReleaseInstance(obj);
+                GetService<YooAssetsService>().ReleaseInstance(obj);
             }
 
             GRoot.inst.RemoveChild(MainPageCom, true);

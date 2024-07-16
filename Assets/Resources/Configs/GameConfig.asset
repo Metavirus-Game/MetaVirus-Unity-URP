@@ -12,14 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 868a6b6077b14c088cfecab40c6cfab1, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  server: 3.96.234.252
-  port: 18889
+  gameVersion: 2
+  servers:
+  - version: 0
+    address: 49.51.244.56
+    port: 18889
+    worldServerId: 0x3E01
+    accountServer: https://acc-test.metavirus.games/
+  - version: 1
+    address: 49.51.244.56
+    port: 18889
+    worldServerId: 0x3F01
+    accountServer: https://acc-test.metavirus.games/
+  - version: 2
+    address: lb-nq58eno0-0xb78t4k5fsu3qzy.clb.na-siliconvalley.tencentclb.com
+    port: 18889
+    worldServerId: 0x3F01
+    accountServer: https://acc.metavirus.games/
   battleServerIp: 127.0.0.1
   battleServerPort: 8881
   moduleId: 0x40
   instId: 0x1
   channelName: Firebase
-  worldServerId: 0x3F01
   targetFps: 60
   nextProcedure: 1
   offlineTest: 0

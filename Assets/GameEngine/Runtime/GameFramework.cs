@@ -62,8 +62,10 @@ namespace GameEngine
         }
 
         /**
+         * 
          * 返回key对应的localized值
          */
+        [Obsolete("使用GameDataService.LT")]
         public static string L(string key)
         {
             return Runtime.GetService<LocalizeService>().GetLanguageText(key);

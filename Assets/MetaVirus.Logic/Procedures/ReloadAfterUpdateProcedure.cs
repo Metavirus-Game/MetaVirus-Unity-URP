@@ -18,7 +18,7 @@ namespace MetaVirus.Logic.Procedures
         private IEnumerator BackToMainPageProcedure()
         {
             yield return new WaitForSeconds(1);
-            ChangeProcedure<MainPageProcedure>();
+            ChangeProcedure<GameEntryProcedure>();
         }
     }
 }

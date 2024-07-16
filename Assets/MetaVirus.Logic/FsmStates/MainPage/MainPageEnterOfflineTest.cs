@@ -11,6 +11,7 @@ using MetaVirus.Logic.UI;
 using UnityEngine;
 using static GameEngine.GameFramework;
 using static MetaVirus.Logic.Data.Constants;
+using static MetaVirus.Logic.Service.GameDataService;
 
 namespace MetaVirus.Logic.FsmStates.MainPage
 {
@@ -47,7 +48,7 @@ namespace MetaVirus.Logic.FsmStates.MainPage
         {
            
 
-            _wndEntering = UIWaitingWindow.ShowWaiting(L("Common_Loading_Content_Entering"));
+            _wndEntering = UIWaitingWindow.ShowWaiting(LT("common.text.entering"));
             //暂时先写死
             const int mapId = 0001;
             var position = new Vector3(22, 0, 0);

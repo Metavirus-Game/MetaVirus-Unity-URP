@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using cfg.buff;
 using cfg.common;
 using GameEngine;
-using GameEngine.Common;
 using GameEngine.Event;
 using GameEngine.Fsm;
+using GameEngine.Resource;
 using MetaVirus.Logic.Data;
 using MetaVirus.Logic.Data.Events.Battle;
 using MetaVirus.Logic.Service.Battle.data;
@@ -14,7 +13,6 @@ using MetaVirus.Logic.Service.Battle.Fsm.BattleUnitFsm;
 using MetaVirus.Logic.Service.Battle.Instruction;
 using MetaVirus.Logic.Service.Vfx;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using static MetaVirus.Logic.Data.Constants;
 
 namespace MetaVirus.Logic.Service.Battle
@@ -78,7 +76,9 @@ namespace MetaVirus.Logic.Service.Battle
         {
             var npcResAddress = ResAddress.BattleUnitRes(BattleUnit.ResourceId);
 
-            var npcResObj = await Addressables.InstantiateAsync(npcResAddress).Task;
+            //var npcResObj = await Addressables.InstantiateAsync(npcResAddress).Task;
+
+            var npcResObj = await GameFramework.GetService<YooAssetsService>().InstanceAsync(npcResAddress);
             Object.DontDestroyOnLoad(npcResObj);
 
             var scale = BattleUnit.Scale;
@@ -236,7 +236,8 @@ namespace MetaVirus.Logic.Service.Battle
 
         public void OnRelease()
         {
-            Addressables.ReleaseInstance(GameObject);
+            //Addressables.ReleaseInstance(GameObject);
+            GameFramework.GetService<YooAssetsService>().ReleaseInstance(GameObject);
             _fsmService.DestroyFsm<BattleUnitEntity>(_fsm.Name);
         }
 

@@ -1,11 +1,11 @@
-using System;
 using System.Collections;
+using Cysharp.Threading.Tasks;
 using FairyGUI;
+using GameEngine;
+using GameEngine.Resource;
 using GameEngine.Utils;
 using MetaVirus.Logic.Data;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.AI;
 using UnityEngine.Events;
 
@@ -71,17 +71,25 @@ namespace MetaVirus.Logic.UI
 
         private IEnumerator LoadModelEnum(string resAddress, UnityAction<RenderTexture> onLoaded)
         {
+            var yooService = GameFramework.GetService<YooAssetsService>();
             if (_modelLoaded != null)
             {
-                Addressables.ReleaseInstance(_modelLoaded);
+                //Addressables.ReleaseInstance(_modelLoaded);
+                yooService.ReleaseInstance(_modelLoaded);
                 _modelLoaded = null;
                 _npcResAddressLoaded = null;
             }
 
-            var task = Addressables.InstantiateAsync(resAddress).Task;
-            yield return task.AsCoroution();
-            _modelLoaded = task.Result;
+            //var task = Addressables.InstantiateAsync(resAddress).Task;
+            // yield return task.AsCoroution();
+            // _modelLoaded = task.Result;
+            var task = yooService.InstanceAsync(resAddress);
             _npcResAddressLoaded = resAddress;
+            yield return task.ToCoroutine((r) =>
+            {
+                _modelLoaded = r;
+            });
+            // _modelLoaded = task.GetAwaiter().GetResult();
 
             _modelLoaded.SetActive(true);
             _modelLoaded.transform.SetParent(anchor, false);
@@ -114,7 +122,8 @@ namespace MetaVirus.Logic.UI
         {
             if (_modelLoaded != null)
             {
-                Addressables.ReleaseInstance(_modelLoaded);
+                //Addressables.ReleaseInstance(_modelLoaded);
+                GameFramework.GetService<YooAssetsService>().ReleaseInstance(_modelLoaded);
             }
 
             if (_modelTexture != null)
